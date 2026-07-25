@@ -46,7 +46,7 @@ void loop() {
     const Config::KeyMask pressedMask = currentMask & ~previousMask;
     for (uint8_t key = 0; key < Config::KEY_COUNT; ++key) {
       if ((pressedMask & static_cast<Config::KeyMask>(1U << key)) != 0) {
-        triggerStatusLedKeyRipple(key);
+        triggerStatusLedKeyAnimation(key);
       }
     }
     sendKeyChanges(previousMask, currentMask, activeLayer());

@@ -22,6 +22,7 @@ constexpr uint8_t DEFAULT_LAYER_COLORS[LAYER_COUNT][3] = {
 };
 constexpr uint8_t DEFAULT_STATUS_LED_BRIGHTNESS = 32;
 constexpr uint8_t MAX_STATUS_LED_BRIGHTNESS = 128;
+constexpr uint8_t DEFAULT_STATUS_KEY_ANIMATION = 0;
 constexpr uint8_t EXTERNAL_RGB_LED_PIN = 14;
 constexpr uint8_t EXTERNAL_RGB_LED_COUNT = 5;
 constexpr bool EXTERNAL_RGB_LED_REVERSED = false;

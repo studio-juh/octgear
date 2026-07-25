@@ -21,18 +21,18 @@ uint32_t layerTransitionTargetColor = 0;
 bool remapperSessionActive = false;
 uint32_t remapperAnimationStartMs = 0;
 
-struct KeyRipple {
+struct KeyAnimationEvent {
   bool active;
   uint8_t center;
   uint32_t startMs;
 };
 
 static_assert(Config::EXTERNAL_RGB_LED_COUNT > 0);
-static_assert(Config::STATUS_KEY_RIPPLE_SLOTS > 0);
-KeyRipple keyRipples[Config::STATUS_KEY_RIPPLE_SLOTS] = {};
-uint8_t nextKeyRippleSlot = 0;
-uint32_t keyRippleLastFrameMs = 0;
-bool keyRippleShown = false;
+static_assert(Config::STATUS_KEY_ANIMATION_SLOTS > 0);
+KeyAnimationEvent keyAnimations[Config::STATUS_KEY_ANIMATION_SLOTS] = {};
+uint8_t nextKeyAnimationSlot = 0;
+uint32_t keyAnimationLastFrameMs = 0;
+bool keyAnimationShown = false;
 Adafruit_NeoPixel statusPixel(
   Config::EXTERNAL_RGB_LED_COUNT,
   Config::STATUS_LED_PIN,
@@ -129,7 +129,7 @@ uint8_t physicalPixelIndex(uint8_t logicalPixel) {
     : logicalPixel;
 }
 
-uint8_t rippleCenterForKey(uint8_t keyIndex) {
+uint8_t animationCenterForKey(uint8_t keyIndex) {
   if (keyIndex < Config::PHYSICAL_KEY_COUNT) {
     const uint8_t column = Config::KEY_MATRIX_COLUMNS[keyIndex];
     return column < Config::EXTERNAL_RGB_LED_COUNT
@@ -140,101 +140,152 @@ uint8_t rippleCenterForKey(uint8_t keyIndex) {
   return static_cast<uint8_t>(Config::EXTERNAL_RGB_LED_COUNT - 1U);
 }
 
-void cancelKeyRipples() {
-  for (uint8_t slot = 0; slot < Config::STATUS_KEY_RIPPLE_SLOTS; ++slot) {
-    keyRipples[slot].active = false;
+void cancelKeyAnimations() {
+  for (uint8_t slot = 0; slot < Config::STATUS_KEY_ANIMATION_SLOTS; ++slot) {
+    keyAnimations[slot].active = false;
   }
-  keyRippleLastFrameMs = 0;
-  keyRippleShown = false;
+  keyAnimationLastFrameMs = 0;
+  keyAnimationShown = false;
 }
 
-void startKeyRipple(uint8_t keyIndex) {
-  uint8_t slot = Config::STATUS_KEY_RIPPLE_SLOTS;
-  for (uint8_t candidate = 0; candidate < Config::STATUS_KEY_RIPPLE_SLOTS; ++candidate) {
-    if (!keyRipples[candidate].active) {
+void startKeyAnimation(uint8_t keyIndex) {
+  if (statusKeyAnimation() == StatusKeyAnimation::Disabled) {
+    return;
+  }
+
+  uint8_t slot = Config::STATUS_KEY_ANIMATION_SLOTS;
+  for (uint8_t candidate = 0; candidate < Config::STATUS_KEY_ANIMATION_SLOTS; ++candidate) {
+    if (!keyAnimations[candidate].active) {
       slot = candidate;
       break;
     }
   }
 
-  if (slot == Config::STATUS_KEY_RIPPLE_SLOTS) {
-    slot = nextKeyRippleSlot;
-    nextKeyRippleSlot = static_cast<uint8_t>(
-      (nextKeyRippleSlot + 1U) % Config::STATUS_KEY_RIPPLE_SLOTS
+  if (slot == Config::STATUS_KEY_ANIMATION_SLOTS) {
+    slot = nextKeyAnimationSlot;
+    nextKeyAnimationSlot = static_cast<uint8_t>(
+      (nextKeyAnimationSlot + 1U) % Config::STATUS_KEY_ANIMATION_SLOTS
     );
   }
 
-  keyRipples[slot] = { true, rippleCenterForKey(keyIndex), millis() };
-  keyRippleLastFrameMs = 0;
+  keyAnimations[slot] = { true, animationCenterForKey(keyIndex), millis() };
+  keyAnimationLastFrameMs = 0;
 }
 
-void updateKeyRipples() {
+uint32_t animationDurationMs(
+  StatusKeyAnimation animation,
+  const KeyAnimationEvent& event
+) {
+  if (animation == StatusKeyAnimation::Flash) {
+    return Config::STATUS_KEY_FLASH_MS;
+  }
+  if (animation == StatusKeyAnimation::Spark) {
+    return Config::STATUS_KEY_SPARK_MS;
+  }
+
+  const uint8_t distanceToStart = event.center;
+  const uint8_t distanceToEnd =
+    static_cast<uint8_t>(Config::EXTERNAL_RGB_LED_COUNT - 1U - event.center);
+  const uint8_t maximumDistance =
+    distanceToStart > distanceToEnd ? distanceToStart : distanceToEnd;
+  return Config::STATUS_KEY_RIPPLE_PULSE_MS +
+         static_cast<uint32_t>(maximumDistance) * Config::STATUS_KEY_RIPPLE_STEP_MS;
+}
+
+uint16_t animationStrength(
+  StatusKeyAnimation animation,
+  const KeyAnimationEvent& event,
+  uint8_t pixel,
+  uint32_t elapsedMs
+) {
+  if (animation == StatusKeyAnimation::Flash) {
+    return static_cast<uint16_t>(
+      (Config::STATUS_KEY_FLASH_MS - elapsedMs) * 255U /
+      Config::STATUS_KEY_FLASH_MS
+    );
+  }
+
+  const uint8_t distance =
+    pixel > event.center ? pixel - event.center : event.center - pixel;
+  if (animation == StatusKeyAnimation::Spark) {
+    const uint16_t temporalStrength = static_cast<uint16_t>(
+      (Config::STATUS_KEY_SPARK_MS - elapsedMs) * 255U /
+      Config::STATUS_KEY_SPARK_MS
+    );
+    const uint16_t spatialStrength = static_cast<uint16_t>(255U / (1U + distance * 2U));
+    return static_cast<uint16_t>(
+      (temporalStrength * spatialStrength + 127U) / 255U
+    );
+  }
+
+  const uint32_t delayMs =
+    static_cast<uint32_t>(distance) * Config::STATUS_KEY_RIPPLE_STEP_MS;
+  if (elapsedMs < delayMs) {
+    return 0;
+  }
+
+  const uint32_t localElapsedMs = elapsedMs - delayMs;
+  if (localElapsedMs >= Config::STATUS_KEY_RIPPLE_PULSE_MS) {
+    return 0;
+  }
+
+  return static_cast<uint16_t>(
+    (Config::STATUS_KEY_RIPPLE_PULSE_MS - localElapsedMs) * 255U /
+    Config::STATUS_KEY_RIPPLE_PULSE_MS
+  );
+}
+
+void updateKeyAnimations() {
+  const StatusKeyAnimation animation = statusKeyAnimation();
+  if (animation == StatusKeyAnimation::Disabled) {
+    if (keyAnimationShown) {
+      showPixelColor(displayedColor);
+    }
+    cancelKeyAnimations();
+    return;
+  }
+
   const uint32_t now = millis();
   uint16_t strengths[Config::EXTERNAL_RGB_LED_COUNT] = {};
   bool anyActive = false;
 
-  for (uint8_t slot = 0; slot < Config::STATUS_KEY_RIPPLE_SLOTS; ++slot) {
-    KeyRipple& ripple = keyRipples[slot];
-    if (!ripple.active) {
+  for (uint8_t slot = 0; slot < Config::STATUS_KEY_ANIMATION_SLOTS; ++slot) {
+    KeyAnimationEvent& event = keyAnimations[slot];
+    if (!event.active) {
       continue;
     }
 
-    const uint32_t elapsedMs = now - ripple.startMs;
-    const uint8_t distanceToStart = ripple.center;
-    const uint8_t distanceToEnd =
-      static_cast<uint8_t>(Config::EXTERNAL_RGB_LED_COUNT - 1U - ripple.center);
-    const uint8_t maximumDistance =
-      distanceToStart > distanceToEnd ? distanceToStart : distanceToEnd;
-    const uint32_t rippleDurationMs =
-      Config::STATUS_KEY_RIPPLE_PULSE_MS +
-      static_cast<uint32_t>(maximumDistance) * Config::STATUS_KEY_RIPPLE_STEP_MS;
-
-    if (elapsedMs >= rippleDurationMs) {
-      ripple.active = false;
+    const uint32_t elapsedMs = now - event.startMs;
+    if (elapsedMs >= animationDurationMs(animation, event)) {
+      event.active = false;
       continue;
     }
 
     anyActive = true;
     for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
-      const uint8_t distance =
-        pixel > ripple.center ? pixel - ripple.center : ripple.center - pixel;
-      const uint32_t delayMs =
-        static_cast<uint32_t>(distance) * Config::STATUS_KEY_RIPPLE_STEP_MS;
-      if (elapsedMs < delayMs) {
-        continue;
-      }
-
-      const uint32_t localElapsedMs = elapsedMs - delayMs;
-      if (localElapsedMs >= Config::STATUS_KEY_RIPPLE_PULSE_MS) {
-        continue;
-      }
-
-      const uint16_t strength = static_cast<uint16_t>(
-        (Config::STATUS_KEY_RIPPLE_PULSE_MS - localElapsedMs) * 255U /
-        Config::STATUS_KEY_RIPPLE_PULSE_MS
-      );
+      const uint16_t strength = animationStrength(animation, event, pixel, elapsedMs);
       const uint16_t combinedStrength = strengths[pixel] + strength;
       strengths[pixel] = combinedStrength > 255U ? 255U : combinedStrength;
     }
   }
 
   if (!anyActive) {
-    if (keyRippleShown) {
+    if (keyAnimationShown) {
       showPixelColor(displayedColor);
     }
-    keyRippleLastFrameMs = 0;
-    keyRippleShown = false;
+    keyAnimationLastFrameMs = 0;
+    keyAnimationShown = false;
     return;
   }
 
   if (
-    keyRippleLastFrameMs != 0 &&
-    now - keyRippleLastFrameMs < Config::STATUS_LED_FRAME_MS
+    keyAnimationLastFrameMs != 0 &&
+    now - keyAnimationLastFrameMs < Config::STATUS_LED_FRAME_MS
   ) {
     return;
   }
 
-  keyRippleLastFrameMs = now;
+  keyAnimationLastFrameMs = now;
   for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
     statusPixel.setPixelColor(
       physicalPixelIndex(pixel),
@@ -250,7 +301,7 @@ void updateKeyRipples() {
   }
 #endif
 
-  keyRippleShown = true;
+  keyAnimationShown = true;
 }
 
 void cancelLayerTransition() {
@@ -349,7 +400,7 @@ void updateLayerLed(uint8_t layer) {
     idleShown = true;
   }
   updateLayerTransition();
-  updateKeyRipples();
+  updateKeyAnimations();
   lastUpdateMs = 0;
 }
 
@@ -377,11 +428,11 @@ void applyStatusLedBrightness() {
   }
 #endif
   showPixelColor(displayedColor);
-  keyRippleLastFrameMs = 0;
+  keyAnimationLastFrameMs = 0;
 }
 
 void setStatusLed(bool on) {
-  cancelKeyRipples();
+  cancelKeyAnimations();
   cancelLayerTransition();
   showPixelColor(on ? colorWheel(colorWheelPosition) : 0);
 
@@ -391,7 +442,7 @@ void setStatusLed(bool on) {
 }
 
 void previewStatusLedColor(uint8_t red, uint8_t green, uint8_t blue) {
-  cancelKeyRipples();
+  cancelKeyAnimations();
   cancelLayerTransition();
   setLayerColorLed({ red, green, blue });
   previewActive = true;
@@ -408,11 +459,19 @@ void clearStatusLedPreview() {
   lastUpdateMs = 0;
 }
 
-void triggerStatusLedKeyRipple(uint8_t keyIndex) {
+void applyStatusKeyAnimation() {
+  const bool restoreBaseColor = keyAnimationShown;
+  cancelKeyAnimations();
+  if (restoreBaseColor) {
+    showPixelColor(displayedColor);
+  }
+}
+
+void triggerStatusLedKeyAnimation(uint8_t keyIndex) {
   if (keyIndex >= Config::KEY_COUNT) {
     return;
   }
-  startKeyRipple(keyIndex);
+  startKeyAnimation(keyIndex);
 }
 
 void updateStatusHeartbeat(bool mounted, bool remapperConnected, bool rescueActive, uint8_t layer) {
@@ -421,7 +480,7 @@ void updateStatusHeartbeat(bool mounted, bool remapperConnected, bool rescueActi
     if (previewActive) {
       clearStatusLedPreview();
     }
-    cancelKeyRipples();
+    cancelKeyAnimations();
     cancelLayerTransition();
     updateColorWheelLed(true);
     return;
@@ -432,7 +491,7 @@ void updateStatusHeartbeat(bool mounted, bool remapperConnected, bool rescueActi
     if (previewActive) {
       clearStatusLedPreview();
     }
-    cancelKeyRipples();
+    cancelKeyAnimations();
     cancelLayerTransition();
     if (!idleShown) {
       setRescueLed();
@@ -459,12 +518,12 @@ void updateStatusHeartbeat(bool mounted, bool remapperConnected, bool rescueActi
   }
 
   if (previewActive) {
-    cancelKeyRipples();
+    cancelKeyAnimations();
     return;
   }
 
   if (millis() - remapperAnimationStartMs < Config::STATUS_REMAPPER_ANIMATION_MS) {
-    cancelKeyRipples();
+    cancelKeyAnimations();
     cancelLayerTransition();
     updateColorWheelLed(false);
     return;

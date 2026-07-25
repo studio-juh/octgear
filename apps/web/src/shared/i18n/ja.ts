@@ -92,6 +92,15 @@ export const ja = {
     statusLedReversed: "反転",
     statusLedDirectionUpdated: (reversed: boolean) => `LEDテープ方向: ${reversed ? "反転" : "標準"}`,
     statusLedDirectionFailed: "LEDテープ方向の変更に失敗しました",
+    statusKeyAnimation: "アニメーション効果",
+    statusKeyAnimationDisabled: "無効",
+    statusKeyAnimationRipple: "波紋",
+    statusKeyAnimationFlash: "フラッシュ",
+    statusKeyAnimationSpark: "スパーク",
+    statusKeyAnimationUpdated: (animation: number) =>
+      `アニメーション効果: ${["波紋", "無効", "フラッシュ", "スパーク"][animation] ?? animation}`,
+    statusKeyAnimationFailed: "アニメーション効果の変更に失敗しました",
+    statusKeyAnimationUnsupported: "最新Firmwareが必要です",
     statusLedBrightness: "LED輝度上限",
     statusLedBrightnessValue: "LED輝度上限の数値",
     statusLedBrightnessRange: (max: number) => `0-${max} / 0は消灯`,
@@ -219,6 +228,7 @@ export const ja = {
     encoderReverseUnsupported: "Encoder方向設定に未対応のファームウェアです。最新UF2を書き込んでください",
     statusLedReverseUnsupported: "LEDテープ方向設定に未対応のファームウェアです。最新UF2を書き込んでください",
     statusLedBrightnessUnsupported: "LED輝度設定に未対応のファームウェアです。最新UF2を書き込んでください",
+    statusKeyAnimationUnsupported: "アニメーション効果設定に未対応のファームウェアです。最新UF2を書き込んでください",
     invalidDiagnosticReport: "診断レポートの内容が一致しません",
     unexpectedResponse: (actual: number, expected: number) =>
       `Unexpected HID response command ${actual}; expected ${expected}`,

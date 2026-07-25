@@ -21,7 +21,9 @@ Readはdeviceから全keymapとlayer設定を再読込し、未保存の編集�
 
 Hardware panelの「回転方向 / 反転」はEncoderのCCW/CWを入れ替え、変更時に実機へ即座に保存します。
 
-Hardware panelの「LEDテープ方向 / 反転」は、盤面左端のLED 1をphysical pixel 0へ対応させる標準順と、最後のphysical pixelへ対応させる反転順を切り替え、変更時に実機へ即座に保存します。打鍵波紋とUSB未認識時の流れるアニメーションの向きに適用されます。
+Hardware panelの「LEDテープ方向 / 反転」は、盤面左端のLED 1をphysical pixel 0へ対応させる標準順と、最後のphysical pixelへ対応させる反転順を切り替え、変更時に実機へ即座に保存します。位置依存の打鍵アニメーションとUSB未認識時の流れるアニメーションの向きに適用されます。
+
+Hardware panelの「アニメーション効果」は、打鍵表示を無効／波紋／フラッシュ／スパークから選ぶプルダウンです。変更時に実機へ即座に保存します。波紋は押下位置から左右へ広がり、フラッシュは5灯を同時点灯、スパークは押下位置とその周囲を短く光らせます。
 
 Hardware panelの「LED輝度上限」は`0-128`で設定します。`0`は消灯です。Sliderまたは数値を変更し、「適用」で外付けWS2812Bと内蔵mirrorへ反映してFlashへ保存します。既定値は`32`です。
 
@@ -154,7 +156,7 @@ Keyboard modifier bitmap:
 | 接続直後に切断表示になる | heartbeat timeout、device再起動、別tabの接続を確認 |
 | Remapper接続中に通常キーが出ない | 設計どおり。Disconnectすると通常出力へ戻る |
 | Encoder方向が違う | Remapperの「回転方向 / 反転」を切り替える |
-| 打鍵波紋の左右が逆 | Remapperの「LEDテープ方向 / 反転」を切り替える |
+| 打鍵アニメーションの左右が逆 | Remapperの「LEDテープ方向 / 反転」を切り替える |
 | Encoderのdetent数が違う | profileの`stepsPerDetent`を確認して再build |
 | UF2 driveへ直接書けない | UF2をdownloadしてOSからcopy |
 | `OCTGEAR` driveが出ない | USB接続前からKey 5を保持しているか確認 |

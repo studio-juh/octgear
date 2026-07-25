@@ -11,4 +11,5 @@ bool saveLayerColorToStorage(uint8_t layer);
 bool saveEncoderReversedToStorage();
 bool saveStatusLedReversedToStorage();
 bool saveStatusLedBrightnessToStorage();
+bool saveStatusKeyAnimationToStorage();
 bool runKeymapStorageSelfTest();

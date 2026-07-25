@@ -10,6 +10,7 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 - LayerごとのRGB LED色設定。`0,0,0`で消灯
 - 外付けWS2812Bと内蔵mirrorの輝度上限を`0-128`で設定、Flash保存
 - 外付けWS2812Bのphysical pixel順を標準／反転で設定、Flash保存
+- 打鍵アニメーションを無効／波紋／フラッシュ／スパークから選択、Flash保存
 - Encoder回転方向の反転設定とFlash保存
 - Keyboard、Consumer Control、次／前レイヤー、Momentary Layer割り当て
 - WebHID Remapperによる読込、編集、差分保存

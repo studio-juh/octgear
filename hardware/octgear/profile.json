@@ -16,6 +16,7 @@
     "default": 32,
     "max": 128
   },
+  "statusLedKeyAnimation": "ripple",
   "externalRgbLed": true,
   "externalRgbLedPin": 14,
   "externalRgbLedCount": 5,

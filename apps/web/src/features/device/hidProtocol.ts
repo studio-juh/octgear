@@ -20,6 +20,7 @@ export enum ConfigCommand {
   SetEncoderReversed = 0x0f,
   SetStatusLedBrightness = 0x10,
   SetStatusLedReversed = 0x11,
+  SetStatusKeyAnimation = 0x12,
 }
 
 export enum ConfigStatus {

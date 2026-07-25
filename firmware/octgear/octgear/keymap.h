@@ -10,6 +10,13 @@ struct LayerColor {
   uint8_t blue;
 };
 
+enum class StatusKeyAnimation : uint8_t {
+  Ripple = 0,
+  Disabled = 1,
+  Flash = 2,
+  Spark = 3,
+};
+
 void beginKeymap();
 void resetKeymapToDefaults();
 uint8_t activeLayer();
@@ -27,6 +34,8 @@ bool statusLedReversed();
 void setStatusLedReversed(bool reversed);
 uint8_t statusLedBrightness();
 void setStatusLedBrightness(uint8_t brightness);
+StatusKeyAnimation statusKeyAnimation();
+bool setStatusKeyAnimation(StatusKeyAnimation animation);
 const KeyAssignment& assignmentFor(uint8_t layer, uint8_t keyIndex);
 bool setAssignment(uint8_t layer, uint8_t keyIndex, const KeyAssignment& assignment);
 void clearKeymap();

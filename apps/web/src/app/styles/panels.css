@@ -168,6 +168,20 @@
   opacity: 0.55;
 }
 
+.hardware-animation-row select {
+  min-width: 112px;
+  min-height: 30px;
+  padding: 3px 24px 3px 8px;
+}
+
+.hardware-animation-row small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+
 .hardware-panel dl div.hardware-brightness-row {
   align-items: stretch;
   flex-direction: column;

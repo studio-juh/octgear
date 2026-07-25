@@ -32,12 +32,14 @@ import {
   setDeviceEncoderReversed,
   setDeviceStatusLedBrightness,
   setDeviceStatusLedReversed,
+  setDeviceStatusKeyAnimation,
   setDeviceLayerEnabled,
   setDeviceLayerColor,
   setDeviceKey,
   subscribeDeviceKeyEvents,
   type DeviceState,
   type LayerColor,
+  type StatusKeyAnimation,
 } from "../../features/device/deviceCommands";
 import { WebHidTransport } from "../../features/device/webHidTransport";
 import {
@@ -83,6 +85,7 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
     HARDWARE_CONFIG.statusLedBrightness.default,
   );
   const [statusLedBrightnessUpdating, setStatusLedBrightnessUpdating] = useState(false);
+  const [statusKeyAnimationUpdating, setStatusKeyAnimationUpdating] = useState(false);
   const [status, setStatus] = useState<string>(t.connection.initialStatus);
   const [firmwareStatus, setFirmwareStatus] = useState<string>(t.firmware.initialStatus);
   const [deviceState, setDeviceState] = useState<DeviceState | null>(null);
@@ -249,6 +252,31 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
       setStatus(error instanceof Error ? error.message : t.hardware.statusLedDirectionFailed);
     } finally {
       setStatusLedDirectionUpdating(false);
+    }
+  }
+
+  async function updateStatusKeyAnimation(animation: StatusKeyAnimation) {
+    if (!connected || !deviceState) {
+      setStatus(t.connection.deviceNotConnected);
+      return;
+    }
+
+    if (!deviceState.statusKeyAnimationSupported) {
+      setStatus(t.device.statusKeyAnimationUnsupported);
+      return;
+    }
+
+    try {
+      setStatusKeyAnimationUpdating(true);
+      const saved = await setDeviceStatusKeyAnimation(transport, animation);
+      setDeviceState((current) =>
+        current ? { ...current, statusKeyAnimation: saved } : current,
+      );
+      setStatus(t.hardware.statusKeyAnimationUpdated(saved));
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : t.hardware.statusKeyAnimationFailed);
+    } finally {
+      setStatusKeyAnimationUpdating(false);
     }
   }
 
@@ -660,10 +688,13 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
           statusLedDirectionUpdating={statusLedDirectionUpdating}
           statusLedBrightness={statusLedBrightness}
           statusLedBrightnessUpdating={statusLedBrightnessUpdating}
+          statusKeyAnimationUpdating={statusKeyAnimationUpdating}
           onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
           onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
           onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
           onStatusLedBrightnessApply={() => void applyStatusLedBrightness()}
+          onStatusKeyAnimationChange={(animation) =>
+            void updateStatusKeyAnimation(animation)}
         />
         <RemapPanel
           activeLayer={activeLayer}

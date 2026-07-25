@@ -8,6 +8,12 @@ const profilePath = join(rootDir, "hardware/octgear/profile.json");
 const firmwareOut = join(rootDir, "firmware/octgear/octgear/generated_hardware_config.h");
 const webOut = join(rootDir, "apps/web/src/features/hardware/generatedHardwareConfig.ts");
 const pinoutOut = join(rootDir, "hardware/octgear/pinout.md");
+const statusLedKeyAnimationValues = {
+  ripple: 0,
+  disabled: 1,
+  flash: 2,
+  spark: 3,
+};
 
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 
@@ -25,7 +31,6 @@ const defaultEnabledLayerMask = profile.defaultEnabledLayers.reduce(
   (mask, layer) => mask | (1 << layer),
   0,
 );
-
 writeFileSync(firmwareOut, firmwareHeader(), "utf8");
 writeFileSync(webOut, webConfig(), "utf8");
 writeFileSync(pinoutOut, pinoutMarkdown(), "utf8");
@@ -51,6 +56,9 @@ function validateProfile(value) {
   if (value.statusLedBrightness.default < 0 ||
       value.statusLedBrightness.default > value.statusLedBrightness.max) {
     throw new Error("statusLedBrightness.default must be within 0-statusLedBrightness.max");
+  }
+  if (!(value.statusLedKeyAnimation in statusLedKeyAnimationValues)) {
+    throw new Error("statusLedKeyAnimation must be ripple, disabled, flash, or spark");
   }
   if (typeof value.externalRgbLed !== "boolean") {
     throw new Error("externalRgbLed must be a boolean");
@@ -199,6 +207,7 @@ ${profile.defaultLayerColors.map((color) => `  { ${color.join(", ")} },`).join("
 };
 constexpr uint8_t DEFAULT_STATUS_LED_BRIGHTNESS = ${profile.statusLedBrightness.default};
 constexpr uint8_t MAX_STATUS_LED_BRIGHTNESS = ${profile.statusLedBrightness.max};
+constexpr uint8_t DEFAULT_STATUS_KEY_ANIMATION = ${statusLedKeyAnimationValues[profile.statusLedKeyAnimation]};
 constexpr uint8_t EXTERNAL_RGB_LED_PIN = ${profile.externalRgbLedPin};
 constexpr uint8_t EXTERNAL_RGB_LED_COUNT = ${profile.externalRgbLedCount};
 constexpr bool EXTERNAL_RGB_LED_REVERSED = ${profile.externalRgbLedReversed ? "true" : "false"};
@@ -266,6 +275,7 @@ export const HARDWARE_CONFIG = {
     default: ${profile.statusLedBrightness.default},
     max: ${profile.statusLedBrightness.max},
   },
+  statusLedKeyAnimation: ${statusLedKeyAnimationValues[profile.statusLedKeyAnimation]},
   matrix: {
     rowCount: ${profile.matrix.rows.length},
     columnCount: ${profile.matrix.columns.length},
@@ -337,7 +347,7 @@ The compiled default direction is ${profile.encoder.reversed ? "reversed" : "sta
 
 ## Status LED
 
-外付けWS2812Bのdata inputをGPIO ${profile.externalRgbLedPin}へ接続します。Firmwareは${profile.externalRgbLedCount} pixels分のdataを送り、layer、打鍵波紋、Remapper、rescue状態を表示します。実装数が少ないchainでは余分なpixel dataは無視されます。論理上はLED 1を盤面左端として扱い、物理pixel順の既定値は${profile.externalRgbLedReversed ? "反転" : "標準"}です。Remapperから向きを反転して保存できます。Boardに内蔵WS2812がある場合はlayer色をミラーします。輝度上限は0-${profile.statusLedBrightness.max}で設定でき、既定値は${profile.statusLedBrightness.default}です。
+外付けWS2812Bのdata inputをGPIO ${profile.externalRgbLedPin}へ接続します。Firmwareは${profile.externalRgbLedCount} pixels分のdataを送り、layer、打鍵アニメーション、Remapper、rescue状態を表示します。実装数が少ないchainでは余分なpixel dataは無視されます。論理上はLED 1を盤面左端として扱い、物理pixel順の既定値は${profile.externalRgbLedReversed ? "反転" : "標準"}です。Remapperから向きと打鍵アニメーション効果を変更して保存できます。Boardに内蔵WS2812がある場合はlayer色をミラーします。輝度上限は0-${profile.statusLedBrightness.max}で設定でき、既定値は${profile.statusLedBrightness.default}です。
 
 | Signal | GPIO | Pixels | Mode |
 | --- | ---: | ---: | --- |

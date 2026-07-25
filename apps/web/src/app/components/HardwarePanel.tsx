@@ -1,5 +1,8 @@
 import { useState } from "react";
-import type { DeviceState } from "../../features/device/deviceCommands";
+import {
+  StatusKeyAnimation,
+  type DeviceState,
+} from "../../features/device/deviceCommands";
 import { OCTGEAR_USB, formatUsbId } from "../../features/device/usbIdentity";
 import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
 import { t } from "../../shared/i18n";
@@ -10,10 +13,12 @@ type HardwarePanelProps = {
   statusLedDirectionUpdating: boolean;
   statusLedBrightness: number;
   statusLedBrightnessUpdating: boolean;
+  statusKeyAnimationUpdating: boolean;
   onEncoderReversedChange: (reversed: boolean) => void;
   onStatusLedReversedChange: (reversed: boolean) => void;
   onStatusLedBrightnessChange: (brightness: number) => void;
   onStatusLedBrightnessApply: () => void;
+  onStatusKeyAnimationChange: (animation: StatusKeyAnimation) => void;
 };
 
 export function HardwarePanel({
@@ -22,10 +27,12 @@ export function HardwarePanel({
   statusLedDirectionUpdating,
   statusLedBrightness,
   statusLedBrightnessUpdating,
+  statusKeyAnimationUpdating,
   onEncoderReversedChange,
   onStatusLedReversedChange,
   onStatusLedBrightnessChange,
   onStatusLedBrightnessApply,
+  onStatusKeyAnimationChange,
 }: HardwarePanelProps) {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const brightnessSupported = deviceState?.statusLedBrightnessSupported ?? false;
@@ -83,6 +90,43 @@ export function HardwarePanel({
               />
               <span>{t.hardware.statusLedReversed}</span>
             </label>
+          </dd>
+        </div>
+        <div className="hardware-animation-row">
+          <dt>{t.hardware.statusKeyAnimation}</dt>
+          <dd>
+            <select
+              value={
+                deviceState?.statusKeyAnimationSupported
+                  ? deviceState.statusKeyAnimation
+                  : HARDWARE_CONFIG.statusLedKeyAnimation
+              }
+              aria-label={t.hardware.statusKeyAnimation}
+              disabled={
+                !deviceState?.statusKeyAnimationSupported ||
+                statusKeyAnimationUpdating
+              }
+              onChange={(event) =>
+                onStatusKeyAnimationChange(
+                  Number(event.target.value) as StatusKeyAnimation,
+                )}
+            >
+              <option value={StatusKeyAnimation.Disabled}>
+                {t.hardware.statusKeyAnimationDisabled}
+              </option>
+              <option value={StatusKeyAnimation.Ripple}>
+                {t.hardware.statusKeyAnimationRipple}
+              </option>
+              <option value={StatusKeyAnimation.Flash}>
+                {t.hardware.statusKeyAnimationFlash}
+              </option>
+              <option value={StatusKeyAnimation.Spark}>
+                {t.hardware.statusKeyAnimationSpark}
+              </option>
+            </select>
+            {!deviceState?.statusKeyAnimationSupported && (
+              <small>{t.hardware.statusKeyAnimationUnsupported}</small>
+            )}
           </dd>
         </div>
         <div className="hardware-brightness-row">

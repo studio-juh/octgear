@@ -26,6 +26,8 @@ constexpr int PAYLOAD_LENGTH_ADDRESS = 12;
 constexpr int DEVICE_FLAGS_ADDRESS = 14;
 constexpr uint8_t ENCODER_REVERSED_FLAG = 0x01;
 constexpr uint8_t STATUS_LED_REVERSED_FLAG = 0x02;
+constexpr uint8_t STATUS_KEY_ANIMATION_MASK = 0x0C;
+constexpr uint8_t STATUS_KEY_ANIMATION_SHIFT = 2;
 constexpr int STATUS_LED_BRIGHTNESS_ADDRESS = 15;
 constexpr int CRC_ADDRESS = 16;
 constexpr int STORAGE_HEADER_SIZE = 20;
@@ -212,7 +214,11 @@ void buildSlotData(uint8_t* data, uint32_t generation, SlotKind kind) {
   data[DEVICE_FLAGS_ADDRESS] =
     static_cast<uint8_t>(
       (encoderReversed() ? ENCODER_REVERSED_FLAG : 0U) |
-      (statusLedReversed() ? STATUS_LED_REVERSED_FLAG : 0U)
+      (statusLedReversed() ? STATUS_LED_REVERSED_FLAG : 0U) |
+      (
+        static_cast<uint8_t>(statusKeyAnimation()) <<
+        STATUS_KEY_ANIMATION_SHIFT
+      )
     );
   data[STATUS_LED_BRIGHTNESS_ADDRESS] = statusLedBrightness();
 
@@ -310,6 +316,14 @@ bool loadKeymapFromStorage() {
       : (data[DEVICE_FLAGS_ADDRESS] & STATUS_LED_REVERSED_FLAG) != 0
   );
   setStatusLedBrightness(data[STATUS_LED_BRIGHTNESS_ADDRESS]);
+  setStatusKeyAnimation(
+    legacyStorage
+      ? static_cast<StatusKeyAnimation>(Config::DEFAULT_STATUS_KEY_ANIMATION)
+      : static_cast<StatusKeyAnimation>(
+          (data[DEVICE_FLAGS_ADDRESS] & STATUS_KEY_ANIMATION_MASK) >>
+          STATUS_KEY_ANIMATION_SHIFT
+        )
+  );
   if (legacyStorage) {
     saveKeymapToStorage();
   }
@@ -350,6 +364,10 @@ bool saveStatusLedBrightnessToStorage() {
   return saveKeymapToStorage();
 }
 
+bool saveStatusKeyAnimationToStorage() {
+  return saveKeymapToStorage();
+}
+
 bool runKeymapStorageSelfTest() {
   KeyAssignment backup[Config::LAYER_COUNT][Config::KEY_COUNT];
   KeyAssignment pattern[Config::LAYER_COUNT][Config::KEY_COUNT];
@@ -361,6 +379,11 @@ bool runKeymapStorageSelfTest() {
   const bool patternStatusLedReversed = !backupStatusLedReversed;
   const uint8_t backupStatusLedBrightness = statusLedBrightness();
   const uint8_t patternStatusLedBrightness = backupStatusLedBrightness == 97 ? 96 : 97;
+  const StatusKeyAnimation backupStatusKeyAnimation = statusKeyAnimation();
+  const StatusKeyAnimation patternStatusKeyAnimation =
+    backupStatusKeyAnimation == StatusKeyAnimation::Spark
+      ? StatusKeyAnimation::Flash
+      : StatusKeyAnimation::Spark;
   const uint8_t patternLayerMask = static_cast<uint8_t>(0x55U & ((1U << Config::LAYER_COUNT) - 1U));
   LayerColor backupLayerColors[Config::LAYER_COUNT];
   LayerColor patternLayerColors[Config::LAYER_COUNT];
@@ -393,6 +416,7 @@ bool runKeymapStorageSelfTest() {
   setEncoderReversed(patternEncoderReversed);
   setStatusLedReversed(patternStatusLedReversed);
   setStatusLedBrightness(patternStatusLedBrightness);
+  setStatusKeyAnimation(patternStatusKeyAnimation);
 
   bool ok = saveCurrentKeymapToStorage(SlotKind::SelfTest);
   if (ok) {
@@ -401,6 +425,7 @@ bool runKeymapStorageSelfTest() {
     resetLayerColors();
     setEncoderReversed(backupEncoderReversed);
     setStatusLedReversed(backupStatusLedReversed);
+    setStatusKeyAnimation(backupStatusKeyAnimation);
     ok = loadKeymapFromStorage();
   }
 
@@ -417,6 +442,10 @@ bool runKeymapStorageSelfTest() {
   }
 
   if (ok && statusLedBrightness() != patternStatusLedBrightness) {
+    ok = false;
+  }
+
+  if (ok && statusKeyAnimation() != patternStatusKeyAnimation) {
     ok = false;
   }
 
@@ -469,6 +498,7 @@ bool runKeymapStorageSelfTest() {
   setEncoderReversed(backupEncoderReversed);
   setStatusLedReversed(backupStatusLedReversed);
   setStatusLedBrightness(backupStatusLedBrightness);
+  setStatusKeyAnimation(backupStatusKeyAnimation);
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     setLayerColor(layer, backupLayerColors[layer]);
   }

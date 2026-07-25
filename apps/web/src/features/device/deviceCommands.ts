@@ -29,8 +29,17 @@ export type DeviceState = {
   statusLedReversedSupported: boolean;
   statusLedBrightness: number;
   statusLedBrightnessSupported: boolean;
+  statusKeyAnimation: StatusKeyAnimation;
+  statusKeyAnimationSupported: boolean;
   enabledLayers: boolean[];
 };
+
+export enum StatusKeyAnimation {
+  Ripple = 0,
+  Disabled = 1,
+  Flash = 2,
+  Spark = 3,
+}
 
 export type LayerEnabledResult = {
   activeLayer: number;
@@ -78,6 +87,8 @@ export async function getDeviceState(transport: WebHidTransport): Promise<Device
     statusLedBrightnessSupported: response.payload.length >= 7,
     statusLedReversed: (response.payload[7] ?? 0) !== 0,
     statusLedReversedSupported: response.payload.length >= 8,
+    statusKeyAnimation: decodeStatusKeyAnimation(response.payload[8]),
+    statusKeyAnimationSupported: response.payload.length >= 9,
     enabledLayers: decodeEnabledLayers(enabledLayerMask, layerCount),
   };
 }
@@ -112,6 +123,18 @@ export async function setDeviceStatusLedReversed(transport: WebHidTransport, rev
   }
   assertConfigOk(response);
   return (response.payload[0] ?? 0) !== 0;
+}
+
+export async function setDeviceStatusKeyAnimation(
+  transport: WebHidTransport,
+  animation: StatusKeyAnimation,
+) {
+  const response = await sendCommand(transport, ConfigCommand.SetStatusKeyAnimation, [animation]);
+  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
+    throw new Error(t.device.statusKeyAnimationUnsupported);
+  }
+  assertConfigOk(response);
+  return decodeStatusKeyAnimation(response.payload[0] ?? animation);
 }
 
 export async function setDeviceLayerEnabled(
@@ -393,4 +416,15 @@ function colorFromTuple(color: readonly [number, number, number] | undefined): L
 
 function clampColorChannel(value: number) {
   return Math.max(0, Math.min(255, Math.trunc(value)));
+}
+
+function decodeStatusKeyAnimation(value: number | undefined): StatusKeyAnimation {
+  switch (value) {
+    case StatusKeyAnimation.Disabled:
+    case StatusKeyAnimation.Flash:
+    case StatusKeyAnimation.Spark:
+      return value;
+    default:
+      return StatusKeyAnimation.Ripple;
+  }
 }
