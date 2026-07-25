@@ -593,7 +593,7 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
 
   return (
     <main className="app-shell">
-      <header className="topbar">
+      <header className="topbar remapper-topbar">
         <a className="brand brand-link" href={homeHref} aria-label={t.home.backHome}>
           <img
             className="brand-mark"

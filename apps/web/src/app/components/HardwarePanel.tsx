@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { DeviceState } from "../../features/device/deviceCommands";
 import { OCTGEAR_USB, formatUsbId } from "../../features/device/usbIdentity";
 import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
@@ -22,25 +23,29 @@ export function HardwarePanel({
   onStatusLedBrightnessChange,
   onStatusLedBrightnessApply,
 }: HardwarePanelProps) {
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
   const brightnessSupported = deviceState?.statusLedBrightnessSupported ?? false;
   const brightnessChanged =
     brightnessSupported && statusLedBrightness !== deviceState?.statusLedBrightness;
 
   return (
     <aside className="panel hardware-panel">
-      <div className="panel-meta">
-        <span className="panel-kicker">{t.hardware.kicker}</span>
-        <h2>{t.hardware.title}</h2>
+      <div className="hardware-panel-heading">
+        <div className="panel-meta">
+          <span className="panel-kicker">{t.hardware.kicker}</span>
+          <h2>{t.hardware.title}</h2>
+        </div>
+        <button
+          type="button"
+          className="hardware-details-toggle"
+          aria-expanded={detailsExpanded}
+          aria-controls="hardware-profile-details"
+          onClick={() => setDetailsExpanded((expanded) => !expanded)}
+        >
+          {detailsExpanded ? t.hardware.collapseDetails : t.hardware.expandDetails}
+        </button>
       </div>
-      <dl>
-        <div>
-          <dt>{t.hardware.keys}</dt>
-          <dd>{HARDWARE_CONFIG.physicalKeyCount}</dd>
-        </div>
-        <div>
-          <dt>{t.hardware.encoder}</dt>
-          <dd>{t.hardware.encoderValue(HARDWARE_CONFIG.encoder.pinCount)}</dd>
-        </div>
+      <dl className="hardware-controls">
         <div>
           <dt>{t.hardware.encoderDirection}</dt>
           <dd>
@@ -91,6 +96,16 @@ export function HardwarePanel({
                 : t.hardware.statusLedBrightnessUnsupported}
             </small>
           </dd>
+        </div>
+      </dl>
+      <dl id="hardware-profile-details" hidden={!detailsExpanded}>
+        <div>
+          <dt>{t.hardware.keys}</dt>
+          <dd>{HARDWARE_CONFIG.physicalKeyCount}</dd>
+        </div>
+        <div>
+          <dt>{t.hardware.encoder}</dt>
+          <dd>{t.hardware.encoderValue(HARDWARE_CONFIG.encoder.pinCount)}</dd>
         </div>
         <div>
           <dt>{t.hardware.matrix}</dt>

@@ -1,7 +1,7 @@
 export const ja = {
   app: {
     eyebrow: "OctGear",
-    title: "Mini Remapper",
+    title: "Remapper",
     description: "8キー + ロータリーエンコーダ RP2040 ボード用 WebHID キーマップエディタ",
     workspaceLabel: "リマッパー作業領域",
   },
@@ -79,6 +79,8 @@ export const ja = {
   hardware: {
     kicker: "Board Profile",
     title: "Hardware",
+    expandDetails: "詳細を表示",
+    collapseDetails: "詳細を閉じる",
     keys: "Keys",
     encoder: "Encoder",
     encoderValue: (pinCount: number) => `${pinCount}pin A/C/B/SW`,

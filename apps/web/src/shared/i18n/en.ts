@@ -3,7 +3,7 @@ import type { ja } from "./ja";
 export const en: typeof ja = {
   app: {
     eyebrow: "OctGear",
-    title: "Mini Remapper",
+    title: "Remapper",
     description: "WebHID keymap editor for the 8-key + rotary encoder RP2040 board",
     workspaceLabel: "Remapper workspace",
   },
@@ -81,6 +81,8 @@ export const en: typeof ja = {
   hardware: {
     kicker: "Board Profile",
     title: "Hardware",
+    expandDetails: "Show details",
+    collapseDetails: "Hide details",
     keys: "Keys",
     encoder: "Encoder",
     encoderValue: (pinCount) => `${pinCount}-pin A/C/B/SW`,

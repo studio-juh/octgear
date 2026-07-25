@@ -90,14 +90,35 @@
 .hardware-panel {
   display: grid;
   align-content: start;
+  align-self: start;
   gap: 16px;
+  min-height: 0;
   background: rgba(250, 244, 236, 0.9);
+}
+
+.hardware-panel-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hardware-details-toggle {
+  min-height: 32px;
+  padding: 0 10px;
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .hardware-panel dl {
   display: grid;
   gap: 8px;
   margin: 0;
+}
+
+.hardware-panel dl[hidden] {
+  display: none;
 }
 
 .hardware-panel dl div {
