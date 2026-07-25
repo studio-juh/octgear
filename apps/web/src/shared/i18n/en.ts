@@ -6,6 +6,8 @@ export const en: typeof ja = {
     title: "Remapper",
     description: "WebHID keymap editor for the 8-key + rotary encoder RP2040 board",
     workspaceLabel: "Remapper workspace",
+    workspaceScale: "Display scale",
+    workspaceScaleValue: (scale) => `${scale}%`,
   },
   home: {
     eyebrow: "OctGear",

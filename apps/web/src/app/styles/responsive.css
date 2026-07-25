@@ -149,6 +149,15 @@
 }
 
 @media (max-width: 640px) {
+  .workspace-scale-control {
+    display: none;
+  }
+
+  .workspace-viewport[data-workspace-scale="80"] .workspace,
+  .workspace-viewport[data-workspace-scale="90"] .workspace {
+    zoom: 1;
+  }
+
   .brand {
     align-items: flex-start;
   }

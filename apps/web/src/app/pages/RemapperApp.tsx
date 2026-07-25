@@ -68,6 +68,10 @@ import {
 import { t } from "../../shared/i18n";
 
 const LAYER_COLOR_PREVIEW_DEBOUNCE_MS = 60;
+const WORKSPACE_SCALE_STORAGE_KEY = "octgear.remapper.workspaceScale";
+const WORKSPACE_SCALE_OPTIONS = [80, 90, 100] as const;
+
+type WorkspaceScale = typeof WORKSPACE_SCALE_OPTIONS[number];
 
 type RemapperAppProps = {
   homeHref?: string;
@@ -93,6 +97,8 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
     statusKeyAnimationBrightnessUpdating,
     setStatusKeyAnimationBrightnessUpdating,
   ] = useState(false);
+  const [workspaceScale, setWorkspaceScale] =
+    useState<WorkspaceScale>(loadWorkspaceScale);
   const [status, setStatus] = useState<string>(t.connection.initialStatus);
   const [firmwareStatus, setFirmwareStatus] = useState<string>(t.firmware.initialStatus);
   const [deviceState, setDeviceState] = useState<DeviceState | null>(null);
@@ -714,6 +720,15 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
     await disconnectDevice();
   }
 
+  function updateWorkspaceScale(scale: WorkspaceScale) {
+    setWorkspaceScale(scale);
+    try {
+      window.localStorage.setItem(WORKSPACE_SCALE_STORAGE_KEY, String(scale));
+    } catch {
+      // Keep the scale for this session when browser storage is unavailable.
+    }
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar remapper-topbar">
@@ -739,6 +754,21 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
             <span className="connection-text">{status}</span>
           </div>
           <div className="connection-actions">
+            <label className="workspace-scale-control">
+              <span>{t.app.workspaceScale}</span>
+              <select
+                value={workspaceScale}
+                aria-label={t.app.workspaceScale}
+                onChange={(event) =>
+                  updateWorkspaceScale(Number(event.target.value) as WorkspaceScale)}
+              >
+                {WORKSPACE_SCALE_OPTIONS.map((scale) => (
+                  <option key={scale} value={scale}>
+                    {t.app.workspaceScaleValue(scale)}
+                  </option>
+                ))}
+              </select>
+            </label>
             <button type="button" className="ghost-button" onClick={() => setFirmwareModalOpen(true)}>
               {t.connection.updater}
             </button>
@@ -749,61 +779,68 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
         </div>
       </header>
 
-      <section className="workspace" aria-label={t.app.workspaceLabel}>
-        <HardwarePanel
-          deviceState={deviceState}
-          encoderDirectionUpdating={encoderDirectionUpdating}
-          statusLedDirectionUpdating={statusLedDirectionUpdating}
-          statusLedBrightness={statusLedBrightness}
-          statusLedBrightnessUpdating={statusLedBrightnessUpdating}
-          statusKeyAnimationUpdating={statusKeyAnimationUpdating}
-          statusKeyAnimationBrightness={statusKeyAnimationBrightness}
-          statusKeyAnimationBrightnessUpdating={statusKeyAnimationBrightnessUpdating}
-          onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
-          onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
-          onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
-          onStatusLedBrightnessApply={() => void applyStatusLedBrightness()}
-          onStatusKeyAnimationChange={(animation) =>
-            void updateStatusKeyAnimation(animation)}
-          onStatusKeyAnimationBrightnessChange={updateStatusKeyAnimationBrightnessDraft}
-          onStatusKeyAnimationBrightnessApply={() => void applyStatusKeyAnimationBrightness()}
-        />
-        <RemapPanel
-          activeLayer={activeLayer}
-          selectedKey={selectedKey}
-          connected={connected}
-          supportedKeyCount={connected ? deviceKeyCount : writeKeymap[activeLayer]?.length ?? 0}
-          layerCount={writeKeymap.length}
-          enabledLayers={writeEnabledLayers}
-          layerColors={writeLayerColors}
-          layerAssignments={writeKeymap[activeLayer]}
-          onRead={() => void readAllAssignments()}
-          onReset={() => setResetModalOpen(true)}
-          onSave={() => void saveAllAssignments()}
-          onSelectLayer={(layerIndex) => void selectLayer(layerIndex)}
-          onLayerEnabledChange={updateLayerEnabled}
-          onLayerColorChange={updateLayerColor}
-          onSelectKey={setSelectedKey}
-        />
-        <EditorPanel
-          selectedKey={selectedKey}
-          draftAssignment={draftAssignment}
-          onUpdateKind={updateDraftKind}
-          onUpdateUsage={updateDraftUsage}
-          modifierSlots={modifierSlots}
-          onUpdateModifierSlot={updateDraftModifierSlot}
-        />
-        <KeyboardPickerPanel
-          draftAssignment={draftAssignment}
-          keyboardLayout={keyboardLayout}
-          onKeyboardLayoutChange={setKeyboardLayout}
-          onPickerOption={applyPickerOption}
-          onConsumerOption={applyConsumerOption}
-          onLayerCycleOption={applyLayerCycleOption}
-          onLayerPreviousOption={applyLayerPreviousOption}
-          onMomentaryLayerOption={applyMomentaryLayerOption}
-        />
-      </section>
+      <div className="workspace-viewport" data-workspace-scale={workspaceScale}>
+        <section className="workspace" aria-label={t.app.workspaceLabel}>
+          <HardwarePanel
+            deviceState={deviceState}
+            encoderDirectionUpdating={encoderDirectionUpdating}
+            statusLedDirectionUpdating={statusLedDirectionUpdating}
+            statusLedBrightness={statusLedBrightness}
+            statusLedBrightnessUpdating={statusLedBrightnessUpdating}
+            statusKeyAnimationUpdating={statusKeyAnimationUpdating}
+            statusKeyAnimationBrightness={statusKeyAnimationBrightness}
+            statusKeyAnimationBrightnessUpdating={statusKeyAnimationBrightnessUpdating}
+            onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
+            onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
+            onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
+            onStatusLedBrightnessApply={() => void applyStatusLedBrightness()}
+            onStatusKeyAnimationChange={(animation) =>
+              void updateStatusKeyAnimation(animation)}
+            onStatusKeyAnimationBrightnessChange={updateStatusKeyAnimationBrightnessDraft}
+            onStatusKeyAnimationBrightnessApply={() =>
+              void applyStatusKeyAnimationBrightness()}
+          />
+          <RemapPanel
+            activeLayer={activeLayer}
+            selectedKey={selectedKey}
+            connected={connected}
+            supportedKeyCount={
+              connected
+                ? deviceKeyCount
+                : writeKeymap[activeLayer]?.length ?? 0
+            }
+            layerCount={writeKeymap.length}
+            enabledLayers={writeEnabledLayers}
+            layerColors={writeLayerColors}
+            layerAssignments={writeKeymap[activeLayer]}
+            onRead={() => void readAllAssignments()}
+            onReset={() => setResetModalOpen(true)}
+            onSave={() => void saveAllAssignments()}
+            onSelectLayer={(layerIndex) => void selectLayer(layerIndex)}
+            onLayerEnabledChange={updateLayerEnabled}
+            onLayerColorChange={updateLayerColor}
+            onSelectKey={setSelectedKey}
+          />
+          <EditorPanel
+            selectedKey={selectedKey}
+            draftAssignment={draftAssignment}
+            onUpdateKind={updateDraftKind}
+            onUpdateUsage={updateDraftUsage}
+            modifierSlots={modifierSlots}
+            onUpdateModifierSlot={updateDraftModifierSlot}
+          />
+          <KeyboardPickerPanel
+            draftAssignment={draftAssignment}
+            keyboardLayout={keyboardLayout}
+            onKeyboardLayoutChange={setKeyboardLayout}
+            onPickerOption={applyPickerOption}
+            onConsumerOption={applyConsumerOption}
+            onLayerCycleOption={applyLayerCycleOption}
+            onLayerPreviousOption={applyLayerPreviousOption}
+            onMomentaryLayerOption={applyMomentaryLayerOption}
+          />
+        </section>
+      </div>
 
       {firmwareModalOpen ? (
         <div
@@ -891,6 +928,19 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
       ) : null}
     </main>
   );
+}
+
+function loadWorkspaceScale(): WorkspaceScale {
+  try {
+    const stored = Number(window.localStorage.getItem(WORKSPACE_SCALE_STORAGE_KEY));
+    if (WORKSPACE_SCALE_OPTIONS.some((scale) => scale === stored)) {
+      return stored as WorkspaceScale;
+    }
+  } catch {
+    // Use the compact default when browser storage is unavailable.
+  }
+
+  return 90;
 }
 
 function createInitialKeymap() {

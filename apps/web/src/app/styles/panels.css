@@ -91,7 +91,7 @@
   display: grid;
   align-content: start;
   align-self: start;
-  gap: 16px;
+  gap: 12px;
   min-height: 0;
   background: rgba(250, 244, 236, 0.9);
 }
@@ -117,6 +117,11 @@
   margin: 0;
 }
 
+.hardware-panel .hardware-controls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 12px;
+}
+
 .hardware-panel dl[hidden] {
   display: none;
 }
@@ -134,6 +139,16 @@
 .hardware-panel dl div:last-child {
   padding-bottom: 0;
   border-bottom: 0;
+}
+
+.hardware-panel .hardware-controls > :not(.hardware-direction-row) {
+  grid-column: 1 / -1;
+}
+
+.hardware-panel dl div.hardware-direction-row {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .hardware-panel dt,
@@ -183,32 +198,39 @@
 }
 
 .hardware-panel dl div.hardware-brightness-row {
-  align-items: stretch;
-  flex-direction: column;
+  align-items: center;
 }
 
 .hardware-brightness-row dd {
+  flex: 1;
+  min-width: 0;
   display: grid;
-  gap: 5px;
+  gap: 3px;
   text-align: left;
+}
+
+.hardware-brightness-row dt {
+  flex: 0 0 82px;
 }
 
 .hardware-brightness-control {
   display: flex;
   align-items: center;
   justify-content: end;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
 .hardware-brightness-control input[type="range"] {
-  width: 32%;
+  flex: 1 1 40px;
+  width: auto;
+  min-width: 40px;
   margin: 0;
   accent-color: var(--selection);
 }
 
 .hardware-brightness-control input[type="number"] {
-  width: 50px;
+  width: 44px;
   min-height: 30px;
   padding: 3px 5px;
   text-align: right;
@@ -216,13 +238,13 @@
 
 .hardware-brightness-control button {
   min-height: 30px;
-  padding: 0 9px;
-  font-size: 12px;
+  padding: 0 7px;
+  font-size: 11px;
 }
 
 .hardware-brightness-row small {
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
 }
 
@@ -610,14 +632,29 @@ button.danger-action {
   justify-content: space-between;
 }
 
+.editor-panel {
+  gap: 10px;
+  padding: 16px;
+  font-size: 12px;
+}
+
+.editor-panel .panel-kicker {
+  font-size: 10px;
+}
+
+.editor-panel .panel-heading h2 {
+  font-size: 16px;
+}
+
 .editor-panel label {
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .editor-panel input,
 .editor-panel select {
-  min-height: 40px;
+  min-height: 36px;
+  font-size: 12px;
 }
 
 .editor-panel .assignment-summary,
@@ -644,20 +681,20 @@ button.danger-action {
 
 .assignment-summary {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   grid-template-columns: 1fr 1fr;
-  margin: 4px 0 0;
-  padding-top: 12px;
+  margin: 2px 0 0;
+  padding-top: 10px;
   border-top: 1px solid rgba(78, 61, 38, 0.08);
 }
 
 .assignment-summary div {
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .assignment-summary dt {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .assignment-summary dd {

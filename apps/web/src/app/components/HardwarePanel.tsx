@@ -70,7 +70,7 @@ export function HardwarePanel({
         </button>
       </div>
       <dl className="hardware-controls">
-        <div>
+        <div className="hardware-direction-row">
           <dt>{t.hardware.encoderDirection}</dt>
           <dd>
             <label className="hardware-toggle">
@@ -84,7 +84,7 @@ export function HardwarePanel({
             </label>
           </dd>
         </div>
-        <div>
+        <div className="hardware-direction-row">
           <dt>{t.hardware.statusLedDirection}</dt>
           <dd>
             <label className="hardware-toggle">

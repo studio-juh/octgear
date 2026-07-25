@@ -241,7 +241,7 @@ select {
 }
 
 .remapper-topbar {
-  max-width: 1320px;
+  max-width: 1400px;
 }
 
 .brand {
@@ -349,6 +349,27 @@ select {
   gap: 10px;
 }
 
+.workspace-scale-control {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 3px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.workspace-scale-control span {
+  white-space: nowrap;
+}
+
+.workspace-scale-control select {
+  width: 82px;
+  min-height: 42px;
+  padding: 0 8px;
+  font-weight: 700;
+}
+
 .connection-meta {
   display: flex;
   align-items: center;
@@ -426,12 +447,26 @@ a.ghost-button {
   box-shadow: none;
 }
 
+.workspace-viewport {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 .workspace {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr) 300px;
+  grid-template-columns: 300px minmax(0, 1fr) 250px;
   gap: 18px;
-  max-width: 1320px;
+  width: 100%;
   margin: 0 auto;
+}
+
+.workspace-viewport[data-workspace-scale="90"] .workspace {
+  zoom: 0.9;
+}
+
+.workspace-viewport[data-workspace-scale="80"] .workspace {
+  zoom: 0.8;
 }
 
 .modal-backdrop {

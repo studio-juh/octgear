@@ -4,6 +4,8 @@ export const ja = {
     title: "Remapper",
     description: "8キー + ロータリーエンコーダ RP2040 ボード用 WebHID キーマップエディタ",
     workspaceLabel: "リマッパー作業領域",
+    workspaceScale: "表示倍率",
+    workspaceScaleValue: (scale: number) => `${scale}%`,
   },
   home: {
     eyebrow: "OctGear",
