@@ -595,7 +595,13 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
     <main className="app-shell">
       <header className="topbar">
         <a className="brand brand-link" href={homeHref} aria-label={t.home.backHome}>
-          <img src={`${import.meta.env.BASE_URL}cy.png`} alt="" />
+          <img
+            className="brand-mark"
+            src={`${import.meta.env.BASE_URL}brand/octgear-mark.png`}
+            width="322"
+            height="307"
+            alt=""
+          />
           <div className="brand-copy">
             <span className="eyebrow">{t.app.eyebrow}</span>
             <h1>{t.app.title}</h1>

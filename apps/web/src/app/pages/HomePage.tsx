@@ -7,7 +7,13 @@ export function HomePage() {
     <main className="app-shell home-shell">
       <section className="home-hero" aria-labelledby="home-title">
         <div className="brand home-brand">
-          <img src={`${import.meta.env.BASE_URL}cy.png`} alt="" />
+          <img
+            className="brand-logo"
+            src={`${import.meta.env.BASE_URL}brand/octgear-logo.png`}
+            width="1153"
+            height="307"
+            alt=""
+          />
           <div className="brand-copy">
             <span className="eyebrow">{t.home.eyebrow}</span>
             <h1 id="home-title">{t.home.title}</h1>

@@ -259,11 +259,22 @@ select {
 }
 
 .brand img {
+  display: block;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.brand-mark {
   width: 54px;
   height: 54px;
   border-radius: 8px;
   background: rgba(255, 250, 244, 0.92);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.brand-logo {
+  width: min(32vw, 260px);
+  height: auto;
 }
 
 .brand-copy {
@@ -297,11 +308,6 @@ select {
   color: var(--text-muted);
   font-size: 14px;
   line-height: 1.45;
-}
-
-.home-brand img {
-  width: 68px;
-  height: 68px;
 }
 
 .home-brand h1 {

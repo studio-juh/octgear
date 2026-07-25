@@ -120,7 +120,13 @@ export function DiagnosticsApp() {
     <main className="app-shell">
       <header className="topbar">
         <div className="brand">
-          <img src={`${import.meta.env.BASE_URL}cy.png`} alt="" />
+          <img
+            className="brand-mark"
+            src={`${import.meta.env.BASE_URL}brand/octgear-mark.png`}
+            width="322"
+            height="307"
+            alt=""
+          />
           <div className="brand-copy">
             <span className="eyebrow">{t.diagnostics.kicker}</span>
             <h1>{t.diagnostics.title}</h1>
