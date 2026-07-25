@@ -25,6 +25,8 @@ export type DeviceState = {
   keyCount: number;
   matrixRowCount: number;
   encoderReversed: boolean;
+  statusLedReversed: boolean;
+  statusLedReversedSupported: boolean;
   statusLedBrightness: number;
   statusLedBrightnessSupported: boolean;
   enabledLayers: boolean[];
@@ -74,6 +76,8 @@ export async function getDeviceState(transport: WebHidTransport): Promise<Device
     encoderReversed: (response.payload[5] ?? 0) !== 0,
     statusLedBrightness: response.payload[6] ?? 0,
     statusLedBrightnessSupported: response.payload.length >= 7,
+    statusLedReversed: (response.payload[7] ?? 0) !== 0,
+    statusLedReversedSupported: response.payload.length >= 8,
     enabledLayers: decodeEnabledLayers(enabledLayerMask, layerCount),
   };
 }
@@ -99,6 +103,15 @@ export async function setDeviceStatusLedBrightness(transport: WebHidTransport, b
   }
   assertConfigOk(response);
   return response.payload[0] ?? brightness;
+}
+
+export async function setDeviceStatusLedReversed(transport: WebHidTransport, reversed: boolean) {
+  const response = await sendCommand(transport, ConfigCommand.SetStatusLedReversed, [reversed ? 1 : 0]);
+  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
+    throw new Error(t.device.statusLedReverseUnsupported);
+  }
+  assertConfigOk(response);
+  return (response.payload[0] ?? 0) !== 0;
 }
 
 export async function setDeviceLayerEnabled(

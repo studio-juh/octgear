@@ -31,6 +31,7 @@ import {
   setDeviceLayer,
   setDeviceEncoderReversed,
   setDeviceStatusLedBrightness,
+  setDeviceStatusLedReversed,
   setDeviceLayerEnabled,
   setDeviceLayerColor,
   setDeviceKey,
@@ -77,6 +78,7 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
   const [resetModalOpen, setResetModalOpen] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [encoderDirectionUpdating, setEncoderDirectionUpdating] = useState(false);
+  const [statusLedDirectionUpdating, setStatusLedDirectionUpdating] = useState(false);
   const [statusLedBrightness, setStatusLedBrightness] = useState<number>(
     HARDWARE_CONFIG.statusLedBrightness.default,
   );
@@ -222,6 +224,31 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
       setStatus(error instanceof Error ? error.message : t.hardware.encoderDirectionFailed);
     } finally {
       setEncoderDirectionUpdating(false);
+    }
+  }
+
+  async function updateStatusLedReversed(reversed: boolean) {
+    if (!connected || !deviceState) {
+      setStatus(t.connection.deviceNotConnected);
+      return;
+    }
+
+    if (!deviceState.statusLedReversedSupported) {
+      setStatus(t.device.statusLedReverseUnsupported);
+      return;
+    }
+
+    try {
+      setStatusLedDirectionUpdating(true);
+      const saved = await setDeviceStatusLedReversed(transport, reversed);
+      setDeviceState((current) =>
+        current ? { ...current, statusLedReversed: saved } : current,
+      );
+      setStatus(t.hardware.statusLedDirectionUpdated(saved));
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : t.hardware.statusLedDirectionFailed);
+    } finally {
+      setStatusLedDirectionUpdating(false);
     }
   }
 
@@ -630,9 +657,11 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
         <HardwarePanel
           deviceState={deviceState}
           encoderDirectionUpdating={encoderDirectionUpdating}
+          statusLedDirectionUpdating={statusLedDirectionUpdating}
           statusLedBrightness={statusLedBrightness}
           statusLedBrightnessUpdating={statusLedBrightnessUpdating}
           onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
+          onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
           onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
           onStatusLedBrightnessApply={() => void applyStatusLedBrightness()}
         />

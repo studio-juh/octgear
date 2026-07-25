@@ -58,6 +58,9 @@ function validateProfile(value) {
   if (value.externalRgbLed) {
     requireInteger(value.externalRgbLedPin, "externalRgbLedPin");
     requireInteger(value.externalRgbLedCount, "externalRgbLedCount");
+    if (typeof value.externalRgbLedReversed !== "boolean") {
+      throw new Error("externalRgbLedReversed must be a boolean");
+    }
     if (value.externalRgbLedCount < 1 || value.externalRgbLedCount > 255) {
       throw new Error("externalRgbLedCount must be within 1-255");
     }
@@ -198,6 +201,7 @@ constexpr uint8_t DEFAULT_STATUS_LED_BRIGHTNESS = ${profile.statusLedBrightness.
 constexpr uint8_t MAX_STATUS_LED_BRIGHTNESS = ${profile.statusLedBrightness.max};
 constexpr uint8_t EXTERNAL_RGB_LED_PIN = ${profile.externalRgbLedPin};
 constexpr uint8_t EXTERNAL_RGB_LED_COUNT = ${profile.externalRgbLedCount};
+constexpr bool EXTERNAL_RGB_LED_REVERSED = ${profile.externalRgbLedReversed ? "true" : "false"};
 constexpr uint8_t MATRIX_ROW_COUNT = ${profile.matrix.rows.length};
 constexpr uint8_t MATRIX_COLUMN_COUNT = ${profile.matrix.columns.length};
 
@@ -269,6 +273,7 @@ export const HARDWARE_CONFIG = {
   },
   externalRgbLed: ${profile.externalRgbLed ? "true" : "false"},
   externalRgbLedCount: ${profile.externalRgbLedCount},
+  externalRgbLedReversed: ${profile.externalRgbLedReversed ? "true" : "false"},
   oled: ${profile.oled ? "true" : "false"},
   encoder: {
     enabled: ${profile.encoder.enabled ? "true" : "false"},
@@ -332,7 +337,7 @@ The compiled default direction is ${profile.encoder.reversed ? "reversed" : "sta
 
 ## Status LED
 
-外付けWS2812Bのdata inputをGPIO ${profile.externalRgbLedPin}へ接続します。Firmwareは${profile.externalRgbLedCount} pixels分のdataを送り、全pixelへ同じlayer、Remapper、rescue状態を表示します。実装数が少ないchainでは余分なpixel dataは無視されます。Boardに内蔵WS2812がある場合は同じ表示をミラーします。輝度上限は0-${profile.statusLedBrightness.max}で設定でき、既定値は${profile.statusLedBrightness.default}です。
+外付けWS2812Bのdata inputをGPIO ${profile.externalRgbLedPin}へ接続します。Firmwareは${profile.externalRgbLedCount} pixels分のdataを送り、layer、打鍵波紋、Remapper、rescue状態を表示します。実装数が少ないchainでは余分なpixel dataは無視されます。論理上はLED 1を盤面左端として扱い、物理pixel順の既定値は${profile.externalRgbLedReversed ? "反転" : "標準"}です。Remapperから向きを反転して保存できます。Boardに内蔵WS2812がある場合はlayer色をミラーします。輝度上限は0-${profile.statusLedBrightness.max}で設定でき、既定値は${profile.statusLedBrightness.default}です。
 
 | Signal | GPIO | Pixels | Mode |
 | --- | ---: | ---: | --- |

@@ -34,6 +34,7 @@ Physical controls ─────>│ RP2040 firmware              │───�
 - layer count、physical key count、control count
 - default enabled layers
 - default layer RGB colors
+- 外付けWS2812Bのpixel countと既定方向
 
 `scripts/generate-hardware-config.mjs`がprofileを検証し、次の3ファイルを生成します。
 
@@ -54,7 +55,7 @@ Firmware entry pointは`firmware/octgear/octgear/octgear.ino`です。
 | `config.h` | timing、LED、heartbeat、rescue等の手動設定 |
 | `generated_hardware_config.h` | profile由来のpin / count定数 |
 | `key_scanner.*` | Matrix scan / debounce、quadrature decode、control mask生成 |
-| `keymap.*` | RAM上のassignment、active layer、layer RGB color、Encoder方向 |
+| `keymap.*` | RAM上のassignment、active layer、layer RGB color、Encoder方向、LEDテープ方向 |
 | `keymap_storage.*` | 3-sector Flash journalのload / save / CRC / self-test |
 | `key_assignment.*` | assignmentの型とconstructor |
 | `hid_device.*` | USB lifecycle、config command、通常HID出力の調停 |
@@ -62,7 +63,7 @@ Firmware entry pointは`firmware/octgear/octgear/octgear.ino`です。
 | `hid_report_descriptor.*` | Keyboard、Consumer、vendor report descriptor |
 | `readme_drive.*` | rescue boot時のread-only FAT12 MSC |
 | `serial_rescue.*` | rescue boot時の115200 baud command interface |
-| `status_led.*` | USB未mount時に流れるカラーホイール、Remapper接続直後1秒のカラーホイール、layer、rescue状態の表示 |
+| `status_led.*` | USB未mount時に流れるカラーホイール、Remapper接続直後1秒のカラーホイール、layer、打鍵波紋、rescue状態の表示 |
 
 ### Main Loop
 
@@ -92,7 +93,7 @@ Assignmentは`None`、`Keyboard`、`Consumer`、`LayerCycle`、`MomentaryLayer`�
 
 Compile済みdefault keymapはLayer 0/1だけにassignmentを持ち、Layer 2-7は全controlが`None`です。具体的な割り当ては[Firmware Default Keymap](../firmware/octgear/README.md#default-keymap)を参照してください。
 
-起動時はcompile済みdefault keymap、layer設定、Encoder方向をRAMへ作成してから保存領域を読みます。保存領域のmagic、version、layer数、key数、record sizeのいずれかが一致しない場合は、現在のdefault設定を保存して初期化します。
+起動時はcompile済みdefault keymap、layer設定、Encoder方向、LEDテープ方向をRAMへ作成してから保存領域を読みます。保存領域のmagic、version、layer数、key数、record sizeのいずれかが一致しない場合は、現在のdefault設定を保存して初期化します。
 
 ## Web Modules
 

@@ -24,6 +24,7 @@ constexpr uint8_t DEFAULT_STATUS_LED_BRIGHTNESS = 32;
 constexpr uint8_t MAX_STATUS_LED_BRIGHTNESS = 128;
 constexpr uint8_t EXTERNAL_RGB_LED_PIN = 14;
 constexpr uint8_t EXTERNAL_RGB_LED_COUNT = 5;
+constexpr bool EXTERNAL_RGB_LED_REVERSED = false;
 constexpr uint8_t MATRIX_ROW_COUNT = 2;
 constexpr uint8_t MATRIX_COLUMN_COUNT = 4;
 

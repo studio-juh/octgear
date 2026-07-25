@@ -7,9 +7,11 @@ import { t } from "../../shared/i18n";
 type HardwarePanelProps = {
   deviceState: DeviceState | null;
   encoderDirectionUpdating: boolean;
+  statusLedDirectionUpdating: boolean;
   statusLedBrightness: number;
   statusLedBrightnessUpdating: boolean;
   onEncoderReversedChange: (reversed: boolean) => void;
+  onStatusLedReversedChange: (reversed: boolean) => void;
   onStatusLedBrightnessChange: (brightness: number) => void;
   onStatusLedBrightnessApply: () => void;
 };
@@ -17,9 +19,11 @@ type HardwarePanelProps = {
 export function HardwarePanel({
   deviceState,
   encoderDirectionUpdating,
+  statusLedDirectionUpdating,
   statusLedBrightness,
   statusLedBrightnessUpdating,
   onEncoderReversedChange,
+  onStatusLedReversedChange,
   onStatusLedBrightnessChange,
   onStatusLedBrightnessApply,
 }: HardwarePanelProps) {
@@ -57,6 +61,27 @@ export function HardwarePanel({
                 onChange={(event) => onEncoderReversedChange(event.target.checked)}
               />
               <span>{t.hardware.encoderReversed}</span>
+            </label>
+          </dd>
+        </div>
+        <div>
+          <dt>{t.hardware.statusLedDirection}</dt>
+          <dd>
+            <label className="hardware-toggle">
+              <input
+                type="checkbox"
+                checked={
+                  deviceState?.statusLedReversedSupported
+                    ? deviceState.statusLedReversed
+                    : HARDWARE_CONFIG.externalRgbLedReversed
+                }
+                disabled={
+                  !deviceState?.statusLedReversedSupported ||
+                  statusLedDirectionUpdating
+                }
+                onChange={(event) => onStatusLedReversedChange(event.target.checked)}
+              />
+              <span>{t.hardware.statusLedReversed}</span>
             </label>
           </dd>
         </div>

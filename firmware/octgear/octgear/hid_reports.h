@@ -26,6 +26,7 @@ enum class ConfigCommand : uint8_t {
   ResetConfiguration = 0x0E,
   SetEncoderReversed = 0x0F,
   SetStatusLedBrightness = 0x10,
+  SetStatusLedReversed = 0x11,
 };
 
 enum class ConfigStatus : uint8_t {

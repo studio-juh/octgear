@@ -14,7 +14,8 @@ namespace {
 
 constexpr uint8_t STORAGE_MAGIC[4] = { 'C', 'M', '8', 'J' };
 constexpr uint8_t STORAGE_SELF_TEST_MAGIC[4] = { 'C', 'M', '8', 'T' };
-constexpr uint8_t STORAGE_VERSION = 2;
+constexpr uint8_t STORAGE_VERSION = 3;
+constexpr uint8_t LEGACY_STORAGE_VERSION = 2;
 constexpr uint8_t SLOT_COUNT = 3;
 constexpr uint32_t SLOT_SIZE = FLASH_SECTOR_SIZE;
 constexpr uint8_t ASSIGNMENT_RECORD_SIZE = 11;
@@ -22,7 +23,9 @@ constexpr uint8_t LAYER_COLOR_SIZE = 3;
 
 constexpr int GENERATION_ADDRESS = 8;
 constexpr int PAYLOAD_LENGTH_ADDRESS = 12;
-constexpr int ENCODER_REVERSED_ADDRESS = 14;
+constexpr int DEVICE_FLAGS_ADDRESS = 14;
+constexpr uint8_t ENCODER_REVERSED_FLAG = 0x01;
+constexpr uint8_t STATUS_LED_REVERSED_FLAG = 0x02;
 constexpr int STATUS_LED_BRIGHTNESS_ADDRESS = 15;
 constexpr int CRC_ADDRESS = 16;
 constexpr int STORAGE_HEADER_SIZE = 20;
@@ -110,7 +113,7 @@ bool validKind(uint8_t value) {
   return value <= static_cast<uint8_t>(AssignmentKind::LayerPrevious);
 }
 
-bool slotValid(uint8_t slot, SlotKind kind) {
+bool slotValidForVersion(uint8_t slot, SlotKind kind, uint8_t version) {
   const uint8_t* data = slotData(slot);
   const uint8_t* expectedMagic = magicForSlotKind(kind);
   for (uint8_t i = 0; i < sizeof(STORAGE_MAGIC); i++) {
@@ -119,7 +122,7 @@ bool slotValid(uint8_t slot, SlotKind kind) {
     }
   }
 
-  if (data[4] != STORAGE_VERSION ||
+  if (data[4] != version ||
       data[5] != Config::LAYER_COUNT ||
       data[6] != Config::KEY_COUNT ||
       data[7] != ASSIGNMENT_RECORD_SIZE ||
@@ -128,6 +131,15 @@ bool slotValid(uint8_t slot, SlotKind kind) {
   }
 
   return readUint32(data, CRC_ADDRESS) == calculateSlotCrc(data);
+}
+
+bool slotValid(uint8_t slot, SlotKind kind) {
+  return slotValidForVersion(slot, kind, STORAGE_VERSION);
+}
+
+bool slotReadable(uint8_t slot, SlotKind kind) {
+  return slotValid(slot, kind) ||
+         slotValidForVersion(slot, kind, LEGACY_STORAGE_VERSION);
 }
 
 bool generationIsNewer(uint32_t candidate, uint32_t current) {
@@ -140,7 +152,7 @@ int8_t findNewestSlot() {
   uint32_t newestGeneration = 0;
 
   for (uint8_t slot = 0; slot < SLOT_COUNT; slot++) {
-    if (!slotValid(slot, SlotKind::Normal)) {
+    if (!slotReadable(slot, SlotKind::Normal)) {
       continue;
     }
 
@@ -197,7 +209,11 @@ void buildSlotData(uint8_t* data, uint32_t generation, SlotKind kind) {
   data[7] = ASSIGNMENT_RECORD_SIZE;
   writeUint32(data, GENERATION_ADDRESS, generation);
   writeUint16(data, PAYLOAD_LENGTH_ADDRESS, STORAGE_DATA_SIZE - STORAGE_HEADER_SIZE);
-  data[ENCODER_REVERSED_ADDRESS] = encoderReversed() ? 1 : 0;
+  data[DEVICE_FLAGS_ADDRESS] =
+    static_cast<uint8_t>(
+      (encoderReversed() ? ENCODER_REVERSED_FLAG : 0U) |
+      (statusLedReversed() ? STATUS_LED_REVERSED_FLAG : 0U)
+    );
   data[STATUS_LED_BRIGHTNESS_ADDRESS] = statusLedBrightness();
 
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
@@ -266,6 +282,7 @@ bool loadKeymapFromStorage() {
   }
 
   const uint8_t* data = slotData(static_cast<uint8_t>(currentSlot));
+  const bool legacyStorage = data[4] == LEGACY_STORAGE_VERSION;
   KeyAssignment loaded[Config::LAYER_COUNT][Config::KEY_COUNT];
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
@@ -286,8 +303,16 @@ bool loadKeymapFromStorage() {
     const int address = layerColorAddress(layer);
     setLayerColor(layer, { data[address], data[address + 1], data[address + 2] });
   }
-  setEncoderReversed(data[ENCODER_REVERSED_ADDRESS] != 0);
+  setEncoderReversed((data[DEVICE_FLAGS_ADDRESS] & ENCODER_REVERSED_FLAG) != 0);
+  setStatusLedReversed(
+    legacyStorage
+      ? Config::EXTERNAL_RGB_LED_REVERSED
+      : (data[DEVICE_FLAGS_ADDRESS] & STATUS_LED_REVERSED_FLAG) != 0
+  );
   setStatusLedBrightness(data[STATUS_LED_BRIGHTNESS_ADDRESS]);
+  if (legacyStorage) {
+    saveKeymapToStorage();
+  }
   return true;
 }
 
@@ -317,6 +342,10 @@ bool saveEncoderReversedToStorage() {
   return saveKeymapToStorage();
 }
 
+bool saveStatusLedReversedToStorage() {
+  return saveKeymapToStorage();
+}
+
 bool saveStatusLedBrightnessToStorage() {
   return saveKeymapToStorage();
 }
@@ -328,6 +357,8 @@ bool runKeymapStorageSelfTest() {
   const uint8_t backupActiveLayer = activeLayer();
   const bool backupEncoderReversed = encoderReversed();
   const bool patternEncoderReversed = !backupEncoderReversed;
+  const bool backupStatusLedReversed = statusLedReversed();
+  const bool patternStatusLedReversed = !backupStatusLedReversed;
   const uint8_t backupStatusLedBrightness = statusLedBrightness();
   const uint8_t patternStatusLedBrightness = backupStatusLedBrightness == 97 ? 96 : 97;
   const uint8_t patternLayerMask = static_cast<uint8_t>(0x55U & ((1U << Config::LAYER_COUNT) - 1U));
@@ -360,6 +391,7 @@ bool runKeymapStorageSelfTest() {
 
   setEnabledLayerMask(patternLayerMask);
   setEncoderReversed(patternEncoderReversed);
+  setStatusLedReversed(patternStatusLedReversed);
   setStatusLedBrightness(patternStatusLedBrightness);
 
   bool ok = saveCurrentKeymapToStorage(SlotKind::SelfTest);
@@ -368,6 +400,7 @@ bool runKeymapStorageSelfTest() {
     setEnabledLayerMask(0x01);
     resetLayerColors();
     setEncoderReversed(backupEncoderReversed);
+    setStatusLedReversed(backupStatusLedReversed);
     ok = loadKeymapFromStorage();
   }
 
@@ -376,6 +409,10 @@ bool runKeymapStorageSelfTest() {
   }
 
   if (ok && encoderReversed() != patternEncoderReversed) {
+    ok = false;
+  }
+
+  if (ok && statusLedReversed() != patternStatusLedReversed) {
     ok = false;
   }
 
@@ -430,6 +467,7 @@ bool runKeymapStorageSelfTest() {
   setEnabledLayerMask(backupLayerMask);
   setActiveLayer(backupActiveLayer);
   setEncoderReversed(backupEncoderReversed);
+  setStatusLedReversed(backupStatusLedReversed);
   setStatusLedBrightness(backupStatusLedBrightness);
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     setLayerColor(layer, backupLayerColors[layer]);
