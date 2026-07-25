@@ -39,6 +39,9 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 | `IDLE_SCAN_SLEEP_US` | `100` | 通常modeのscan間sleep |
 | `REMAPPER_SCAN_SLEEP_US` | `1000` | Config / rescue modeのscan間sleep |
 | `REMAPPER_HEARTBEAT_TIMEOUT_MS` | `3000` | 通常出力抑止を解除する期限 |
+| `STATUS_LAYER_TRANSITION_MS` | `200` | Layer色を切り替えるフェード時間 |
+| `STATUS_LED_FRAME_MS` | `20` | Layer色フェードの更新間隔 |
+| `STATUS_REMAPPER_ANIMATION_MS` | `1000` | Remapper接続時のカラーホイール表示時間 |
 | `CONFIG_RESPONSE_READY_RETRIES` | `20` | Config input reportのHID ready retry |
 | `CONFIG_RESPONSE_RETRY_DELAY_US` | `100` | Retry間隔 |
 

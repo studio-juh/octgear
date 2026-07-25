@@ -62,7 +62,7 @@ Firmware entry pointは`firmware/octgear/octgear/octgear.ino`です。
 | `hid_report_descriptor.*` | Keyboard、Consumer、vendor report descriptor |
 | `readme_drive.*` | rescue boot時のread-only FAT12 MSC |
 | `serial_rescue.*` | rescue boot時の115200 baud command interface |
-| `status_led.*` | mount、layer、remapper、rescue状態の表示 |
+| `status_led.*` | USB未mount時に流れるカラーホイール、Remapper接続直後1秒のカラーホイール、layer、rescue状態の表示 |
 
 ### Main Loop
 
