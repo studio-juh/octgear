@@ -101,6 +101,14 @@ export const ja = {
       `アニメーション効果: ${["波紋", "無効", "フラッシュ", "スパーク"][animation] ?? animation}`,
     statusKeyAnimationFailed: "アニメーション効果の変更に失敗しました",
     statusKeyAnimationUnsupported: "最新Firmwareが必要です",
+    statusKeyAnimationBrightness: "アニメーション輝度上限",
+    statusKeyAnimationBrightnessValue: "アニメーション輝度上限の数値",
+    statusKeyAnimationBrightnessRange: (max: number) =>
+      `0-${max} / LED輝度上限より高くすると強調`,
+    statusKeyAnimationBrightnessUpdated: (brightness: number) =>
+      `アニメーション輝度上限: ${brightness}`,
+    statusKeyAnimationBrightnessFailed: "アニメーション輝度上限の変更に失敗しました",
+    statusKeyAnimationBrightnessUnsupported: "最新Firmwareが必要です",
     statusLedBrightness: "LED輝度上限",
     statusLedBrightnessValue: "LED輝度上限の数値",
     statusLedBrightnessRange: (max: number) => `0-${max} / 0は消灯`,
@@ -229,6 +237,7 @@ export const ja = {
     statusLedReverseUnsupported: "LEDテープ方向設定に未対応のファームウェアです。最新UF2を書き込んでください",
     statusLedBrightnessUnsupported: "LED輝度設定に未対応のファームウェアです。最新UF2を書き込んでください",
     statusKeyAnimationUnsupported: "アニメーション効果設定に未対応のファームウェアです。最新UF2を書き込んでください",
+    statusKeyAnimationBrightnessUnsupported: "アニメーション輝度設定に未対応のファームウェアです。最新UF2を書き込んでください",
     invalidDiagnosticReport: "診断レポートの内容が一致しません",
     unexpectedResponse: (actual: number, expected: number) =>
       `Unexpected HID response command ${actual}; expected ${expected}`,

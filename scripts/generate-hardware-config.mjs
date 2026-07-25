@@ -57,6 +57,19 @@ function validateProfile(value) {
       value.statusLedBrightness.default > value.statusLedBrightness.max) {
     throw new Error("statusLedBrightness.default must be within 0-statusLedBrightness.max");
   }
+  requireObject(value.statusKeyAnimationBrightness, "statusKeyAnimationBrightness");
+  requireInteger(value.statusKeyAnimationBrightness.default, "statusKeyAnimationBrightness.default");
+  requireInteger(value.statusKeyAnimationBrightness.max, "statusKeyAnimationBrightness.max");
+  if (value.statusKeyAnimationBrightness.max < 0 ||
+      value.statusKeyAnimationBrightness.max > 255) {
+    throw new Error("statusKeyAnimationBrightness.max must be within 0-255");
+  }
+  if (value.statusKeyAnimationBrightness.default < 0 ||
+      value.statusKeyAnimationBrightness.default > value.statusKeyAnimationBrightness.max) {
+    throw new Error(
+      "statusKeyAnimationBrightness.default must be within 0-statusKeyAnimationBrightness.max",
+    );
+  }
   if (!(value.statusLedKeyAnimation in statusLedKeyAnimationValues)) {
     throw new Error("statusLedKeyAnimation must be ripple, disabled, flash, or spark");
   }
@@ -207,6 +220,8 @@ ${profile.defaultLayerColors.map((color) => `  { ${color.join(", ")} },`).join("
 };
 constexpr uint8_t DEFAULT_STATUS_LED_BRIGHTNESS = ${profile.statusLedBrightness.default};
 constexpr uint8_t MAX_STATUS_LED_BRIGHTNESS = ${profile.statusLedBrightness.max};
+constexpr uint8_t DEFAULT_STATUS_KEY_ANIMATION_BRIGHTNESS = ${profile.statusKeyAnimationBrightness.default};
+constexpr uint8_t MAX_STATUS_KEY_ANIMATION_BRIGHTNESS = ${profile.statusKeyAnimationBrightness.max};
 constexpr uint8_t DEFAULT_STATUS_KEY_ANIMATION = ${statusLedKeyAnimationValues[profile.statusLedKeyAnimation]};
 constexpr uint8_t EXTERNAL_RGB_LED_PIN = ${profile.externalRgbLedPin};
 constexpr uint8_t EXTERNAL_RGB_LED_COUNT = ${profile.externalRgbLedCount};
@@ -274,6 +289,10 @@ export const HARDWARE_CONFIG = {
   statusLedBrightness: {
     default: ${profile.statusLedBrightness.default},
     max: ${profile.statusLedBrightness.max},
+  },
+  statusKeyAnimationBrightness: {
+    default: ${profile.statusKeyAnimationBrightness.default},
+    max: ${profile.statusKeyAnimationBrightness.max},
   },
   statusLedKeyAnimation: ${statusLedKeyAnimationValues[profile.statusLedKeyAnimation]},
   matrix: {
@@ -347,7 +366,7 @@ The compiled default direction is ${profile.encoder.reversed ? "reversed" : "sta
 
 ## Status LED
 
-外付けWS2812Bのdata inputをGPIO ${profile.externalRgbLedPin}へ接続します。Firmwareは${profile.externalRgbLedCount} pixels分のdataを送り、layer、打鍵アニメーション、Remapper、rescue状態を表示します。実装数が少ないchainでは余分なpixel dataは無視されます。論理上はLED 1を盤面左端として扱い、物理pixel順の既定値は${profile.externalRgbLedReversed ? "反転" : "標準"}です。Remapperから向きと打鍵アニメーション効果を変更して保存できます。Boardに内蔵WS2812がある場合はlayer色をミラーします。輝度上限は0-${profile.statusLedBrightness.max}で設定でき、既定値は${profile.statusLedBrightness.default}です。
+外付けWS2812Bのdata inputをGPIO ${profile.externalRgbLedPin}へ接続します。Firmwareは${profile.externalRgbLedCount} pixels分のdataを送り、layer、打鍵アニメーション、Remapper、rescue状態を表示します。実装数が少ないchainでは余分なpixel dataは無視されます。論理上はLED 1を盤面左端として扱い、物理pixel順の既定値は${profile.externalRgbLedReversed ? "反転" : "標準"}です。Remapperから向きと打鍵アニメーション効果を変更して保存できます。Boardに内蔵WS2812がある場合はlayer色をミラーします。Layer表示の輝度上限は0-${profile.statusLedBrightness.max}で既定値${profile.statusLedBrightness.default}、打鍵アニメーションの輝度上限は0-${profile.statusKeyAnimationBrightness.max}で既定値${profile.statusKeyAnimationBrightness.default}です。
 
 | Signal | GPIO | Pixels | Mode |
 | --- | ---: | ---: | --- |

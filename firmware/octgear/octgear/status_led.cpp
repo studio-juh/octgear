@@ -42,16 +42,35 @@ Adafruit_NeoPixel statusPixel(
 Adafruit_NeoPixel builtInStatusPixel(1, PIN_NEOPIXEL, NEO_GRB + NEO_KHZ800);
 #endif
 
+uint8_t colorChannel(uint32_t color, uint8_t shift) {
+  return static_cast<uint8_t>((color >> shift) & 0xFFU);
+}
+
+uint8_t scaleChannelForBrightness(uint8_t channel, uint8_t brightness) {
+  return static_cast<uint8_t>(
+    (static_cast<uint16_t>(channel) * brightness + 127U) / 255U
+  );
+}
+
+uint32_t scalePixelColor(uint32_t color, uint8_t brightness) {
+  return statusPixel.Color(
+    scaleChannelForBrightness(colorChannel(color, 16), brightness),
+    scaleChannelForBrightness(colorChannel(color, 8), brightness),
+    scaleChannelForBrightness(colorChannel(color, 0), brightness)
+  );
+}
+
 void showPixelColor(uint32_t color) {
   displayedColor = color;
+  const uint32_t scaledColor = scalePixelColor(color, statusLedBrightness());
   for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
-    statusPixel.setPixelColor(pixel, color);
+    statusPixel.setPixelColor(pixel, scaledColor);
   }
   statusPixel.show();
 
 #if defined(PIN_NEOPIXEL)
   if (PIN_NEOPIXEL != Config::STATUS_LED_PIN) {
-    builtInStatusPixel.setPixelColor(0, color);
+    builtInStatusPixel.setPixelColor(0, scaledColor);
     builtInStatusPixel.show();
   }
 #endif
@@ -88,10 +107,6 @@ void setLayerColorLed(const LayerColor& color) {
   showPixelColor(balancedPixelColor(color.red, color.green, color.blue));
 }
 
-uint8_t colorChannel(uint32_t color, uint8_t shift) {
-  return static_cast<uint8_t>((color >> shift) & 0xFFU);
-}
-
 uint8_t interpolateChannel(uint8_t start, uint8_t target, uint32_t elapsedMs) {
   const int32_t delta = static_cast<int32_t>(target) - start;
   return static_cast<uint8_t>(
@@ -108,18 +123,22 @@ uint32_t interpolatePixelColor(uint32_t start, uint32_t target, uint32_t elapsed
   );
 }
 
-uint8_t blendChannelToWhite(uint8_t channel, uint16_t strength) {
+uint8_t blendChannelToAnimation(uint8_t channel, uint16_t strength) {
+  const uint8_t base =
+    scaleChannelForBrightness(channel, statusLedBrightness());
+  const uint8_t animationLimit = statusKeyAnimationBrightness();
+  const uint8_t target = base > animationLimit ? base : animationLimit;
   return static_cast<uint8_t>(
-    channel +
-    (static_cast<uint16_t>(255U - channel) * strength + 127U) / 255U
+    base +
+    (static_cast<uint16_t>(target - base) * strength + 127U) / 255U
   );
 }
 
-uint32_t blendPixelColorToWhite(uint32_t color, uint16_t strength) {
+uint32_t blendPixelColorToAnimation(uint32_t color, uint16_t strength) {
   return statusPixel.Color(
-    blendChannelToWhite(colorChannel(color, 16), strength),
-    blendChannelToWhite(colorChannel(color, 8), strength),
-    blendChannelToWhite(colorChannel(color, 0), strength)
+    blendChannelToAnimation(colorChannel(color, 16), strength),
+    blendChannelToAnimation(colorChannel(color, 8), strength),
+    blendChannelToAnimation(colorChannel(color, 0), strength)
   );
 }
 
@@ -289,14 +308,17 @@ void updateKeyAnimations() {
   for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
     statusPixel.setPixelColor(
       physicalPixelIndex(pixel),
-      blendPixelColorToWhite(displayedColor, strengths[pixel])
+      blendPixelColorToAnimation(displayedColor, strengths[pixel])
     );
   }
   statusPixel.show();
 
 #if defined(PIN_NEOPIXEL)
   if (PIN_NEOPIXEL != Config::STATUS_LED_PIN) {
-    builtInStatusPixel.setPixelColor(0, displayedColor);
+    builtInStatusPixel.setPixelColor(
+      0,
+      scalePixelColor(displayedColor, statusLedBrightness())
+    );
     builtInStatusPixel.show();
   }
 #endif
@@ -363,14 +385,20 @@ void showFlowingColorWheel(uint8_t position) {
   for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
     statusPixel.setPixelColor(
       physicalPixelIndex(pixel),
-      colorWheel(static_cast<uint8_t>(position + pixel * pixelSpacing))
+      scalePixelColor(
+        colorWheel(static_cast<uint8_t>(position + pixel * pixelSpacing)),
+        statusLedBrightness()
+      )
     );
   }
   statusPixel.show();
 
 #if defined(PIN_NEOPIXEL)
   if (PIN_NEOPIXEL != Config::STATUS_LED_PIN) {
-    builtInStatusPixel.setPixelColor(0, displayedColor);
+    builtInStatusPixel.setPixelColor(
+      0,
+      scalePixelColor(displayedColor, statusLedBrightness())
+    );
     builtInStatusPixel.show();
   }
 #endif
@@ -408,12 +436,12 @@ void updateLayerLed(uint8_t layer) {
 
 void beginStatusLed() {
   statusPixel.begin();
-  statusPixel.setBrightness(statusLedBrightness());
+  statusPixel.setBrightness(255);
 
 #if defined(PIN_NEOPIXEL)
   if (PIN_NEOPIXEL != Config::STATUS_LED_PIN) {
     builtInStatusPixel.begin();
-    builtInStatusPixel.setBrightness(statusLedBrightness());
+    builtInStatusPixel.setBrightness(255);
   }
 #endif
 
@@ -421,12 +449,6 @@ void beginStatusLed() {
 }
 
 void applyStatusLedBrightness() {
-  statusPixel.setBrightness(statusLedBrightness());
-#if defined(PIN_NEOPIXEL)
-  if (PIN_NEOPIXEL != Config::STATUS_LED_PIN) {
-    builtInStatusPixel.setBrightness(statusLedBrightness());
-  }
-#endif
   showPixelColor(displayedColor);
   keyAnimationLastFrameMs = 0;
 }

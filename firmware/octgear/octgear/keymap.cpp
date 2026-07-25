@@ -12,6 +12,8 @@ uint8_t currentEnabledLayerMask = Config::DEFAULT_ENABLED_LAYER_MASK;
 bool currentEncoderReversed = Config::ENCODER_REVERSED;
 bool currentStatusLedReversed = Config::EXTERNAL_RGB_LED_REVERSED;
 uint8_t currentStatusLedBrightness = Config::DEFAULT_STATUS_LED_BRIGHTNESS;
+uint8_t currentStatusKeyAnimationBrightness =
+  Config::DEFAULT_STATUS_KEY_ANIMATION_BRIGHTNESS;
 StatusKeyAnimation currentStatusKeyAnimation =
   static_cast<StatusKeyAnimation>(Config::DEFAULT_STATUS_KEY_ANIMATION);
 LayerColor currentLayerColors[Config::LAYER_COUNT];
@@ -71,6 +73,8 @@ void resetKeymapToDefaults() {
   currentEncoderReversed = Config::ENCODER_REVERSED;
   currentStatusLedReversed = Config::EXTERNAL_RGB_LED_REVERSED;
   currentStatusLedBrightness = Config::DEFAULT_STATUS_LED_BRIGHTNESS;
+  currentStatusKeyAnimationBrightness =
+    Config::DEFAULT_STATUS_KEY_ANIMATION_BRIGHTNESS;
   currentStatusKeyAnimation =
     static_cast<StatusKeyAnimation>(Config::DEFAULT_STATUS_KEY_ANIMATION);
   resetLayerColors();
@@ -128,6 +132,17 @@ void setStatusLedBrightness(uint8_t brightness) {
   currentStatusLedBrightness = brightness > Config::MAX_STATUS_LED_BRIGHTNESS
     ? Config::MAX_STATUS_LED_BRIGHTNESS
     : brightness;
+}
+
+uint8_t statusKeyAnimationBrightness() {
+  return currentStatusKeyAnimationBrightness;
+}
+
+void setStatusKeyAnimationBrightness(uint8_t brightness) {
+  currentStatusKeyAnimationBrightness =
+    brightness > Config::MAX_STATUS_KEY_ANIMATION_BRIGHTNESS
+      ? Config::MAX_STATUS_KEY_ANIMATION_BRIGHTNESS
+      : brightness;
 }
 
 StatusKeyAnimation statusKeyAnimation() {

@@ -103,6 +103,14 @@ export const en: typeof ja = {
       `Animation effect: ${["Ripple", "Off", "Flash", "Spark"][animation] ?? animation}`,
     statusKeyAnimationFailed: "Failed to change animation effect",
     statusKeyAnimationUnsupported: "Latest firmware required",
+    statusKeyAnimationBrightness: "Animation brightness limit",
+    statusKeyAnimationBrightnessValue: "Animation brightness limit value",
+    statusKeyAnimationBrightnessRange: (max) =>
+      `0-${max} / set above LED brightness for contrast`,
+    statusKeyAnimationBrightnessUpdated: (brightness) =>
+      `Animation brightness limit: ${brightness}`,
+    statusKeyAnimationBrightnessFailed: "Failed to change animation brightness limit",
+    statusKeyAnimationBrightnessUnsupported: "Latest firmware required",
     statusLedBrightness: "LED brightness limit",
     statusLedBrightnessValue: "LED brightness limit value",
     statusLedBrightnessRange: (max) => `0-${max} / 0 turns LEDs off`,
@@ -231,6 +239,7 @@ export const en: typeof ja = {
     statusLedReverseUnsupported: "This firmware does not support LED strip direction. Flash the latest UF2.",
     statusLedBrightnessUnsupported: "This firmware does not support LED brightness. Flash the latest UF2.",
     statusKeyAnimationUnsupported: "This firmware does not support animation effects. Flash the latest UF2.",
+    statusKeyAnimationBrightnessUnsupported: "This firmware does not support animation brightness. Flash the latest UF2.",
     invalidDiagnosticReport: "Diagnostic report payload did not match",
     unexpectedResponse: (actual, expected) => `Unexpected HID response command ${actual}; expected ${expected}`,
   },

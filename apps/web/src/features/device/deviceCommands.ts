@@ -31,6 +31,8 @@ export type DeviceState = {
   statusLedBrightnessSupported: boolean;
   statusKeyAnimation: StatusKeyAnimation;
   statusKeyAnimationSupported: boolean;
+  statusKeyAnimationBrightness: number;
+  statusKeyAnimationBrightnessSupported: boolean;
   enabledLayers: boolean[];
 };
 
@@ -89,6 +91,8 @@ export async function getDeviceState(transport: WebHidTransport): Promise<Device
     statusLedReversedSupported: response.payload.length >= 8,
     statusKeyAnimation: decodeStatusKeyAnimation(response.payload[8]),
     statusKeyAnimationSupported: response.payload.length >= 9,
+    statusKeyAnimationBrightness: response.payload[9] ?? 0,
+    statusKeyAnimationBrightnessSupported: response.payload.length >= 10,
     enabledLayers: decodeEnabledLayers(enabledLayerMask, layerCount),
   };
 }
@@ -100,7 +104,10 @@ export async function setDeviceLayer(transport: WebHidTransport, layer: number) 
 
 export async function setDeviceEncoderReversed(transport: WebHidTransport, reversed: boolean) {
   const response = await sendCommand(transport, ConfigCommand.SetEncoderReversed, [reversed ? 1 : 0]);
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
+  if (
+    response.status === ConfigStatus.UnknownCommand ||
+    response.status === ConfigStatus.Unsupported
+  ) {
     throw new Error(t.device.encoderReverseUnsupported);
   }
   assertConfigOk(response);
@@ -109,7 +116,10 @@ export async function setDeviceEncoderReversed(transport: WebHidTransport, rever
 
 export async function setDeviceStatusLedBrightness(transport: WebHidTransport, brightness: number) {
   const response = await sendCommand(transport, ConfigCommand.SetStatusLedBrightness, [brightness]);
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
+  if (
+    response.status === ConfigStatus.UnknownCommand ||
+    response.status === ConfigStatus.Unsupported
+  ) {
     throw new Error(t.device.statusLedBrightnessUnsupported);
   }
   assertConfigOk(response);
@@ -118,7 +128,10 @@ export async function setDeviceStatusLedBrightness(transport: WebHidTransport, b
 
 export async function setDeviceStatusLedReversed(transport: WebHidTransport, reversed: boolean) {
   const response = await sendCommand(transport, ConfigCommand.SetStatusLedReversed, [reversed ? 1 : 0]);
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
+  if (
+    response.status === ConfigStatus.UnknownCommand ||
+    response.status === ConfigStatus.Unsupported
+  ) {
     throw new Error(t.device.statusLedReverseUnsupported);
   }
   assertConfigOk(response);
@@ -135,6 +148,22 @@ export async function setDeviceStatusKeyAnimation(
   }
   assertConfigOk(response);
   return decodeStatusKeyAnimation(response.payload[0] ?? animation);
+}
+
+export async function setDeviceStatusKeyAnimationBrightness(
+  transport: WebHidTransport,
+  brightness: number,
+) {
+  const response = await sendCommand(
+    transport,
+    ConfigCommand.SetStatusKeyAnimationBrightness,
+    [brightness],
+  );
+  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
+    throw new Error(t.device.statusKeyAnimationBrightnessUnsupported);
+  }
+  assertConfigOk(response);
+  return response.payload[0] ?? brightness;
 }
 
 export async function setDeviceLayerEnabled(

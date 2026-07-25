@@ -33,6 +33,7 @@ import {
   setDeviceStatusLedBrightness,
   setDeviceStatusLedReversed,
   setDeviceStatusKeyAnimation,
+  setDeviceStatusKeyAnimationBrightness,
   setDeviceLayerEnabled,
   setDeviceLayerColor,
   setDeviceKey,
@@ -86,6 +87,12 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
   );
   const [statusLedBrightnessUpdating, setStatusLedBrightnessUpdating] = useState(false);
   const [statusKeyAnimationUpdating, setStatusKeyAnimationUpdating] = useState(false);
+  const [statusKeyAnimationBrightness, setStatusKeyAnimationBrightness] =
+    useState<number>(HARDWARE_CONFIG.statusKeyAnimationBrightness.default);
+  const [
+    statusKeyAnimationBrightnessUpdating,
+    setStatusKeyAnimationBrightnessUpdating,
+  ] = useState(false);
   const [status, setStatus] = useState<string>(t.connection.initialStatus);
   const [firmwareStatus, setFirmwareStatus] = useState<string>(t.firmware.initialStatus);
   const [deviceState, setDeviceState] = useState<DeviceState | null>(null);
@@ -175,6 +182,11 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
         state.statusLedBrightnessSupported
           ? state.statusLedBrightness
           : HARDWARE_CONFIG.statusLedBrightness.default,
+      );
+      setStatusKeyAnimationBrightness(
+        state.statusKeyAnimationBrightnessSupported
+          ? state.statusKeyAnimationBrightness
+          : HARDWARE_CONFIG.statusKeyAnimationBrightness.default,
       );
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
@@ -280,6 +292,52 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
     }
   }
 
+  function updateStatusKeyAnimationBrightnessDraft(brightness: number) {
+    setStatusKeyAnimationBrightness(Math.max(
+      0,
+      Math.min(
+        HARDWARE_CONFIG.statusKeyAnimationBrightness.max,
+        Math.trunc(brightness),
+      ),
+    ));
+  }
+
+  async function applyStatusKeyAnimationBrightness() {
+    if (!connected || !deviceState) {
+      setStatus(t.connection.deviceNotConnected);
+      return;
+    }
+
+    if (!deviceState.statusKeyAnimationBrightnessSupported) {
+      setStatus(t.device.statusKeyAnimationBrightnessUnsupported);
+      return;
+    }
+
+    try {
+      setStatusKeyAnimationBrightnessUpdating(true);
+      const saved = await setDeviceStatusKeyAnimationBrightness(
+        transport,
+        statusKeyAnimationBrightness,
+      );
+      setStatusKeyAnimationBrightness(saved);
+      setDeviceState((current) =>
+        current ? { ...current, statusKeyAnimationBrightness: saved } : current,
+      );
+      setStatus(t.hardware.statusKeyAnimationBrightnessUpdated(saved));
+    } catch (error) {
+      setStatusKeyAnimationBrightness(
+        deviceState.statusKeyAnimationBrightness,
+      );
+      setStatus(
+        error instanceof Error
+          ? error.message
+          : t.hardware.statusKeyAnimationBrightnessFailed,
+      );
+    } finally {
+      setStatusKeyAnimationBrightnessUpdating(false);
+    }
+  }
+
   function updateStatusLedBrightnessDraft(brightness: number) {
     setStatusLedBrightness(Math.max(
       0,
@@ -336,6 +394,11 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
         state.statusLedBrightnessSupported
           ? state.statusLedBrightness
           : HARDWARE_CONFIG.statusLedBrightness.default,
+      );
+      setStatusKeyAnimationBrightness(
+        state.statusKeyAnimationBrightnessSupported
+          ? state.statusKeyAnimationBrightness
+          : HARDWARE_CONFIG.statusKeyAnimationBrightness.default,
       );
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
@@ -440,6 +503,11 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
         state.statusLedBrightnessSupported
           ? state.statusLedBrightness
           : HARDWARE_CONFIG.statusLedBrightness.default,
+      );
+      setStatusKeyAnimationBrightness(
+        state.statusKeyAnimationBrightnessSupported
+          ? state.statusKeyAnimationBrightness
+          : HARDWARE_CONFIG.statusKeyAnimationBrightness.default,
       );
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
@@ -689,12 +757,16 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
           statusLedBrightness={statusLedBrightness}
           statusLedBrightnessUpdating={statusLedBrightnessUpdating}
           statusKeyAnimationUpdating={statusKeyAnimationUpdating}
+          statusKeyAnimationBrightness={statusKeyAnimationBrightness}
+          statusKeyAnimationBrightnessUpdating={statusKeyAnimationBrightnessUpdating}
           onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
           onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
           onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
           onStatusLedBrightnessApply={() => void applyStatusLedBrightness()}
           onStatusKeyAnimationChange={(animation) =>
             void updateStatusKeyAnimation(animation)}
+          onStatusKeyAnimationBrightnessChange={updateStatusKeyAnimationBrightnessDraft}
+          onStatusKeyAnimationBrightnessApply={() => void applyStatusKeyAnimationBrightness()}
         />
         <RemapPanel
           activeLayer={activeLayer}

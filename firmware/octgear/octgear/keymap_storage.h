@@ -12,4 +12,5 @@ bool saveEncoderReversedToStorage();
 bool saveStatusLedReversedToStorage();
 bool saveStatusLedBrightnessToStorage();
 bool saveStatusKeyAnimationToStorage();
+bool saveStatusKeyAnimationBrightnessToStorage();
 bool runKeymapStorageSelfTest();

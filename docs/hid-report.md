@@ -48,7 +48,7 @@ byte 3..31  response payload
 
 | Value | Name | Request payload | Response payload |
 | ---: | --- | --- | --- |
-| `0x01` | `GetState` | none | `activeLayer, layerCount, keyCount, matrixRowCount, enabledLayerMask, encoderReversed, statusLedBrightness, statusLedReversed, statusKeyAnimation` |
+| `0x01` | `GetState` | none | `activeLayer, layerCount, keyCount, matrixRowCount, enabledLayerMask, encoderReversed, statusLedBrightness, statusLedReversed, statusKeyAnimation, statusKeyAnimationBrightness` |
 | `0x02` | `SetLayer` | `layer` | `layer` |
 | `0x03` | `GetKey` | `layer, keyIndex` | key assignment payload |
 | `0x04` | `SetKey` | key assignment payload | `layer, keyIndex` |
@@ -66,6 +66,7 @@ byte 3..31  response payload
 | `0x10` | `SetStatusLedBrightness` | `brightness` | `brightness` |
 | `0x11` | `SetStatusLedReversed` | `reversed` | `reversed` |
 | `0x12` | `SetStatusKeyAnimation` | `animation` | `animation` |
+| `0x13` | `SetStatusKeyAnimationBrightness` | `brightness` | `brightness` |
 
 通常の同期commandは、requestと同じcommandをbyte 0に持つresponseを1つ返します。`RemapperHeartbeat`と`EnterBootloader`は例外です。Heartbeatは応答を返さず、bootloader commandはdeviceが再起動するためresponseを待ちません。
 
@@ -87,7 +88,7 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 `encoderReversed`と`reversed`は`0`がprofileの配線どおり、`1`がA/Bの回転eventを反転した状態です。`SetEncoderReversed`は変更をFlashへ即座に保存します。
 
-`statusLedBrightness`と`brightness`は`0-128`です。`0`は消灯、既定値は`32`です。`SetStatusLedBrightness`は変更をFlashへ即座に保存し、外付けWS2812Bと内蔵mirrorへ適用します。
+`statusLedBrightness`と`SetStatusLedBrightness`の`brightness`は`0-128`です。`0`は消灯、既定値は`32`です。変更はFlashへ即座に保存し、通常のLayer表示、カラーホイール、rescue表示、内蔵mirrorへ適用します。
 
 `statusLedReversed`と`SetStatusLedReversed`の`reversed`は、`0`がLED 1をphysical pixel 0へ対応させる標準順、`1`がLED 1を最後のphysical pixelへ対応させる反転順です。変更はFlashへ即座に保存し、USB未mount時の流れるカラーホイールと位置依存の打鍵アニメーションへ適用します。
 
@@ -97,7 +98,11 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 旧firmwareの`GetState` responseに9 byte目がない場合、Webは打鍵アニメーション設定を未対応として扱います。
 
-`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、打鍵アニメーションをcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerはLayer 0へ戻ります。
+`statusKeyAnimationBrightness`と`SetStatusKeyAnimationBrightness`の`brightness`は`0-128`です。既定値は`96`で、アニメーションの白色ハイライトだけに適用します。Layer側の`statusLedBrightness`より高く設定すると、光っていないpixelの明るさを変えずにコントラストを強められます。`0`ではアニメーション効果を選択したままハイライトだけを消せます。変更はFlashへ即座に保存します。
+
+旧firmwareの`GetState` responseに10 byte目がない場合、Webはアニメーション輝度設定を未対応として扱います。
+
+`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、打鍵アニメーション、アニメーション輝度上限をcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerはLayer 0へ戻ります。
 
 ## Session Lifecycle
 

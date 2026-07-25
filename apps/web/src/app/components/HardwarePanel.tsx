@@ -14,11 +14,15 @@ type HardwarePanelProps = {
   statusLedBrightness: number;
   statusLedBrightnessUpdating: boolean;
   statusKeyAnimationUpdating: boolean;
+  statusKeyAnimationBrightness: number;
+  statusKeyAnimationBrightnessUpdating: boolean;
   onEncoderReversedChange: (reversed: boolean) => void;
   onStatusLedReversedChange: (reversed: boolean) => void;
   onStatusLedBrightnessChange: (brightness: number) => void;
   onStatusLedBrightnessApply: () => void;
   onStatusKeyAnimationChange: (animation: StatusKeyAnimation) => void;
+  onStatusKeyAnimationBrightnessChange: (brightness: number) => void;
+  onStatusKeyAnimationBrightnessApply: () => void;
 };
 
 export function HardwarePanel({
@@ -28,16 +32,25 @@ export function HardwarePanel({
   statusLedBrightness,
   statusLedBrightnessUpdating,
   statusKeyAnimationUpdating,
+  statusKeyAnimationBrightness,
+  statusKeyAnimationBrightnessUpdating,
   onEncoderReversedChange,
   onStatusLedReversedChange,
   onStatusLedBrightnessChange,
   onStatusLedBrightnessApply,
   onStatusKeyAnimationChange,
+  onStatusKeyAnimationBrightnessChange,
+  onStatusKeyAnimationBrightnessApply,
 }: HardwarePanelProps) {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const brightnessSupported = deviceState?.statusLedBrightnessSupported ?? false;
   const brightnessChanged =
     brightnessSupported && statusLedBrightness !== deviceState?.statusLedBrightness;
+  const animationBrightnessSupported =
+    deviceState?.statusKeyAnimationBrightnessSupported ?? false;
+  const animationBrightnessChanged =
+    animationBrightnessSupported &&
+    statusKeyAnimationBrightness !== deviceState?.statusKeyAnimationBrightness;
 
   return (
     <aside className="panel hardware-panel">
@@ -127,6 +140,58 @@ export function HardwarePanel({
             {!deviceState?.statusKeyAnimationSupported && (
               <small>{t.hardware.statusKeyAnimationUnsupported}</small>
             )}
+          </dd>
+        </div>
+        <div className="hardware-brightness-row">
+          <dt>{t.hardware.statusKeyAnimationBrightness}</dt>
+          <dd>
+            <div className="hardware-brightness-control">
+              <input
+                type="range"
+                min={0}
+                max={HARDWARE_CONFIG.statusKeyAnimationBrightness.max}
+                value={statusKeyAnimationBrightness}
+                aria-label={t.hardware.statusKeyAnimationBrightness}
+                disabled={
+                  !animationBrightnessSupported ||
+                  statusKeyAnimationBrightnessUpdating
+                }
+                onChange={(event) =>
+                  onStatusKeyAnimationBrightnessChange(Number(event.target.value))}
+              />
+              <input
+                type="number"
+                min={0}
+                max={HARDWARE_CONFIG.statusKeyAnimationBrightness.max}
+                value={statusKeyAnimationBrightness}
+                aria-label={t.hardware.statusKeyAnimationBrightnessValue}
+                disabled={
+                  !animationBrightnessSupported ||
+                  statusKeyAnimationBrightnessUpdating
+                }
+                onChange={(event) =>
+                  onStatusKeyAnimationBrightnessChange(Number(event.target.value))}
+              />
+              <button
+                type="button"
+                disabled={
+                  !animationBrightnessChanged ||
+                  statusKeyAnimationBrightnessUpdating
+                }
+                onClick={onStatusKeyAnimationBrightnessApply}
+              >
+                {statusKeyAnimationBrightnessUpdating
+                  ? t.hardware.applying
+                  : t.hardware.apply}
+              </button>
+            </div>
+            <small>
+              {animationBrightnessSupported
+                ? t.hardware.statusKeyAnimationBrightnessRange(
+                    HARDWARE_CONFIG.statusKeyAnimationBrightness.max,
+                  )
+                : t.hardware.statusKeyAnimationBrightnessUnsupported}
+            </small>
           </dd>
         </div>
         <div className="hardware-brightness-row">

@@ -14,8 +14,9 @@ namespace {
 
 constexpr uint8_t STORAGE_MAGIC[4] = { 'C', 'M', '8', 'J' };
 constexpr uint8_t STORAGE_SELF_TEST_MAGIC[4] = { 'C', 'M', '8', 'T' };
-constexpr uint8_t STORAGE_VERSION = 3;
-constexpr uint8_t LEGACY_STORAGE_VERSION = 2;
+constexpr uint8_t STORAGE_VERSION = 4;
+constexpr uint8_t LEGACY_STORAGE_VERSION_3 = 3;
+constexpr uint8_t LEGACY_STORAGE_VERSION_2 = 2;
 constexpr uint8_t SLOT_COUNT = 3;
 constexpr uint32_t SLOT_SIZE = FLASH_SECTOR_SIZE;
 constexpr uint8_t ASSIGNMENT_RECORD_SIZE = 11;
@@ -35,7 +36,10 @@ constexpr int ASSIGNMENTS_ADDRESS = STORAGE_HEADER_SIZE;
 constexpr int ENABLED_LAYER_MASK_ADDRESS =
   ASSIGNMENTS_ADDRESS + (Config::LAYER_COUNT * Config::KEY_COUNT * ASSIGNMENT_RECORD_SIZE);
 constexpr int LAYER_COLORS_ADDRESS = ENABLED_LAYER_MASK_ADDRESS + 1;
-constexpr int STORAGE_DATA_SIZE = LAYER_COLORS_ADDRESS + (Config::LAYER_COUNT * LAYER_COLOR_SIZE);
+constexpr int LEGACY_STORAGE_DATA_SIZE =
+  LAYER_COLORS_ADDRESS + (Config::LAYER_COUNT * LAYER_COLOR_SIZE);
+constexpr int STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS = LEGACY_STORAGE_DATA_SIZE;
+constexpr int STORAGE_DATA_SIZE = STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS + 1;
 constexpr int PROGRAM_SIZE = ((STORAGE_DATA_SIZE + FLASH_PAGE_SIZE - 1) / FLASH_PAGE_SIZE) * FLASH_PAGE_SIZE;
 
 static_assert(STORAGE_DATA_SIZE <= static_cast<int>(SLOT_SIZE), "Keymap must fit in one flash sector");
@@ -105,10 +109,18 @@ uint32_t updateCrc32(uint32_t crc, const uint8_t* data, size_t length) {
   return crc;
 }
 
-uint32_t calculateSlotCrc(const uint8_t* data) {
+uint32_t calculateSlotCrc(const uint8_t* data, int storageDataSize) {
   uint32_t crc = updateCrc32(0xFFFFFFFFUL, data, CRC_ADDRESS);
-  crc = updateCrc32(crc, data + STORAGE_HEADER_SIZE, STORAGE_DATA_SIZE - STORAGE_HEADER_SIZE);
+  crc = updateCrc32(
+    crc,
+    data + STORAGE_HEADER_SIZE,
+    storageDataSize - STORAGE_HEADER_SIZE
+  );
   return crc ^ 0xFFFFFFFFUL;
+}
+
+int storageDataSizeForVersion(uint8_t version) {
+  return version == STORAGE_VERSION ? STORAGE_DATA_SIZE : LEGACY_STORAGE_DATA_SIZE;
 }
 
 bool validKind(uint8_t value) {
@@ -118,6 +130,7 @@ bool validKind(uint8_t value) {
 bool slotValidForVersion(uint8_t slot, SlotKind kind, uint8_t version) {
   const uint8_t* data = slotData(slot);
   const uint8_t* expectedMagic = magicForSlotKind(kind);
+  const int storageDataSize = storageDataSizeForVersion(version);
   for (uint8_t i = 0; i < sizeof(STORAGE_MAGIC); i++) {
     if (data[i] != expectedMagic[i]) {
       return false;
@@ -128,11 +141,11 @@ bool slotValidForVersion(uint8_t slot, SlotKind kind, uint8_t version) {
       data[5] != Config::LAYER_COUNT ||
       data[6] != Config::KEY_COUNT ||
       data[7] != ASSIGNMENT_RECORD_SIZE ||
-      readUint16(data, PAYLOAD_LENGTH_ADDRESS) != STORAGE_DATA_SIZE - STORAGE_HEADER_SIZE) {
+      readUint16(data, PAYLOAD_LENGTH_ADDRESS) != storageDataSize - STORAGE_HEADER_SIZE) {
     return false;
   }
 
-  return readUint32(data, CRC_ADDRESS) == calculateSlotCrc(data);
+  return readUint32(data, CRC_ADDRESS) == calculateSlotCrc(data, storageDataSize);
 }
 
 bool slotValid(uint8_t slot, SlotKind kind) {
@@ -141,7 +154,8 @@ bool slotValid(uint8_t slot, SlotKind kind) {
 
 bool slotReadable(uint8_t slot, SlotKind kind) {
   return slotValid(slot, kind) ||
-         slotValidForVersion(slot, kind, LEGACY_STORAGE_VERSION);
+         slotValidForVersion(slot, kind, LEGACY_STORAGE_VERSION_3) ||
+         slotValidForVersion(slot, kind, LEGACY_STORAGE_VERSION_2);
 }
 
 bool generationIsNewer(uint32_t candidate, uint32_t current) {
@@ -221,6 +235,8 @@ void buildSlotData(uint8_t* data, uint32_t generation, SlotKind kind) {
       )
     );
   data[STATUS_LED_BRIGHTNESS_ADDRESS] = statusLedBrightness();
+  data[STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS] =
+    statusKeyAnimationBrightness();
 
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
@@ -236,7 +252,7 @@ void buildSlotData(uint8_t* data, uint32_t generation, SlotKind kind) {
     data[address + 1] = color.green;
     data[address + 2] = color.blue;
   }
-  writeUint32(data, CRC_ADDRESS, calculateSlotCrc(data));
+  writeUint32(data, CRC_ADDRESS, calculateSlotCrc(data, STORAGE_DATA_SIZE));
 }
 
 bool writeSlot(uint8_t slot, const uint8_t* data, SlotKind kind) {
@@ -288,7 +304,8 @@ bool loadKeymapFromStorage() {
   }
 
   const uint8_t* data = slotData(static_cast<uint8_t>(currentSlot));
-  const bool legacyStorage = data[4] == LEGACY_STORAGE_VERSION;
+  const uint8_t storageVersion = data[4];
+  const bool version2Storage = storageVersion == LEGACY_STORAGE_VERSION_2;
   KeyAssignment loaded[Config::LAYER_COUNT][Config::KEY_COUNT];
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
@@ -311,20 +328,25 @@ bool loadKeymapFromStorage() {
   }
   setEncoderReversed((data[DEVICE_FLAGS_ADDRESS] & ENCODER_REVERSED_FLAG) != 0);
   setStatusLedReversed(
-    legacyStorage
+    version2Storage
       ? Config::EXTERNAL_RGB_LED_REVERSED
       : (data[DEVICE_FLAGS_ADDRESS] & STATUS_LED_REVERSED_FLAG) != 0
   );
   setStatusLedBrightness(data[STATUS_LED_BRIGHTNESS_ADDRESS]);
   setStatusKeyAnimation(
-    legacyStorage
+    version2Storage
       ? static_cast<StatusKeyAnimation>(Config::DEFAULT_STATUS_KEY_ANIMATION)
       : static_cast<StatusKeyAnimation>(
           (data[DEVICE_FLAGS_ADDRESS] & STATUS_KEY_ANIMATION_MASK) >>
           STATUS_KEY_ANIMATION_SHIFT
         )
   );
-  if (legacyStorage) {
+  setStatusKeyAnimationBrightness(
+    storageVersion == STORAGE_VERSION
+      ? data[STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS]
+      : Config::DEFAULT_STATUS_KEY_ANIMATION_BRIGHTNESS
+  );
+  if (storageVersion != STORAGE_VERSION) {
     saveKeymapToStorage();
   }
   return true;
@@ -368,6 +390,10 @@ bool saveStatusKeyAnimationToStorage() {
   return saveKeymapToStorage();
 }
 
+bool saveStatusKeyAnimationBrightnessToStorage() {
+  return saveKeymapToStorage();
+}
+
 bool runKeymapStorageSelfTest() {
   KeyAssignment backup[Config::LAYER_COUNT][Config::KEY_COUNT];
   KeyAssignment pattern[Config::LAYER_COUNT][Config::KEY_COUNT];
@@ -384,6 +410,10 @@ bool runKeymapStorageSelfTest() {
     backupStatusKeyAnimation == StatusKeyAnimation::Spark
       ? StatusKeyAnimation::Flash
       : StatusKeyAnimation::Spark;
+  const uint8_t backupStatusKeyAnimationBrightness =
+    statusKeyAnimationBrightness();
+  const uint8_t patternStatusKeyAnimationBrightness =
+    backupStatusKeyAnimationBrightness == 91 ? 90 : 91;
   const uint8_t patternLayerMask = static_cast<uint8_t>(0x55U & ((1U << Config::LAYER_COUNT) - 1U));
   LayerColor backupLayerColors[Config::LAYER_COUNT];
   LayerColor patternLayerColors[Config::LAYER_COUNT];
@@ -417,6 +447,7 @@ bool runKeymapStorageSelfTest() {
   setStatusLedReversed(patternStatusLedReversed);
   setStatusLedBrightness(patternStatusLedBrightness);
   setStatusKeyAnimation(patternStatusKeyAnimation);
+  setStatusKeyAnimationBrightness(patternStatusKeyAnimationBrightness);
 
   bool ok = saveCurrentKeymapToStorage(SlotKind::SelfTest);
   if (ok) {
@@ -426,6 +457,7 @@ bool runKeymapStorageSelfTest() {
     setEncoderReversed(backupEncoderReversed);
     setStatusLedReversed(backupStatusLedReversed);
     setStatusKeyAnimation(backupStatusKeyAnimation);
+    setStatusKeyAnimationBrightness(backupStatusKeyAnimationBrightness);
     ok = loadKeymapFromStorage();
   }
 
@@ -446,6 +478,13 @@ bool runKeymapStorageSelfTest() {
   }
 
   if (ok && statusKeyAnimation() != patternStatusKeyAnimation) {
+    ok = false;
+  }
+
+  if (
+    ok &&
+    statusKeyAnimationBrightness() != patternStatusKeyAnimationBrightness
+  ) {
     ok = false;
   }
 
@@ -499,6 +538,7 @@ bool runKeymapStorageSelfTest() {
   setStatusLedReversed(backupStatusLedReversed);
   setStatusLedBrightness(backupStatusLedBrightness);
   setStatusKeyAnimation(backupStatusKeyAnimation);
+  setStatusKeyAnimationBrightness(backupStatusKeyAnimationBrightness);
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     setLayerColor(layer, backupLayerColors[layer]);
   }

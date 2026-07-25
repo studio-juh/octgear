@@ -16,6 +16,10 @@
     "default": 32,
     "max": 128
   },
+  "statusKeyAnimationBrightness": {
+    "default": 96,
+    "max": 128
+  },
   "statusLedKeyAnimation": "ripple",
   "externalRgbLed": true,
   "externalRgbLedPin": 14,

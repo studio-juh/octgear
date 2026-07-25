@@ -34,6 +34,8 @@ bool statusLedReversed();
 void setStatusLedReversed(bool reversed);
 uint8_t statusLedBrightness();
 void setStatusLedBrightness(uint8_t brightness);
+uint8_t statusKeyAnimationBrightness();
+void setStatusKeyAnimationBrightness(uint8_t brightness);
 StatusKeyAnimation statusKeyAnimation();
 bool setStatusKeyAnimation(StatusKeyAnimation animation);
 const KeyAssignment& assignmentFor(uint8_t layer, uint8_t keyIndex);

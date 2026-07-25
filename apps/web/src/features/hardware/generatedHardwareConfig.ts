@@ -28,6 +28,10 @@ export const HARDWARE_CONFIG = {
     default: 32,
     max: 128,
   },
+  statusKeyAnimationBrightness: {
+    default: 96,
+    max: 128,
+  },
   statusLedKeyAnimation: 0,
   matrix: {
     rowCount: 2,
