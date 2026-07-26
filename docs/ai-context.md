@@ -46,7 +46,7 @@ RP2040 firmware
 | Firmware timingと手動設定 | `firmware/octgear/octgear/config.h` | Firmware behavior |
 | Default keymap | `firmware/octgear/octgear/keymap.cpp` | Firmware README |
 | HID commandsとpayload | Firmware `hid_reports.h` + handler、Web protocol | `docs/hid-report.md` |
-| Web device identity filter | `apps/web/src/features/device/usbIdentity.ts` | Firmware build identity、README |
+| Web product routes / assets / device identity / UF2 | `apps/web/src/products/octgear/product.ts` | Firmware build identity、README |
 | Japanese / English UI copy | `apps/web/src/shared/i18n/ja.ts`, `en.ts` | React components |
 | Rescue commands | `firmware/octgear/octgear/rescue.cmd` | generated header、UF2 bundle |
 

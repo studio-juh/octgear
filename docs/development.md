@@ -71,7 +71,7 @@ pnpm build
 
 ```text
 firmware/octgear/octgear/generated_hardware_config.h
-apps/web/src/features/hardware/generatedHardwareConfig.ts
+apps/web/src/products/octgear/generatedHardwareConfig.ts
 hardware/octgear/pinout.md
 ```
 
@@ -112,7 +112,7 @@ VID/PIDを変えた場合、WebHID filterも同時に更新しないとRemapper�
 | pin / control / layer metadata | `hardware/octgear/profile.json` | generated hardware files |
 | debounce / sleep / LED / rescue toggle | firmware `config.h` | generated header |
 | USB identity defaults | firmware build scripts | compiled UF2 |
-| WebHID accepted identity | Web `usbIdentity.ts` | transport code |
+| WebHID accepted identity | Web product definition `products/octgear/product.ts` | transport code |
 | HID wire protocol | firmware + Web protocol modules | one side only |
 | UI copy | `src/shared/i18n/ja.ts` and `en.ts` | component-local literals |
 

@@ -1,13 +1,24 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const rootDir = join(dirname(fileURLToPath(import.meta.url)), "..");
-const profilePath = join(rootDir, "hardware/octgear/profile.json");
-const firmwareOut = join(rootDir, "firmware/octgear/octgear/generated_hardware_config.h");
-const webOut = join(rootDir, "apps/web/src/features/hardware/generatedHardwareConfig.ts");
-const pinoutOut = join(rootDir, "hardware/octgear/pinout.md");
+const productId = process.argv[2] ?? "octgear";
+if (!/^[a-z0-9][a-z0-9-]*$/.test(productId)) {
+  throw new Error("product id must use lowercase letters, numbers, and hyphens");
+}
+
+const profilePath = join(rootDir, `hardware/${productId}/profile.json`);
+const firmwareOut = join(
+  rootDir,
+  `firmware/${productId}/${productId}/generated_hardware_config.h`,
+);
+const webOut = join(
+  rootDir,
+  `apps/web/src/products/${productId}/generatedHardwareConfig.ts`,
+);
+const pinoutOut = join(rootDir, `hardware/${productId}/pinout.md`);
 const statusLedKeyAnimationValues = {
   ripple: 0,
   disabled: 1,
@@ -31,6 +42,7 @@ const defaultEnabledLayerMask = profile.defaultEnabledLayers.reduce(
   (mask, layer) => mask | (1 << layer),
   0,
 );
+mkdirSync(dirname(webOut), { recursive: true });
 writeFileSync(firmwareOut, firmwareHeader(), "utf8");
 writeFileSync(webOut, webConfig(), "utf8");
 writeFileSync(pinoutOut, pinoutMarkdown(), "utf8");
@@ -203,7 +215,7 @@ function registerPin(usedPins, pin, name) {
 }
 
 function firmwareHeader() {
-  return `// Generated from hardware/octgear/profile.json. Do not edit by hand.
+  return `// Generated from hardware/${productId}/profile.json. Do not edit by hand.
 #pragma once
 
 #include <Arduino.h>
@@ -269,7 +281,7 @@ function webConfig() {
     `  { id: ${json(control.id)}, label: ${json(control.label)}, bit: ${control.firmwareIndex}, kind: ${json(control.kind)} },`
   ).join("\n");
 
-  return `// Generated from hardware/octgear/profile.json. Do not edit by hand.
+  return `// Generated from hardware/${productId}/profile.json. Do not edit by hand.
 
 const keyControls = [
 ${keyControls}
@@ -331,7 +343,7 @@ function pinoutMarkdown() {
 
 現行8キー + ロータリーエンコーダ版のファームウェアとPCB設計を合わせるためのピン割り当てです。
 
-この表は \`hardware/octgear/profile.json\` から生成します。
+この表は \`hardware/${productId}/profile.json\` から生成します。
 
 ## Key Matrix
 

@@ -3,8 +3,8 @@ import {
   StatusKeyAnimation,
   type DeviceState,
 } from "../../features/device/deviceCommands";
-import { OCTGEAR_USB, formatUsbId } from "../../features/device/usbIdentity";
-import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
+import { formatUsbId } from "../../features/device/usbIdentity";
+import { useProductDefinition } from "../../products/ProductContext";
 import { t } from "../../shared/i18n";
 
 type HardwarePanelProps = {
@@ -42,6 +42,7 @@ export function HardwarePanel({
   onStatusKeyAnimationBrightnessChange,
   onStatusKeyAnimationBrightnessApply,
 }: HardwarePanelProps) {
+  const { hardware, usbIdentity } = useProductDefinition();
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const brightnessSupported = deviceState?.statusLedBrightnessSupported ?? false;
   const brightnessChanged =
@@ -76,7 +77,7 @@ export function HardwarePanel({
             <label className="hardware-toggle">
               <input
                 type="checkbox"
-                checked={deviceState?.encoderReversed ?? HARDWARE_CONFIG.encoder.reversed}
+                checked={deviceState?.encoderReversed ?? hardware.encoder.reversed}
                 disabled={!deviceState || encoderDirectionUpdating}
                 onChange={(event) => onEncoderReversedChange(event.target.checked)}
               />
@@ -93,7 +94,7 @@ export function HardwarePanel({
                 checked={
                   deviceState?.statusLedReversedSupported
                     ? deviceState.statusLedReversed
-                    : HARDWARE_CONFIG.externalRgbLedReversed
+                    : hardware.externalRgbLedReversed
                 }
                 disabled={
                   !deviceState?.statusLedReversedSupported ||
@@ -112,7 +113,7 @@ export function HardwarePanel({
               value={
                 deviceState?.statusKeyAnimationSupported
                   ? deviceState.statusKeyAnimation
-                  : HARDWARE_CONFIG.statusLedKeyAnimation
+                  : hardware.statusLedKeyAnimation
               }
               aria-label={t.hardware.statusKeyAnimation}
               disabled={
@@ -149,7 +150,7 @@ export function HardwarePanel({
               <input
                 type="range"
                 min={0}
-                max={HARDWARE_CONFIG.statusKeyAnimationBrightness.max}
+                max={hardware.statusKeyAnimationBrightness.max}
                 value={statusKeyAnimationBrightness}
                 aria-label={t.hardware.statusKeyAnimationBrightness}
                 disabled={
@@ -162,7 +163,7 @@ export function HardwarePanel({
               <input
                 type="number"
                 min={0}
-                max={HARDWARE_CONFIG.statusKeyAnimationBrightness.max}
+                max={hardware.statusKeyAnimationBrightness.max}
                 value={statusKeyAnimationBrightness}
                 aria-label={t.hardware.statusKeyAnimationBrightnessValue}
                 disabled={
@@ -188,7 +189,7 @@ export function HardwarePanel({
             <small>
               {animationBrightnessSupported
                 ? t.hardware.statusKeyAnimationBrightnessRange(
-                    HARDWARE_CONFIG.statusKeyAnimationBrightness.max,
+                    hardware.statusKeyAnimationBrightness.max,
                   )
                 : t.hardware.statusKeyAnimationBrightnessUnsupported}
             </small>
@@ -201,7 +202,7 @@ export function HardwarePanel({
               <input
                 type="range"
                 min={0}
-                max={HARDWARE_CONFIG.statusLedBrightness.max}
+                max={hardware.statusLedBrightness.max}
                 value={statusLedBrightness}
                 aria-label={t.hardware.statusLedBrightness}
                 disabled={!brightnessSupported || statusLedBrightnessUpdating}
@@ -210,7 +211,7 @@ export function HardwarePanel({
               <input
                 type="number"
                 min={0}
-                max={HARDWARE_CONFIG.statusLedBrightness.max}
+                max={hardware.statusLedBrightness.max}
                 value={statusLedBrightness}
                 aria-label={t.hardware.statusLedBrightnessValue}
                 disabled={!brightnessSupported || statusLedBrightnessUpdating}
@@ -226,7 +227,7 @@ export function HardwarePanel({
             </div>
             <small>
               {brightnessSupported
-                ? t.hardware.statusLedBrightnessRange(HARDWARE_CONFIG.statusLedBrightness.max)
+                ? t.hardware.statusLedBrightnessRange(hardware.statusLedBrightness.max)
                 : t.hardware.statusLedBrightnessUnsupported}
             </small>
           </dd>
@@ -235,18 +236,18 @@ export function HardwarePanel({
       <dl id="hardware-profile-details" hidden={!detailsExpanded}>
         <div>
           <dt>{t.hardware.keys}</dt>
-          <dd>{HARDWARE_CONFIG.physicalKeyCount}</dd>
+          <dd>{hardware.physicalKeyCount}</dd>
         </div>
         <div>
           <dt>{t.hardware.encoder}</dt>
-          <dd>{t.hardware.encoderValue(HARDWARE_CONFIG.encoder.pinCount)}</dd>
+          <dd>{t.hardware.encoderValue(hardware.encoder.pinCount)}</dd>
         </div>
         <div>
           <dt>{t.hardware.matrix}</dt>
           <dd>{t.hardware.matrixValue(
-            deviceState?.matrixRowCount ?? HARDWARE_CONFIG.matrix.rowCount,
-            HARDWARE_CONFIG.matrix.columnCount,
-            HARDWARE_CONFIG.matrix.diodeDirection,
+            deviceState?.matrixRowCount ?? hardware.matrix.rowCount,
+            hardware.matrix.columnCount,
+            hardware.matrix.diodeDirection,
           )}</dd>
         </div>
         <div>
@@ -260,14 +261,14 @@ export function HardwarePanel({
         <div>
           <dt>{t.hardware.usbId}</dt>
           <dd>
-            {formatUsbId(OCTGEAR_USB.vendorId)}:{formatUsbId(OCTGEAR_USB.productId)}
+            {formatUsbId(usbIdentity.vendorId)}:{formatUsbId(usbIdentity.productId)}
           </dd>
         </div>
         <div>
           <dt>{t.hardware.externalRgb}</dt>
           <dd>
-            {HARDWARE_CONFIG.externalRgbLed
-              ? t.hardware.externalRgbValue(HARDWARE_CONFIG.externalRgbLedCount)
+            {hardware.externalRgbLed
+              ? t.hardware.externalRgbValue(hardware.externalRgbLedCount)
               : t.hardware.none}
           </dd>
         </div>

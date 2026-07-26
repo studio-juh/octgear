@@ -346,7 +346,7 @@
   position: relative;
   isolation: isolate;
   width: 100%;
-  aspect-ratio: 2 / 1;
+  aspect-ratio: var(--guide-board-aspect-ratio, 2 / 1);
 }
 
 .guide-device-outline {
@@ -373,8 +373,10 @@
   align-content: center;
   justify-items: center;
   gap: 1px;
-  width: 11.7%;
-  height: 23.4%;
+  top: var(--guide-key-top);
+  left: var(--guide-key-left);
+  width: var(--guide-key-width, 11.7%);
+  height: var(--guide-key-height, 23.4%);
   border: clamp(1px, 0.3vw, 3px) solid rgba(255, 255, 255, 0.42);
   border-radius: clamp(5px, 1vw, 9px);
   background: #b86d58;
@@ -393,61 +395,18 @@
   opacity: 0.72;
 }
 
-.guide-device-key:nth-child(1),
-.guide-device-key:nth-child(5) {
+.guide-device-key[data-tone="light"] {
   background: #eef0dd;
   color: #4b493e;
 }
 
-.guide-device-key:nth-child(1) {
-  top: 17%;
-  left: 7.85%;
-  width: 14.625%;
-}
-
-.guide-device-key:nth-child(2) {
-  top: 17%;
-  left: 27.2%;
-}
-
-.guide-device-key:nth-child(3) {
-  top: 17%;
-  left: 42.9%;
-}
-
-.guide-device-key:nth-child(4) {
-  top: 17%;
-  left: 58.6%;
-}
-
-.guide-device-key:nth-child(5) {
-  top: 48.5%;
-  left: 8.475%;
-  width: 17.55%;
-}
-
-.guide-device-key:nth-child(6) {
-  top: 48.5%;
-  left: 31.4%;
-}
-
-.guide-device-key:nth-child(7) {
-  top: 48.5%;
-  left: 47.1%;
-}
-
-.guide-device-key:nth-child(8) {
-  top: 48.5%;
-  left: 62.8%;
-}
-
 .guide-device-encoder {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: var(--guide-encoder-right, 0);
+  bottom: var(--guide-encoder-bottom, 0);
   display: grid;
   place-items: center;
-  width: 21%;
+  width: var(--guide-encoder-width, 21%);
   aspect-ratio: 1;
   padding: clamp(5px, 1.6vw, 14px);
   border: clamp(3px, 0.55vw, 5px) solid rgba(255, 255, 255, 0.34);

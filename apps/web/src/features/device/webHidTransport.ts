@@ -1,6 +1,6 @@
 import type { HidConnectionEvent, HidDevice, HidInputReportEvent, HidNavigator } from "./webHidTypes";
 import { CONFIG_REPORT_ID } from "./hidProtocol";
-import { OCTGEAR_USB } from "./usbIdentity";
+import type { UsbIdentity } from "./usbIdentity";
 import { t } from "../../shared/i18n";
 
 export type ConfigReportListener = (report: Uint8Array) => void;
@@ -8,18 +8,20 @@ export type ConfigReportListener = (report: Uint8Array) => void;
 export class WebHidTransport {
   private device: HidDevice | null = null;
 
+  constructor(private readonly identity: UsbIdentity) {}
+
   get connected() {
     return this.device?.opened ?? false;
   }
 
   async requestDevice() {
     const hid = this.getHidApi();
-    console.info("[hid] requesting device with filters", [OCTGEAR_USB]);
+    console.info("[hid] requesting device with filters", [this.identity]);
     const devices = await hid.requestDevice({
       filters: [
         {
-          vendorId: OCTGEAR_USB.vendorId,
-          productId: OCTGEAR_USB.productId,
+          vendorId: this.identity.vendorId,
+          productId: this.identity.productId,
         },
       ],
     });
@@ -30,7 +32,7 @@ export class WebHidTransport {
       return this.device;
     }
 
-    throw new Error(t.device.notFound);
+    throw new Error(t.device.notFound(this.identity.productName));
   }
 
   async open() {

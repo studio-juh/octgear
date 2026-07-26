@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ConsumerKeycapSvg } from "./ConsumerKeycapSvg";
-import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
+import type { HardwareControl } from "../../features/hardware/hardwareConfig";
 import { consumerOptionByUsage } from "../../features/keymap/keyPickerOptions";
 import type { KeyAssignment } from "../../features/keymap/keymapTypes";
+import { useProductDefinition } from "../../products/ProductContext";
 import { t } from "../../shared/i18n";
 import type { LayerColor } from "../../features/device/deviceCommands";
 
@@ -41,9 +42,10 @@ export function RemapPanel({
   onLayerColorChange,
   onSelectKey,
 }: RemapPanelProps) {
+  const { hardware } = useProductDefinition();
   const [actionsOpen, setActionsOpen] = useState(false);
   const actionsRef = useRef<HTMLDivElement>(null);
-  const controls = HARDWARE_CONFIG.controls.slice(0, layerAssignments.length);
+  const controls = hardware.controls.slice(0, layerAssignments.length);
   const keyControls = controls.filter((control) => control.kind === "key");
   const encoderControls = controls.filter((control) => control.kind !== "key");
   const activeLayerColor = layerColors[activeLayer] ?? { red: 0, green: 0, blue: 0 };
@@ -160,7 +162,12 @@ export function RemapPanel({
                   onChange={(event) =>
                     onLayerColorChange(
                       activeLayer,
-                      event.target.checked ? defaultLayerColor(activeLayer) : { red: 0, green: 0, blue: 0 },
+                      event.target.checked
+                        ? defaultLayerColor(
+                            activeLayer,
+                            hardware.defaultLayerColors,
+                          )
+                        : { red: 0, green: 0, blue: 0 },
                     )
                   }
                 />
@@ -236,8 +243,11 @@ export function RemapPanel({
   );
 }
 
-function defaultLayerColor(layer: number): LayerColor {
-  const [red, green, blue] = HARDWARE_CONFIG.defaultLayerColors[layer] ?? [255, 255, 255];
+function defaultLayerColor(
+  layer: number,
+  defaultLayerColors: readonly (readonly [number, number, number])[],
+): LayerColor {
+  const [red, green, blue] = defaultLayerColors[layer] ?? [255, 255, 255];
   return { red, green, blue };
 }
 
@@ -265,7 +275,7 @@ function renderControlTile({
 }: {
   assignment: KeyAssignment;
   connected: boolean;
-  control: typeof HARDWARE_CONFIG.controls[number];
+  control: HardwareControl;
   isSelected: boolean;
   onSelectKey: (keyIndex: number) => void;
   supported: boolean;

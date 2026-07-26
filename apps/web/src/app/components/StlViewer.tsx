@@ -22,11 +22,17 @@ type StlViewerProps = {
   assetBaseUrl: string;
   labels: StlViewerLabels;
   models: readonly StlModel[];
+  translucentModelFiles?: readonly string[];
 };
 
 type ViewerStatus = "loading" | "ready" | "error";
 
-export function StlViewer({ assetBaseUrl, labels, models }: StlViewerProps) {
+export function StlViewer({
+  assetBaseUrl,
+  labels,
+  models,
+  translucentModelFiles = [],
+}: StlViewerProps) {
   const [selectedModelIndex, setSelectedModelIndex] = useState(0);
   const [status, setStatus] = useState<ViewerStatus>("loading");
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -138,8 +144,9 @@ export function StlViewer({ assetBaseUrl, labels, models }: StlViewerProps) {
           return;
         }
 
-        const translucentMiddle =
-          selectedModel.file === "octgear-case-middle.stl";
+        const translucentMiddle = translucentModelFiles.includes(
+          selectedModel.file,
+        );
         material = new THREE.MeshStandardMaterial({
           color: translucentMiddle ? 0x9ce4dc : 0xded2bf,
           metalness: 0.08,
@@ -188,7 +195,7 @@ export function StlViewer({ assetBaseUrl, labels, models }: StlViewerProps) {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [assetBaseUrl, labels.title, selectedModel]);
+  }, [assetBaseUrl, labels.title, selectedModel, translucentModelFiles]);
 
   if (!selectedModel) {
     return null;

@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { StlViewer } from "../components/StlViewer";
-import { buildGuideUrl, diagnosticsUrl, homeUrl, remapperUrl } from "../appUrls";
-import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
+import {
+  productAssetUrl,
+  productPageUrl,
+} from "../appUrls";
+import { useProductDefinition } from "../../products/ProductContext";
+import { getProductMessages } from "../../products/productMessages";
 import { t } from "../../shared/i18n";
-
-const HARDWARE_LICENSE_URL =
-  "https://github.com/falxala/octgear/blob/main/HARDWARE-LICENSE.md";
-const BUILD_GUIDE_ASSET_URL = `${import.meta.env.BASE_URL}build-guide/`;
-const KEYCAP_SIZE_LABELS = [
-  "1.25U",
-  null,
-  null,
-  null,
-  "1.5U",
-  null,
-  null,
-  null,
-] as const;
 
 type ExpandedGuideImage = {
   src: string;
@@ -26,7 +16,17 @@ type ExpandedGuideImage = {
   height: number;
 };
 
+type GuideLayoutStyle = CSSProperties &
+  Record<`--guide-${string}`, string>;
+
 export function BuildGuidePage() {
+  const product = useProductDefinition();
+  const guide = getProductMessages(product.id).buildGuide;
+  const buildGuideAssetUrl = productAssetUrl(product.assets.buildGuideRoot);
+  const buildGuideUrl = productPageUrl(product, "buildGuide");
+  const homeUrl = productPageUrl(product, "home");
+  const remapperUrl = productPageUrl(product, "remapper");
+  const diagnosticsUrl = productPageUrl(product, "diagnostics");
   const [expandedImage, setExpandedImage] = useState<ExpandedGuideImage | null>(
     null,
   );
@@ -52,7 +52,7 @@ export function BuildGuidePage() {
   }, [expandedImage]);
 
   return (
-    <main className="app-shell guide-shell">
+    <main className="app-shell guide-shell" data-product={product.id}>
       <header className="guide-topbar">
         <a
           className="guide-brand"
@@ -61,17 +61,17 @@ export function BuildGuidePage() {
         >
           <img
             className="brand-mark"
-            src={`${import.meta.env.BASE_URL}brand/octgear-mark.png`}
+            src={productAssetUrl(product.assets.mark)}
             width="322"
             height="307"
             alt=""
           />
           <span>
-            <small>{t.buildGuide.brandKicker}</small>
-            <strong>OctGear</strong>
+            <small>{guide.brandKicker}</small>
+            <strong>{product.name}</strong>
           </span>
         </a>
-        <nav className="guide-nav" aria-label={t.buildGuide.navigationLabel}>
+        <nav className="guide-nav" aria-label={guide.navigationLabel}>
           <a className="ghost-button nav-button" href={homeUrl}>
             {t.home.backHome}
           </a>
@@ -87,20 +87,20 @@ export function BuildGuidePage() {
       <article className="guide-content">
         <section className="guide-hero" aria-labelledby="guide-title">
           <div className="guide-hero-copy">
-            <span className="eyebrow">{t.buildGuide.kicker}</span>
-            <h1 id="guide-title">{t.buildGuide.title}</h1>
-            <p>{t.buildGuide.description}</p>
+            <span className="eyebrow">{guide.kicker}</span>
+            <h1 id="guide-title">{guide.title}</h1>
+            <p>{guide.description}</p>
             <div className="guide-hero-actions">
               <a className="product-action" href="#assembly">
-                {t.buildGuide.start}
+                {guide.start}
               </a>
               <a className="product-action secondary" href="#final-check">
-                {t.buildGuide.jumpToCheck}
+                {guide.jumpToCheck}
               </a>
             </div>
           </div>
-          <dl className="guide-facts" aria-label={t.buildGuide.factsLabel}>
-            {t.buildGuide.facts.map((fact) => (
+          <dl className="guide-facts" aria-label={guide.factsLabel}>
+            {guide.facts.map((fact) => (
               <div key={fact.label}>
                 <dt>{fact.label}</dt>
                 <dd>{fact.value}</dd>
@@ -110,8 +110,8 @@ export function BuildGuidePage() {
         </section>
 
         <div className="guide-body">
-          <nav className="guide-jump-nav" aria-label={t.buildGuide.pageIndexLabel}>
-            {t.buildGuide.pageIndex.map((item, index) => (
+          <nav className="guide-jump-nav" aria-label={guide.pageIndexLabel}>
+            {guide.pageIndex.map((item, index) => (
               <a href={item.href} key={item.href}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 {item.label}
@@ -122,73 +122,96 @@ export function BuildGuidePage() {
 
         <section className="guide-section" id="prepare" aria-labelledby="prepare-title">
           <GuideHeading
-            kicker={t.buildGuide.prepareKicker}
-            title={t.buildGuide.prepareTitle}
-            description={t.buildGuide.prepareDescription}
+            kicker={guide.prepareKicker}
+            title={guide.prepareTitle}
+            description={guide.prepareDescription}
             id="prepare-title"
           />
           <div className="guide-check-grid">
             <GuideChecklist
-              title={t.buildGuide.packageTitle}
-              items={t.buildGuide.packageItems}
+              title={guide.packageTitle}
+              items={guide.packageItems}
             />
             <GuideChecklist
-              title={t.buildGuide.toolsTitle}
-              items={t.buildGuide.toolItems}
+              title={guide.toolsTitle}
+              items={guide.toolItems}
             />
             <GuideChecklist
-              title={t.buildGuide.optionalToolsTitle}
-              items={t.buildGuide.optionalToolItems}
+              title={guide.optionalToolsTitle}
+              items={guide.optionalToolItems}
             />
           </div>
           <div className="guide-notice warning">
-            <strong>{t.buildGuide.safetyTitle}</strong>
-            <p>{t.buildGuide.safetyDescription}</p>
+            <strong>{guide.safetyTitle}</strong>
+            <p>{guide.safetyDescription}</p>
           </div>
         </section>
 
         <section className="guide-section guide-layout-section" aria-labelledby="layout-title">
           <GuideHeading
-            kicker={t.buildGuide.layoutKicker}
-            title={t.buildGuide.layoutTitle}
-            description={t.buildGuide.layoutDescription}
+            kicker={guide.layoutKicker}
+            title={guide.layoutTitle}
+            description={guide.layoutDescription}
             id="layout-title"
           />
-          <div className="guide-device" role="img" aria-label={t.buildGuide.layoutAriaLabel}>
-            <div className="guide-device-board">
+          <div className="guide-device" role="img" aria-label={guide.layoutAriaLabel}>
+            <div
+              className="guide-device-board"
+              style={{
+                "--guide-board-aspect-ratio":
+                  product.buildGuide.controlLayout.aspectRatio,
+              } as GuideLayoutStyle}
+            >
               <img
                 className="guide-device-outline"
-                src={`${BUILD_GUIDE_ASSET_URL}layout/octgear-control-layout.svg`}
+                src={`${buildGuideAssetUrl}${product.buildGuide.controlLayout.outline}`}
                 alt=""
                 aria-hidden="true"
               />
               <div className="guide-device-keys">
-                {Array.from(
-                  { length: HARDWARE_CONFIG.physicalKeyCount },
-                  (_, keyIndex) => (
-                    <div className="guide-device-key" key={keyIndex}>
-                      <span>{t.buildGuide.keyLabel(keyIndex + 1)}</span>
-                      {KEYCAP_SIZE_LABELS[keyIndex] ? (
+                {product.buildGuide.controlLayout.keys
+                  .slice(0, product.hardware.physicalKeyCount)
+                  .map((key, keyIndex) => (
+                    <div
+                      className="guide-device-key"
+                      data-tone={key.tone ?? "default"}
+                      key={keyIndex}
+                      style={{
+                        "--guide-key-top": key.top,
+                        "--guide-key-left": key.left,
+                        "--guide-key-width": key.width ?? "11.7%",
+                        "--guide-key-height": key.height ?? "23.4%",
+                      } as GuideLayoutStyle}
+                    >
+                      <span>{guide.keyLabel(keyIndex + 1)}</span>
+                      {key.optionalKeycapSize ? (
                         <small>
-                          {t.buildGuide.optionalKeycapSize(
-                            KEYCAP_SIZE_LABELS[keyIndex],
-                          )}
+                          {guide.optionalKeycapSize(key.optionalKeycapSize)}
                         </small>
                       ) : null}
                     </div>
-                  ),
-                )}
+                  ))}
               </div>
-              <div className="guide-device-encoder">
-                <span>{t.buildGuide.encoderLabel}</span>
-                <small>{t.buildGuide.encoderOperations}</small>
+              <div
+                className="guide-device-encoder"
+                style={{
+                  "--guide-encoder-right":
+                    product.buildGuide.controlLayout.encoder.right,
+                  "--guide-encoder-bottom":
+                    product.buildGuide.controlLayout.encoder.bottom,
+                  "--guide-encoder-width":
+                    product.buildGuide.controlLayout.encoder.width,
+                } as GuideLayoutStyle}
+              >
+                <span>{guide.encoderLabel}</span>
+                <small>{guide.encoderOperations}</small>
               </div>
             </div>
             <div className="guide-device-led-strip">
-              <span>{t.buildGuide.ledStripLabel}</span>
+              <span>{guide.ledStripLabel}</span>
               <div>
                 {Array.from(
-                  { length: HARDWARE_CONFIG.externalRgbLedCount },
+                  { length: product.hardware.externalRgbLedCount },
                   (_, ledIndex) => (
                     <i key={ledIndex}>{ledIndex + 1}</i>
                   ),
@@ -198,18 +221,18 @@ export function BuildGuidePage() {
           </div>
           <div className="guide-completed-reference">
             <div>
-              <h3>{t.buildGuide.completedReferenceTitle}</h3>
-              <p>{t.buildGuide.completedReferenceDescription}</p>
+              <h3>{guide.completedReferenceTitle}</h3>
+              <p>{guide.completedReferenceDescription}</p>
             </div>
             <div className="guide-completed-gallery">
-              {t.buildGuide.completedImages.map((image) => {
-                const src = `${BUILD_GUIDE_ASSET_URL}completed/${image.file}`;
+              {guide.completedImages.map((image) => {
+                const src = `${buildGuideAssetUrl}completed/${image.file}`;
 
                 return (
                   <figure key={image.file}>
                     <button
                       type="button"
-                      aria-label={t.buildGuide.enlargeGuideImage(image.title)}
+                      aria-label={guide.enlargeGuideImage(image.title)}
                       onClick={() =>
                         setExpandedImage({
                           src,
@@ -236,18 +259,18 @@ export function BuildGuidePage() {
           </div>
           <div className="guide-pcb-reference">
             <div>
-              <h3>{t.buildGuide.pcbReferenceTitle}</h3>
-              <p>{t.buildGuide.pcbReferenceDescription}</p>
+              <h3>{guide.pcbReferenceTitle}</h3>
+              <p>{guide.pcbReferenceDescription}</p>
             </div>
             <div className="guide-pcb-gallery">
-              {t.buildGuide.pcbImages.map((image) => (
+              {guide.pcbImages.map((image) => (
                 <figure key={image.file}>
                   <button
                     type="button"
-                    aria-label={t.buildGuide.enlargeGuideImage(image.title)}
+                    aria-label={guide.enlargeGuideImage(image.title)}
                     onClick={() =>
                       setExpandedImage({
-                        src: `${BUILD_GUIDE_ASSET_URL}pcb/${image.file}`,
+                        src: `${buildGuideAssetUrl}pcb/${image.file}`,
                         title: image.title,
                         alt: image.alt,
                         width: 1366,
@@ -256,7 +279,7 @@ export function BuildGuidePage() {
                     }
                   >
                     <img
-                      src={`${BUILD_GUIDE_ASSET_URL}pcb/${image.file}`}
+                      src={`${buildGuideAssetUrl}pcb/${image.file}`}
                       alt={image.alt}
                       loading="lazy"
                       width="1366"
@@ -272,13 +295,13 @@ export function BuildGuidePage() {
 
         <section className="guide-section" id="assembly" aria-labelledby="assembly-title">
           <GuideHeading
-            kicker={t.buildGuide.assemblyKicker}
-            title={t.buildGuide.assemblyTitle}
-            description={t.buildGuide.assemblyDescription}
+            kicker={guide.assemblyKicker}
+            title={guide.assemblyTitle}
+            description={guide.assemblyDescription}
             id="assembly-title"
           />
           <ol className="guide-steps">
-            {t.buildGuide.steps.map((step, index) => (
+            {guide.steps.map((step, index) => (
               <li key={step.title}>
                 <div className="guide-step-number">
                   {String(index + 1).padStart(2, "0")}
@@ -299,50 +322,51 @@ export function BuildGuidePage() {
 
         <section className="guide-section" id="downloads" aria-labelledby="downloads-title">
           <GuideHeading
-            kicker={t.buildGuide.downloadsKicker}
-            title={t.buildGuide.downloadsTitle}
-            description={t.buildGuide.downloadsDescription}
+            kicker={guide.downloadsKicker}
+            title={guide.downloadsTitle}
+            description={guide.downloadsDescription}
             id="downloads-title"
           />
           <StlViewer
-            assetBaseUrl={`${BUILD_GUIDE_ASSET_URL}downloads/`}
+            assetBaseUrl={`${buildGuideAssetUrl}downloads/`}
             labels={{
-              title: t.buildGuide.stlViewerTitle,
-              description: t.buildGuide.stlViewerDescription,
-              loading: t.buildGuide.stlViewerLoading,
-              error: t.buildGuide.stlViewerError,
-              reset: t.buildGuide.stlViewerReset,
-              instructions: t.buildGuide.stlViewerInstructions,
+              title: guide.stlViewerTitle,
+              description: guide.stlViewerDescription,
+              loading: guide.stlViewerLoading,
+              error: guide.stlViewerError,
+              reset: guide.stlViewerReset,
+              instructions: guide.stlViewerInstructions,
             }}
-            models={t.buildGuide.downloads.filter(
+            models={guide.downloads.filter(
               (download) => download.format === "STL",
             )}
+            translucentModelFiles={product.buildGuide.translucentStlFiles}
           />
           <div className="guide-notice warning guide-material-notice">
-            <strong>{t.buildGuide.middleCaseMaterialTitle}</strong>
-            <p>{t.buildGuide.middleCaseMaterialDescription}</p>
+            <strong>{guide.middleCaseMaterialTitle}</strong>
+            <p>{guide.middleCaseMaterialDescription}</p>
           </div>
           <div className="guide-download-grid">
-            {t.buildGuide.downloads.map((download) => (
+            {guide.downloads.map((download) => (
               <a
                 className="guide-download-card"
-                href={`${BUILD_GUIDE_ASSET_URL}downloads/${download.file}`}
+                href={`${buildGuideAssetUrl}downloads/${download.file}`}
                 download
                 key={download.file}
               >
                 <span>{download.format}</span>
                 <strong>{download.title}</strong>
                 <small>{download.description}</small>
-                <b>{t.buildGuide.downloadAction}</b>
+                <b>{guide.downloadAction}</b>
               </a>
             ))}
           </div>
           <div className="guide-notice">
-            <strong>{t.buildGuide.downloadNoticeTitle}</strong>
+            <strong>{guide.downloadNoticeTitle}</strong>
             <p>
-              {t.buildGuide.downloadNoticeDescription}{" "}
-              <a href={HARDWARE_LICENSE_URL} rel="noreferrer">
-                {t.buildGuide.licenseLink}
+              {guide.downloadNoticeDescription}{" "}
+              <a href={product.buildGuide.hardwareLicenseUrl} rel="noreferrer">
+                {guide.licenseLink}
               </a>
             </p>
           </div>
@@ -350,44 +374,44 @@ export function BuildGuidePage() {
 
         <section className="guide-section" id="firmware" aria-labelledby="firmware-title">
           <GuideHeading
-            kicker={t.buildGuide.firmwareKicker}
-            title={t.buildGuide.firmwareTitle}
-            description={t.buildGuide.firmwareDescription}
+            kicker={guide.firmwareKicker}
+            title={guide.firmwareTitle}
+            description={guide.firmwareDescription}
             id="firmware-title"
           />
           <div className="guide-action-grid">
             <article className="guide-action-card">
               <span>01</span>
-              <h3>{t.buildGuide.firmwareCardTitle}</h3>
-              <p>{t.buildGuide.firmwareCardDescription}</p>
+              <h3>{guide.firmwareCardTitle}</h3>
+              <p>{guide.firmwareCardDescription}</p>
               <a className="product-action" href={remapperUrl}>
                 {t.home.openRemapper}
               </a>
             </article>
             <article className="guide-action-card">
               <span>02</span>
-              <h3>{t.buildGuide.remapCardTitle}</h3>
-              <p>{t.buildGuide.remapCardDescription}</p>
+              <h3>{guide.remapCardTitle}</h3>
+              <p>{guide.remapCardDescription}</p>
               <a className="product-action secondary" href={remapperUrl}>
-                {t.buildGuide.configureKeymap}
+                {guide.configureKeymap}
               </a>
             </article>
           </div>
           <div className="guide-notice">
-            <strong>{t.buildGuide.recoveryTitle}</strong>
-            <p>{t.buildGuide.recoveryDescription}</p>
+            <strong>{guide.recoveryTitle}</strong>
+            <p>{guide.recoveryDescription}</p>
           </div>
         </section>
 
         <section className="guide-section" id="final-check" aria-labelledby="check-title">
           <GuideHeading
-            kicker={t.buildGuide.checkKicker}
-            title={t.buildGuide.checkTitle}
-            description={t.buildGuide.checkDescription}
+            kicker={guide.checkKicker}
+            title={guide.checkTitle}
+            description={guide.checkDescription}
             id="check-title"
           />
           <div className="guide-check-flow">
-            {t.buildGuide.checks.map((check, index) => (
+            {guide.checks.map((check, index) => (
               <div key={check.title}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <div>
@@ -398,19 +422,19 @@ export function BuildGuidePage() {
             ))}
           </div>
           <a className="product-action guide-diagnostics-action" href={diagnosticsUrl}>
-            {t.buildGuide.openFinalCheck}
+            {guide.openFinalCheck}
           </a>
         </section>
 
         <section className="guide-section" id="troubleshooting" aria-labelledby="trouble-title">
           <GuideHeading
-            kicker={t.buildGuide.troubleKicker}
-            title={t.buildGuide.troubleTitle}
-            description={t.buildGuide.troubleDescription}
+            kicker={guide.troubleKicker}
+            title={guide.troubleTitle}
+            description={guide.troubleDescription}
             id="trouble-title"
           />
           <div className="guide-troubleshooting">
-            {t.buildGuide.troubleshooting.map((item) => (
+            {guide.troubleshooting.map((item) => (
               <details key={item.problem}>
                 <summary>{item.problem}</summary>
                 <p>{item.solution}</p>
@@ -421,13 +445,13 @@ export function BuildGuidePage() {
 
         <footer className="guide-footer">
           <div>
-            <strong>{t.buildGuide.completeTitle}</strong>
-            <p>{t.buildGuide.completeDescription}</p>
+            <strong>{guide.completeTitle}</strong>
+            <p>{guide.completeDescription}</p>
           </div>
           <p className="guide-license-note">
-            {t.buildGuide.licenseNote}{" "}
-            <a href={HARDWARE_LICENSE_URL} rel="noreferrer">
-              {t.buildGuide.licenseLink}
+            {guide.licenseNote}{" "}
+            <a href={product.buildGuide.hardwareLicenseUrl} rel="noreferrer">
+              {guide.licenseLink}
             </a>
           </p>
         </footer>
@@ -451,7 +475,7 @@ export function BuildGuidePage() {
             <button
               type="button"
               className="guide-image-lightbox-close"
-              aria-label={t.buildGuide.closeGuideImage}
+              aria-label={guide.closeGuideImage}
               autoFocus
               onClick={() => setExpandedImage(null)}
             >

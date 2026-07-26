@@ -27,13 +27,28 @@ src/
 ├── features/
 │   ├── device/           WebHID transportとcommand codec
 │   ├── firmware/         UF2 download / install
-│   ├── hardware/         generated control metadata
+│   ├── hardware/         製品共通hardware metadata型
 │   └── keymap/           assignment modelとpicker data
 ├── pages/                multi-page entry points
+├── products/             製品定義、製品一覧、製品別generated metadata
 └── shared/               i18n等の小さい共通module
 ```
 
 Dependency directionはpageからfeatureへ向けます。TransportはUI stateを持たず、protocol moduleはDOMを参照しません。特定featureだけで使う処理は`shared`へ移さず、そのfeature内に置きます。
+
+## Product Definitions
+
+`src/products/<product-id>/product.ts`がWeb側の製品単位の正本です。製品名、page route、markとBuild Guide asset、USB VID/PID、配布UF2、生成Hardware metadataを1つの`ProductDefinition`へまとめます。Homeは`src/products/catalog.ts`を`ProductCard`で描画し、Remapper、Diagnostics、Build Guideは各entry pointから`ProductProvider`で対象製品を受け取ります。共通のWebHID transportとFirmware updaterは製品固有値を保持しません。
+
+対応製品を追加する場合:
+
+1. `hardware/<product-id>/profile.json`と対応Firmware directoryを用意し、`node scripts/generate-hardware-config.mjs <product-id>`を実行します。
+2. `src/products/<product-id>/product.ts`へroute、asset、USB identity、UF2を定義し、`catalog.ts`へ追加します。
+3. `ja.ts`と`en.ts`へ製品文言を追加し、`productMessages.ts`で製品IDへ対応づけます。
+4. 製品別HTMLと`src/pages/` entryを追加し、`ProductProvider`へ製品定義を渡してVite inputへ登録します。
+5. Build Guide assetと配布UF2を製品定義のpublic pathへ配置します。
+
+RemapperとDiagnosticsの共通利用には現在の32-byte WebHID protocolとの互換性が必要です。protocolが異なる製品はtransport / command adapterも製品定義から切り替えられる境界を追加してください。
 
 HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を製品visualとして使用します。Build Guideの完成配置図は`public/build-guide/layout/`のSVG外形へHTML / CSSの8キー、Encoder、側面5灯を重ね、同directoryの完成写真と`public/build-guide/pcb/`のPCB製造previewを併記します。写真とpreviewはページ内で拡大表示できます。Three.jsのSTL Viewerではcase 3層とencoder knobをbrowser内で読み込み、回転・zoom・表示resetを提供します。組み立て、製造データdownload、Firmware導入、Diagnosticsによる完成検査を1ページで案内し、印刷時はnavigationとWeb操作buttonを省略します。
 
@@ -43,7 +58,7 @@ HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を�
 
 接続時は次の順で処理します。
 
-1. `usbIdentity.ts`のVID/PID filterでdeviceを選択
+1. 対象entry pointへ渡された製品定義のVID/PID filterでdeviceを選択
 2. HID deviceをopen
 3. heartbeatを送信
 4. `GetState`でdevice dimensions、layer状態、Encoder方向、LEDテープ方向、打鍵アニメーションと輝度上限を取得
@@ -83,11 +98,11 @@ PCとタブレットでは、topbarの「表示倍率」からWorkspaceを`80%`�
 
 ## Firmware Updater
 
-`src/features/firmware/firmwareUpdater.ts`は次を担当します。
+`src/features/firmware/firmwareUpdater.ts`は、製品定義からUF2のpublic pathとfile名を受け取り、次を担当します。
 
-- `${BASE_URL}firmware/octgear.uf2`のdownload
+- 製品定義の`${BASE_URL}<firmware-public-path>`からのdownload
 - File System Access API support判定
-- Userが選択したUF2 driveへの`octgear.uf2`書込
+- Userが選択したUF2 driveへの製品別UF2 file書込
 
 BOOTSEL移行command自体はdevice featureにあり、page componentがsession closeとUI stateを調停します。
 

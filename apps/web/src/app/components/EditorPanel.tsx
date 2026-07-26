@@ -1,10 +1,10 @@
-import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
 import { modifierOptions } from "../../features/keymap/keyPickerOptions";
 import {
   formatHex,
   type KeyAssignment,
   type KeyAssignmentKind,
 } from "../../features/keymap/keymapTypes";
+import { useProductDefinition } from "../../products/ProductContext";
 import { t } from "../../shared/i18n";
 
 type EditorPanelProps = {
@@ -24,11 +24,12 @@ export function EditorPanel({
   modifierSlots,
   onUpdateModifierSlot,
 }: EditorPanelProps) {
+  const { hardware } = useProductDefinition();
   let usageMax = 255;
   if (draftAssignment.kind === "consumer") {
     usageMax = 65535;
   } else if (draftAssignment.kind === "momentaryLayer") {
-    usageMax = HARDWARE_CONFIG.layerCount - 1;
+    usageMax = hardware.layerCount - 1;
   }
 
   const usesTargetLayer = draftAssignment.kind === "momentaryLayer";

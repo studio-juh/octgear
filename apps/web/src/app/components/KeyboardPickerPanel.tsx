@@ -2,7 +2,6 @@ import type { CSSProperties } from "react";
 
 import { ConsumerKeycapSvg } from "./ConsumerKeycapSvg";
 import { KeycapSvg } from "./KeycapSvg";
-import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
 import {
   blankOption,
   consumerOptions,
@@ -15,6 +14,7 @@ import {
   type KeyPickerOption,
 } from "../../features/keymap/keyPickerOptions";
 import type { KeyAssignment } from "../../features/keymap/keymapTypes";
+import { useProductDefinition } from "../../products/ProductContext";
 import { t } from "../../shared/i18n";
 
 type KeyboardPickerPanelProps = {
@@ -38,6 +38,7 @@ export function KeyboardPickerPanel({
   onLayerPreviousOption,
   onMomentaryLayerOption,
 }: KeyboardPickerPanelProps) {
+  const { hardware } = useProductDefinition();
   const systemRows = navigationRows.slice(0, 1);
   const navigationBodyRows = navigationRows.slice(1);
   const keyboardRows = keyboardRowsForLayout(keyboardLayout);
@@ -154,7 +155,7 @@ export function KeyboardPickerPanel({
           >
             <KeycapSvg label={t.assignment.layerPreviousLabel} units={2.16} />
           </button>
-          {Array.from({ length: HARDWARE_CONFIG.layerCount }, (_, layer) => (
+          {Array.from({ length: hardware.layerCount }, (_, layer) => (
             <button
               key={layer}
               type="button"

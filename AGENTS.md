@@ -18,7 +18,7 @@
 - GPIO、matrix、control順、layer数、既定色などは`hardware/octgear/profile.json`を編集します。
 - 次の生成物は直接編集しません。
   - `firmware/octgear/octgear/generated_hardware_config.h`
-  - `apps/web/src/features/hardware/generatedHardwareConfig.ts`
+  - `apps/web/src/products/octgear/generatedHardwareConfig.ts`
   - `hardware/octgear/pinout.md`
 - Hardware profile変更後は`pnpm hardware:generate`を実行し、3生成物を同じ変更へ含めます。
 - HID wire formatはFirmwareとWebの共有契約です。一方だけを変更しません。
@@ -72,4 +72,3 @@ WebはReact + TypeScript + Vite、FirmwareはRP2040 Arduino core + Adafruit Tiny
 - 対応する検証commandが成功した
 - `git diff --check`が成功した
 - 実機でしか確認できない項目を報告した
-

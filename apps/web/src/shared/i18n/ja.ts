@@ -1,8 +1,6 @@
 export const ja = {
   app: {
-    eyebrow: "OctGear",
     title: "Remapper",
-    description: "8キー + ロータリーエンコーダ RP2040 ボード用 WebHID キーマップエディタ",
     workspaceLabel: "リマッパー作業領域",
     workspaceScale: "表示倍率",
     workspaceScaleValue: (scale: number) => `${scale}%`,
@@ -12,26 +10,28 @@ export const ja = {
     title: "Device Hub",
     description: "ビルドガイド、Remapper、Firmware updaterから必要なツールを開きます。",
     productListLabel: "製品一覧",
-    products: [
-      {
+    products: {
+      octgear: {
         status: "Available",
         name: "OctGear",
         description: "2 × 4キーマトリクスとA/C/B/SWロータリーエンコーダを持つRP2040ボードです。",
+        deviceImageAlt: "側面LEDが発光している完成したOctGearの正面写真",
+        encoderValue: "A/C/B/SW",
+        connectionValue: "WebHID",
+        remapperDescription:
+          "8キー + ロータリーエンコーダ RP2040 ボード用 WebHID キーマップエディタ",
       },
-    ],
-    deviceImageAlt: "側面LEDが発光している完成したOctGearの正面写真",
+    },
     keys: "Keys",
     encoder: "Encoder",
-    encoderValue: "A/C/B/SW",
     layers: "Layers",
     connection: "Connection",
-    connectionValue: "WebHID",
     openBuildGuide: "Build Guide",
     openRemapper: "Open Remapper",
     openDiagnostics: "Open Diagnostics",
     backHome: "Home",
   },
-  buildGuide: {
+  octgearBuildGuide: {
     brandKicker: "Build Guide",
     navigationLabel: "ビルドガイドのナビゲーション",
     kicker: "Assembly & Setup",
@@ -503,7 +503,8 @@ export const ja = {
   },
   device: {
     fallbackName: "HID device",
-    notFound: "OctGear が見つかりません。接続後にもう一度試すか、ファームウェアを書き込み直してください",
+    notFound: (productName: string) =>
+      `${productName} が見つかりません。接続後にもう一度試すか、ファームウェアを書き込み直してください`,
     missingDevice: "接続するHIDデバイスがありません",
     timeout: "HIDデバイスからの応答がタイムアウトしました",
     unsupportedWebHid: "このブラウザはWebHIDに対応していません",

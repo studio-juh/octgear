@@ -1,4 +1,4 @@
-import { HARDWARE_CONFIG } from "../hardware/hardwareConfig";
+import { HARDWARE_CONFIG } from "./generatedHardwareConfig";
 import {
   createBlankAssignment,
   createConsumerAssignment,
@@ -6,9 +6,9 @@ import {
   createLayerCycleAssignment,
   createMomentaryLayerAssignment,
   type DeviceKeymap,
-} from "./keymapTypes";
+} from "../../features/keymap/keymapTypes";
 
-export function createInitialKeymap(): DeviceKeymap {
+export function createOctgearDefaultKeymap(): DeviceKeymap {
   const keymap = Array.from({ length: HARDWARE_CONFIG.layerCount }, () =>
     Array.from({ length: HARDWARE_CONFIG.keyCount }, createBlankAssignment),
   );

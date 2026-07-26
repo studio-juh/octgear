@@ -96,7 +96,7 @@ Key 5を押しながらUSB接続すると、その起動だけread-onlyの`OCTGE
 | Manufacturer | `OctGear` |
 | Product | `OctGear` |
 
-`0xCAFE`はproject-localな開発用VIDです。商用・広範囲な配布では、割り当て済みVID/PID、許可されたsublicense、またはpid.codes等で取得したPIDへ置き換えてください。Web側の接続filterは`apps/web/src/features/device/usbIdentity.ts`で管理します。
+`0xCAFE`はproject-localな開発用VIDです。商用・広範囲な配布では、割り当て済みVID/PID、許可されたsublicense、またはpid.codes等で取得したPIDへ置き換えてください。Web側の接続filterは`apps/web/src/products/octgear/product.ts`の製品定義で管理します。
 
 ## Documentation
 

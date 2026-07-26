@@ -1,4 +1,18 @@
-export const homeUrl = `${import.meta.env.BASE_URL}`;
-export const buildGuideUrl = `${import.meta.env.BASE_URL}octgear.html`;
-export const remapperUrl = `${import.meta.env.BASE_URL}octgear-remapper.html`;
-export const diagnosticsUrl = `${import.meta.env.BASE_URL}octgear-diagnostics.html`;
+import type { ProductDefinition, ProductPage } from "../products/productTypes";
+
+export const homeUrl = publicUrl("");
+
+export function publicUrl(path: string) {
+  return `${import.meta.env.BASE_URL}${path}`;
+}
+
+export function productPageUrl(
+  product: ProductDefinition,
+  page: ProductPage,
+) {
+  return publicUrl(product.routes[page]);
+}
+
+export function productAssetUrl(path: string) {
+  return publicUrl(path);
+}

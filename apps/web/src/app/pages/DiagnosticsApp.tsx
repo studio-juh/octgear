@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { homeUrl, remapperUrl } from "../appUrls";
+import { productAssetUrl, productPageUrl } from "../appUrls";
 import { useDeviceSession } from "../hooks/useDeviceSession";
 import {
   getDeviceState,
@@ -11,11 +11,15 @@ import {
   type DeviceState,
 } from "../../features/device/deviceCommands";
 import { WebHidTransport } from "../../features/device/webHidTransport";
-import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
+import { useProductDefinition } from "../../products/ProductContext";
 import { t } from "../../shared/i18n";
 
 export function DiagnosticsApp() {
-  const transport = useMemo(() => new WebHidTransport(), []);
+  const product = useProductDefinition();
+  const transport = useMemo(
+    () => new WebHidTransport(product.usbIdentity),
+    [product.usbIdentity],
+  );
   const [status, setStatus] = useState<string>(t.connection.initialStatus);
   const [deviceState, setDeviceState] = useState<DeviceState | null>(null);
   const [reportTestStatus, setReportTestStatus] = useState<"idle" | "running" | "passed" | "failed">("idle");
@@ -23,7 +27,7 @@ export function DiagnosticsApp() {
   const [storageTestStatus, setStorageTestStatus] = useState<"idle" | "running" | "passed" | "failed">("idle");
   const [storageTestDetail, setStorageTestDetail] = useState("-");
   const [testedKeys, setTestedKeys] = useState<boolean[]>(() =>
-    Array.from({ length: HARDWARE_CONFIG.keyCount }, () => false),
+    Array.from({ length: product.hardware.keyCount }, () => false),
   );
   const [lastKey, setLastKey] = useState<number | null>(null);
   const connected = deviceState !== null && transport.connected;
@@ -112,7 +116,12 @@ export function DiagnosticsApp() {
   }
 
   function resetDiagnostics() {
-    setTestedKeys(Array.from({ length: deviceState?.keyCount ?? HARDWARE_CONFIG.keyCount }, () => false));
+    setTestedKeys(
+      Array.from(
+        { length: deviceState?.keyCount ?? product.hardware.keyCount },
+        () => false,
+      ),
+    );
     setLastKey(null);
   }
 
@@ -122,7 +131,7 @@ export function DiagnosticsApp() {
         <div className="brand">
           <img
             className="brand-mark"
-            src={`${import.meta.env.BASE_URL}brand/octgear-mark.png`}
+            src={productAssetUrl(product.assets.mark)}
             width="322"
             height="307"
             alt=""
@@ -141,10 +150,16 @@ export function DiagnosticsApp() {
             <span className="connection-text">{status}</span>
           </div>
           <div className="connection-actions">
-            <a className="ghost-button nav-button" href={homeUrl}>
+            <a
+              className="ghost-button nav-button"
+              href={productPageUrl(product, "home")}
+            >
               {t.home.backHome}
             </a>
-            <a className="ghost-button nav-button" href={remapperUrl}>
+            <a
+              className="ghost-button nav-button"
+              href={productPageUrl(product, "remapper")}
+            >
               {t.home.openRemapper}
             </a>
             <button type="button" onClick={connected ? disconnectDevice : connectDevice}>

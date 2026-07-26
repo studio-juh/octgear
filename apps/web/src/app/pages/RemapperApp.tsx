@@ -4,7 +4,7 @@ import { FirmwarePanel } from "../components/FirmwarePanel";
 import { HardwarePanel } from "../components/HardwarePanel";
 import { KeyboardPickerPanel } from "../components/KeyboardPickerPanel";
 import { RemapPanel } from "../components/RemapPanel";
-import { homeUrl } from "../appUrls";
+import { productAssetUrl, productPageUrl } from "../appUrls";
 import { useDeviceSession } from "../hooks/useDeviceSession";
 import {
   createModifierMaskFromSlots,
@@ -48,7 +48,7 @@ import {
   downloadFirmwareUf2,
   installFirmwareUf2,
 } from "../../features/firmware/firmwareUpdater";
-import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
+import type { HardwareConfig } from "../../features/hardware/hardwareConfig";
 import {
   type ConsumerKeyOption,
   type KeyboardLayoutMode,
@@ -65,10 +65,11 @@ import {
   type KeyAssignment,
   type KeyAssignmentKind,
 } from "../../features/keymap/keymapTypes";
+import { useProductDefinition } from "../../products/ProductContext";
+import { getProductMessages } from "../../products/productMessages";
 import { t } from "../../shared/i18n";
 
 const LAYER_COLOR_PREVIEW_DEBOUNCE_MS = 60;
-const WORKSPACE_SCALE_STORAGE_KEY = "octgear.remapper.workspaceScale";
 const WORKSPACE_SCALE_OPTIONS = [80, 90, 100] as const;
 
 type WorkspaceScale = typeof WORKSPACE_SCALE_OPTIONS[number];
@@ -77,8 +78,17 @@ type RemapperAppProps = {
   homeHref?: string;
 };
 
-export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
-  const transport = useMemo(() => new WebHidTransport(), []);
+export function RemapperApp({ homeHref }: RemapperAppProps) {
+  const product = useProductDefinition();
+  const hardware = product.hardware;
+  const productMessages = getProductMessages(product.id);
+  const resolvedHomeHref = homeHref ?? productPageUrl(product, "home");
+  const workspaceScaleStorageKey =
+    `${product.storageNamespace}.remapper.workspaceScale`;
+  const transport = useMemo(
+    () => new WebHidTransport(product.usbIdentity),
+    [product.usbIdentity],
+  );
   const [activeLayer, setActiveLayer] = useState(0);
   const [selectedKey, setSelectedKey] = useState(0);
   const [firmwareModalOpen, setFirmwareModalOpen] = useState(false);
@@ -87,27 +97,41 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
   const [encoderDirectionUpdating, setEncoderDirectionUpdating] = useState(false);
   const [statusLedDirectionUpdating, setStatusLedDirectionUpdating] = useState(false);
   const [statusLedBrightness, setStatusLedBrightness] = useState<number>(
-    HARDWARE_CONFIG.statusLedBrightness.default,
+    hardware.statusLedBrightness.default,
   );
   const [statusLedBrightnessUpdating, setStatusLedBrightnessUpdating] = useState(false);
   const [statusKeyAnimationUpdating, setStatusKeyAnimationUpdating] = useState(false);
   const [statusKeyAnimationBrightness, setStatusKeyAnimationBrightness] =
-    useState<number>(HARDWARE_CONFIG.statusKeyAnimationBrightness.default);
+    useState<number>(hardware.statusKeyAnimationBrightness.default);
   const [
     statusKeyAnimationBrightnessUpdating,
     setStatusKeyAnimationBrightnessUpdating,
   ] = useState(false);
   const [workspaceScale, setWorkspaceScale] =
-    useState<WorkspaceScale>(loadWorkspaceScale);
+    useState<WorkspaceScale>(() =>
+      loadWorkspaceScale(workspaceScaleStorageKey),
+    );
   const [status, setStatus] = useState<string>(t.connection.initialStatus);
   const [firmwareStatus, setFirmwareStatus] = useState<string>(t.firmware.initialStatus);
   const [deviceState, setDeviceState] = useState<DeviceState | null>(null);
-  const [readKeymap, setReadKeymap] = useState(createInitialKeymap);
-  const [writeKeymap, setWriteKeymap] = useState(createInitialKeymap);
-  const [readEnabledLayers, setReadEnabledLayers] = useState(createInitialEnabledLayers);
-  const [writeEnabledLayers, setWriteEnabledLayers] = useState(createInitialEnabledLayers);
-  const [readLayerColors, setReadLayerColors] = useState(createInitialLayerColors);
-  const [writeLayerColors, setWriteLayerColors] = useState(createInitialLayerColors);
+  const [readKeymap, setReadKeymap] = useState(() =>
+    createInitialKeymap(hardware),
+  );
+  const [writeKeymap, setWriteKeymap] = useState(() =>
+    createInitialKeymap(hardware),
+  );
+  const [readEnabledLayers, setReadEnabledLayers] = useState(() =>
+    createInitialEnabledLayers(hardware),
+  );
+  const [writeEnabledLayers, setWriteEnabledLayers] = useState(() =>
+    createInitialEnabledLayers(hardware),
+  );
+  const [readLayerColors, setReadLayerColors] = useState(() =>
+    createInitialLayerColors(hardware),
+  );
+  const [writeLayerColors, setWriteLayerColors] = useState(() =>
+    createInitialLayerColors(hardware),
+  );
   const colorPreviewTimerRef = useRef<number | null>(null);
   const colorPreviewQueueRef = useRef<Promise<void>>(Promise.resolve());
   const [keyboardLayout, setKeyboardLayout] = useState<KeyboardLayoutMode>("jis");
@@ -175,24 +199,24 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
       const loadedLayerColors = await readDeviceLayerColors(
         transport,
         state.layerCount,
-        HARDWARE_CONFIG.defaultLayerColors,
+        hardware.defaultLayerColors,
       );
       console.info("[hid] connected", {
         productName: device.productName,
         vendorId: `0x${device.vendorId.toString(16).padStart(4, "0").toUpperCase()}`,
         productId: `0x${device.productId.toString(16).padStart(4, "0").toUpperCase()}`,
       });
-      const uiKeymap = expandKeymap(loadedKeymap, state.layerCount, HARDWARE_CONFIG.keyCount);
+      const uiKeymap = expandKeymap(loadedKeymap, state.layerCount, hardware.keyCount);
       setDeviceState(state);
       setStatusLedBrightness(
         state.statusLedBrightnessSupported
           ? state.statusLedBrightness
-          : HARDWARE_CONFIG.statusLedBrightness.default,
+          : hardware.statusLedBrightness.default,
       );
       setStatusKeyAnimationBrightness(
         state.statusKeyAnimationBrightnessSupported
           ? state.statusKeyAnimationBrightness
-          : HARDWARE_CONFIG.statusKeyAnimationBrightness.default,
+          : hardware.statusKeyAnimationBrightness.default,
       );
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
@@ -302,7 +326,7 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
     setStatusKeyAnimationBrightness(Math.max(
       0,
       Math.min(
-        HARDWARE_CONFIG.statusKeyAnimationBrightness.max,
+        hardware.statusKeyAnimationBrightness.max,
         Math.trunc(brightness),
       ),
     ));
@@ -347,7 +371,7 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
   function updateStatusLedBrightnessDraft(brightness: number) {
     setStatusLedBrightness(Math.max(
       0,
-      Math.min(HARDWARE_CONFIG.statusLedBrightness.max, Math.trunc(brightness)),
+      Math.min(hardware.statusLedBrightness.max, Math.trunc(brightness)),
     ));
   }
 
@@ -392,19 +416,19 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
       const loadedLayerColors = await readDeviceLayerColors(
         transport,
         state.layerCount,
-        HARDWARE_CONFIG.defaultLayerColors,
+        hardware.defaultLayerColors,
       );
-      const uiKeymap = expandKeymap(loadedKeymap, state.layerCount, HARDWARE_CONFIG.keyCount);
+      const uiKeymap = expandKeymap(loadedKeymap, state.layerCount, hardware.keyCount);
       setDeviceState(state);
       setStatusLedBrightness(
         state.statusLedBrightnessSupported
           ? state.statusLedBrightness
-          : HARDWARE_CONFIG.statusLedBrightness.default,
+          : hardware.statusLedBrightness.default,
       );
       setStatusKeyAnimationBrightness(
         state.statusKeyAnimationBrightnessSupported
           ? state.statusKeyAnimationBrightness
-          : HARDWARE_CONFIG.statusKeyAnimationBrightness.default,
+          : hardware.statusKeyAnimationBrightness.default,
       );
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
@@ -500,20 +524,20 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
       const loadedLayerColors = await readDeviceLayerColors(
         transport,
         state.layerCount,
-        HARDWARE_CONFIG.defaultLayerColors,
+        hardware.defaultLayerColors,
       );
-      const uiKeymap = expandKeymap(loadedKeymap, state.layerCount, HARDWARE_CONFIG.keyCount);
+      const uiKeymap = expandKeymap(loadedKeymap, state.layerCount, hardware.keyCount);
 
       setDeviceState(state);
       setStatusLedBrightness(
         state.statusLedBrightnessSupported
           ? state.statusLedBrightness
-          : HARDWARE_CONFIG.statusLedBrightness.default,
+          : hardware.statusLedBrightness.default,
       );
       setStatusKeyAnimationBrightness(
         state.statusKeyAnimationBrightnessSupported
           ? state.statusKeyAnimationBrightness
-          : HARDWARE_CONFIG.statusKeyAnimationBrightness.default,
+          : hardware.statusKeyAnimationBrightness.default,
       );
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
@@ -553,7 +577,7 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
   async function installBundledFirmware() {
     try {
       setFirmwareStatus(t.firmware.writing);
-      const result = await installFirmwareUf2();
+      const result = await installFirmwareUf2(product.firmware);
       setFirmwareStatus(t.firmware.written(result.fileName, Math.ceil(result.size / 1024)));
     } catch (error) {
       setFirmwareStatus(error instanceof Error ? error.message : t.firmware.writeFailed);
@@ -563,7 +587,7 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
   async function downloadBundledFirmware() {
     try {
       setFirmwareStatus(t.firmware.downloading);
-      await downloadFirmwareUf2();
+      await downloadFirmwareUf2(product.firmware);
       setFirmwareStatus(t.firmware.downloaded);
     } catch (error) {
       setFirmwareStatus(error instanceof Error ? error.message : t.firmware.downloadFailed);
@@ -723,7 +747,7 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
   function updateWorkspaceScale(scale: WorkspaceScale) {
     setWorkspaceScale(scale);
     try {
-      window.localStorage.setItem(WORKSPACE_SCALE_STORAGE_KEY, String(scale));
+      window.localStorage.setItem(workspaceScaleStorageKey, String(scale));
     } catch {
       // Keep the scale for this session when browser storage is unavailable.
     }
@@ -732,18 +756,22 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
   return (
     <main className="app-shell">
       <header className="topbar remapper-topbar">
-        <a className="brand brand-link" href={homeHref} aria-label={t.home.backHome}>
+        <a
+          className="brand brand-link"
+          href={resolvedHomeHref}
+          aria-label={t.home.backHome}
+        >
           <img
             className="brand-mark"
-            src={`${import.meta.env.BASE_URL}brand/octgear-mark.png`}
+            src={productAssetUrl(product.assets.mark)}
             width="322"
             height="307"
             alt=""
           />
           <div className="brand-copy">
-            <span className="eyebrow">{t.app.eyebrow}</span>
+            <span className="eyebrow">{product.name}</span>
             <h1>{t.app.title}</h1>
-            <p>{t.app.description}</p>
+            <p>{productMessages.home.remapperDescription}</p>
           </div>
         </a>
         <div className="connection">
@@ -930,9 +958,9 @@ export function RemapperApp({ homeHref = homeUrl }: RemapperAppProps) {
   );
 }
 
-function loadWorkspaceScale(): WorkspaceScale {
+function loadWorkspaceScale(storageKey: string): WorkspaceScale {
   try {
-    const stored = Number(window.localStorage.getItem(WORKSPACE_SCALE_STORAGE_KEY));
+    const stored = Number(window.localStorage.getItem(storageKey));
     if (WORKSPACE_SCALE_OPTIONS.some((scale) => scale === stored)) {
       return stored as WorkspaceScale;
     }
@@ -943,19 +971,19 @@ function loadWorkspaceScale(): WorkspaceScale {
   return 90;
 }
 
-function createInitialKeymap() {
-  return createBlankKeymap(HARDWARE_CONFIG.layerCount, HARDWARE_CONFIG.keyCount);
+function createInitialKeymap(hardware: HardwareConfig) {
+  return createBlankKeymap(hardware.layerCount, hardware.keyCount);
 }
 
-function createInitialEnabledLayers() {
+function createInitialEnabledLayers(hardware: HardwareConfig) {
   return Array.from(
-    { length: HARDWARE_CONFIG.layerCount },
-    (_, layer) => HARDWARE_CONFIG.defaultEnabledLayers.includes(layer),
+    { length: hardware.layerCount },
+    (_, layer) => hardware.defaultEnabledLayers.includes(layer),
   );
 }
 
-function createInitialLayerColors(): LayerColor[] {
-  return HARDWARE_CONFIG.defaultLayerColors.map(([red, green, blue]) => ({ red, green, blue }));
+function createInitialLayerColors(hardware: HardwareConfig): LayerColor[] {
+  return hardware.defaultLayerColors.map(([red, green, blue]) => ({ red, green, blue }));
 }
 
 function normalizeLayerColor(color: LayerColor): LayerColor {

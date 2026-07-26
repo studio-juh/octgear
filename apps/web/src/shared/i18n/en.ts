@@ -2,9 +2,7 @@ import type { ja } from "./ja";
 
 export const en: typeof ja = {
   app: {
-    eyebrow: "OctGear",
     title: "Remapper",
-    description: "WebHID keymap editor for the 8-key + rotary encoder RP2040 board",
     workspaceLabel: "Remapper workspace",
     workspaceScale: "Display scale",
     workspaceScaleValue: (scale) => `${scale}%`,
@@ -14,26 +12,28 @@ export const en: typeof ja = {
     title: "Device Hub",
     description: "Open the build guide, remapper, or firmware updater for your device.",
     productListLabel: "Product list",
-    products: [
-      {
+    products: {
+      octgear: {
         status: "Available",
         name: "OctGear",
         description: "RP2040 board with a 2 × 4 key matrix and an A/C/B/SW rotary encoder.",
+        deviceImageAlt: "Front view of a completed OctGear with illuminated side LEDs",
+        encoderValue: "A/C/B/SW",
+        connectionValue: "WebHID",
+        remapperDescription:
+          "WebHID keymap editor for the 8-key + rotary encoder RP2040 board",
       },
-    ],
-    deviceImageAlt: "Front view of a completed OctGear with illuminated side LEDs",
+    },
     keys: "Keys",
     encoder: "Encoder",
-    encoderValue: "A/C/B/SW",
     layers: "Layers",
     connection: "Connection",
-    connectionValue: "WebHID",
     openBuildGuide: "Build Guide",
     openRemapper: "Open Remapper",
     openDiagnostics: "Open Diagnostics",
     backHome: "Home",
   },
-  buildGuide: {
+  octgearBuildGuide: {
     brandKicker: "Build Guide",
     navigationLabel: "Build guide navigation",
     kicker: "Assembly & Setup",
@@ -505,7 +505,8 @@ export const en: typeof ja = {
   },
   device: {
     fallbackName: "HID device",
-    notFound: "OctGear was not found. Connect it and try again, or reflash the firmware.",
+    notFound: (productName) =>
+      `${productName} was not found. Connect it and try again, or reflash the firmware.`,
     missingDevice: "No HID device is available to connect",
     timeout: "Timed out waiting for a HID response",
     unsupportedWebHid: "This browser does not support WebHID",

@@ -16,7 +16,7 @@ The materials in this directory are provided under the [OctGear Hardware License
 同じprofileから次も生成します。
 
 - `firmware/octgear/octgear/generated_hardware_config.h`
-- `apps/web/src/features/hardware/generatedHardwareConfig.ts`
+- `apps/web/src/products/octgear/generatedHardwareConfig.ts`
 
 ## Change Workflow
 

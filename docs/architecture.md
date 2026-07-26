@@ -41,7 +41,7 @@ Physical controls ─────>│ RP2040 firmware              │───�
 | Generated file | Consumer |
 | --- | --- |
 | `firmware/octgear/octgear/generated_hardware_config.h` | Firmware compile-time constants |
-| `apps/web/src/features/hardware/generatedHardwareConfig.ts` | Web UIのcontrol metadata |
+| `apps/web/src/products/octgear/generatedHardwareConfig.ts` | Web UIのcontrol metadata |
 | `hardware/octgear/pinout.md` | 人が読むpinout |
 
 生成スクリプトはMatrix Row / Columnとキーのindex・範囲、全GPIOの重複、encoder controlが`enc-ccw`、`enc-cw`、`enc-sw`の順で連続することを検証します。生成物は直接編集しません。
@@ -109,6 +109,7 @@ Web entry pointはページごとに分かれ、共通実装を`src/app`と`src/
 | `src/features/keymap/` | assignment model、normalize、picker option |
 | `src/features/hardware/` | profileから生成したUI metadata |
 | `src/features/firmware/` | UF2 download / File System Access API書込 |
+| `src/products/` | 製品ごとのroute、asset、USB identity、UF2、hardware metadataと製品一覧 |
 | `src/shared/i18n/` | 日本語・英語message。現在のdefaultは日本語 |
 
 `WebHidTransport`は1 device / 1 in-flight commandを前提とします。同期commandはcommand byteが一致する最初のinput reportを待ち、1秒でtimeoutします。`KeyEvent`は別listenerで非同期に購読します。
@@ -117,7 +118,7 @@ Web entry pointはページごとに分かれ、共通実装を`src/app`と`src/
 
 ### Connect And Read
 
-1. Browserが`0xCAFE:0xC608` filterでdevice pickerを開きます。
+1. 各entry pointから注入された製品定義の`0xCAFE:0xC608` filterでdevice pickerを開きます。
 2. Deviceをopenし、最初のheartbeatを送ります。
 3. `GetState`でfirmwareのlayer / key countを取得します。
 4. `GetKey`をlayer x key分、`GetLayerColor`をlayer分送って全設定を読みます。

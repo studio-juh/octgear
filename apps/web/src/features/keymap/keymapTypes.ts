@@ -1,5 +1,6 @@
 import { t } from "../../shared/i18n";
-import { HARDWARE_CONFIG } from "../hardware/hardwareConfig";
+
+const MAX_LAYER_INDEX = 7;
 
 export type KeyAssignmentKind =
   | "none"
@@ -102,7 +103,9 @@ export function normalizeAssignment(
   }
 
   if (kind === "momentaryLayer") {
-    const targetLayer = clampLayer(assignment.targetLayer ?? assignment.usage ?? 0);
+    const targetLayer = clampLayer(
+      assignment.targetLayer ?? assignment.usage ?? 0,
+    );
 
     return {
       kind,
@@ -168,7 +171,7 @@ function clampBytePair(value: number) {
 }
 
 function clampLayer(value: number) {
-  return Math.max(0, Math.min(HARDWARE_CONFIG.layerCount - 1, Math.trunc(value)));
+  return Math.max(0, Math.min(MAX_LAYER_INDEX, Math.trunc(value)));
 }
 
 export function formatModifier(modifier: number) {
