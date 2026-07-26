@@ -19,6 +19,7 @@ export const ja = {
         description: "2 × 4キーマトリクスとA/C/B/SWロータリーエンコーダを持つRP2040ボードです。",
       },
     ],
+    deviceImageAlt: "側面LEDが発光している完成したOctGearの正面写真",
     keys: "Keys",
     encoder: "Encoder",
     encoderValue: "A/C/B/SW",

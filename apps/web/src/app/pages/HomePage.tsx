@@ -34,6 +34,14 @@ export function HomePage() {
               </div>
               <p>{product.description}</p>
             </div>
+            <figure className="product-device-visual">
+              <img
+                src={`${import.meta.env.BASE_URL}build-guide/completed/octgear-completed-front.jpg`}
+                width="1024"
+                height="768"
+                alt={t.home.deviceImageAlt}
+              />
+            </figure>
             <dl className="product-specs">
               <div>
                 <dt>{t.home.keys}</dt>

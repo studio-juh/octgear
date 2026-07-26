@@ -79,6 +79,20 @@
     padding: 18px;
   }
 
+  .product-card {
+    grid-template-areas:
+      "copy"
+      "visual"
+      "specs"
+      "actions";
+    grid-template-columns: 1fr;
+  }
+
+  .product-device-visual {
+    align-self: auto;
+    width: min(100%, 440px);
+  }
+
   .connection {
     justify-content: space-between;
   }

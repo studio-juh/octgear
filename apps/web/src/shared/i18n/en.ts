@@ -21,6 +21,7 @@ export const en: typeof ja = {
         description: "RP2040 board with a 2 × 4 key matrix and an A/C/B/SW rotary encoder.",
       },
     ],
+    deviceImageAlt: "Front view of a completed OctGear with illuminated side LEDs",
     keys: "Keys",
     encoder: "Encoder",
     encoderValue: "A/C/B/SW",
