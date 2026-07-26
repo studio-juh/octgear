@@ -8,23 +8,27 @@ const HARDWARE_LICENSE_URL =
   "https://github.com/falxala/octgear/blob/main/HARDWARE-LICENSE.md";
 const BUILD_GUIDE_ASSET_URL = `${import.meta.env.BASE_URL}build-guide/`;
 
+type ExpandedGuideImage = {
+  src: string;
+  title: string;
+  alt: string;
+  width: number;
+  height: number;
+};
+
 export function BuildGuidePage() {
-  const [expandedPcbImageIndex, setExpandedPcbImageIndex] = useState<number | null>(
+  const [expandedImage, setExpandedImage] = useState<ExpandedGuideImage | null>(
     null,
   );
-  const expandedPcbImage =
-    expandedPcbImageIndex === null
-      ? null
-      : t.buildGuide.pcbImages[expandedPcbImageIndex];
 
   useEffect(() => {
-    if (!expandedPcbImage) {
+    if (!expandedImage) {
       return;
     }
 
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setExpandedPcbImageIndex(null);
+        setExpandedImage(null);
       }
     };
 
@@ -35,7 +39,7 @@ export function BuildGuidePage() {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", closeOnEscape);
     };
-  }, [expandedPcbImage]);
+  }, [expandedImage]);
 
   return (
     <main className="app-shell guide-shell">
@@ -159,18 +163,64 @@ export function BuildGuidePage() {
               </div>
             </div>
           </div>
+          <div className="guide-completed-reference">
+            <div>
+              <h3>{t.buildGuide.completedReferenceTitle}</h3>
+              <p>{t.buildGuide.completedReferenceDescription}</p>
+            </div>
+            <div className="guide-completed-gallery">
+              {t.buildGuide.completedImages.map((image) => {
+                const src = `${BUILD_GUIDE_ASSET_URL}completed/${image.file}`;
+
+                return (
+                  <figure key={image.file}>
+                    <button
+                      type="button"
+                      aria-label={t.buildGuide.enlargeGuideImage(image.title)}
+                      onClick={() =>
+                        setExpandedImage({
+                          src,
+                          title: image.title,
+                          alt: image.alt,
+                          width: 1024,
+                          height: 768,
+                        })
+                      }
+                    >
+                      <img
+                        src={src}
+                        alt={image.alt}
+                        loading="lazy"
+                        width="1024"
+                        height="768"
+                      />
+                    </button>
+                    <figcaption>{image.title}</figcaption>
+                  </figure>
+                );
+              })}
+            </div>
+          </div>
           <div className="guide-pcb-reference">
             <div>
               <h3>{t.buildGuide.pcbReferenceTitle}</h3>
               <p>{t.buildGuide.pcbReferenceDescription}</p>
             </div>
             <div className="guide-pcb-gallery">
-              {t.buildGuide.pcbImages.map((image, imageIndex) => (
+              {t.buildGuide.pcbImages.map((image) => (
                 <figure key={image.file}>
                   <button
                     type="button"
-                    aria-label={t.buildGuide.enlargePcbImage(image.title)}
-                    onClick={() => setExpandedPcbImageIndex(imageIndex)}
+                    aria-label={t.buildGuide.enlargeGuideImage(image.title)}
+                    onClick={() =>
+                      setExpandedImage({
+                        src: `${BUILD_GUIDE_ASSET_URL}pcb/${image.file}`,
+                        title: image.title,
+                        alt: image.alt,
+                        width: 1366,
+                        height: 604,
+                      })
+                    }
                   >
                     <img
                       src={`${BUILD_GUIDE_ASSET_URL}pcb/${image.file}`}
@@ -350,35 +400,35 @@ export function BuildGuidePage() {
         </footer>
       </article>
 
-      {expandedPcbImage ? (
+      {expandedImage ? (
         <div
           className="guide-image-lightbox"
           role="presentation"
-          onClick={() => setExpandedPcbImageIndex(null)}
+          onClick={() => setExpandedImage(null)}
         >
           <div
             className="guide-image-lightbox-dialog"
             role="dialog"
             aria-modal="true"
-            aria-label={expandedPcbImage.title}
+            aria-label={expandedImage.title}
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               className="guide-image-lightbox-close"
-              aria-label={t.buildGuide.closePcbImage}
+              aria-label={t.buildGuide.closeGuideImage}
               autoFocus
-              onClick={() => setExpandedPcbImageIndex(null)}
+              onClick={() => setExpandedImage(null)}
             >
               ×
             </button>
             <img
-              src={`${BUILD_GUIDE_ASSET_URL}pcb/${expandedPcbImage.file}`}
-              alt={expandedPcbImage.alt}
-              width="1366"
-              height="604"
+              src={expandedImage.src}
+              alt={expandedImage.alt}
+              width={expandedImage.width}
+              height={expandedImage.height}
             />
-            <strong>{expandedPcbImage.title}</strong>
+            <strong>{expandedImage.title}</strong>
           </div>
         </div>
       ) : null}

@@ -411,6 +411,7 @@
   box-shadow: 0 0 16px rgba(50, 201, 188, 0.54);
 }
 
+.guide-completed-reference,
 .guide-pcb-reference {
   display: grid;
   gap: 16px;
@@ -419,15 +420,19 @@
   border-top: 1px solid rgba(78, 61, 38, 0.1);
 }
 
+.guide-completed-reference h3,
+.guide-completed-reference p,
 .guide-pcb-reference h3,
 .guide-pcb-reference p {
   margin: 0;
 }
 
+.guide-completed-reference h3,
 .guide-pcb-reference h3 {
   font-size: 18px;
 }
 
+.guide-completed-reference p,
 .guide-pcb-reference p {
   max-width: 760px;
   margin-top: 5px;
@@ -435,12 +440,21 @@
   line-height: 1.6;
 }
 
+.guide-completed-gallery,
 .guide-pcb-gallery {
   display: grid;
   gap: 12px;
+}
+
+.guide-completed-gallery {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.guide-pcb-gallery {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.guide-completed-gallery figure,
 .guide-pcb-gallery figure {
   overflow: hidden;
   margin: 0;
@@ -449,6 +463,7 @@
   background: rgba(255, 252, 247, 0.82);
 }
 
+.guide-completed-gallery button,
 .guide-pcb-gallery button {
   display: block;
   width: 100%;
@@ -461,6 +476,7 @@
   cursor: zoom-in;
 }
 
+.guide-completed-gallery img,
 .guide-pcb-gallery img {
   display: block;
   width: 100%;
@@ -470,10 +486,22 @@
   transition: transform 160ms ease;
 }
 
+.guide-completed-gallery img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.guide-pcb-gallery img {
+  aspect-ratio: 1366 / 604;
+  object-fit: contain;
+}
+
+.guide-completed-gallery button:hover img,
 .guide-pcb-gallery button:hover img {
   transform: scale(1.025);
 }
 
+.guide-completed-gallery figcaption,
 .guide-pcb-gallery figcaption {
   padding: 10px 12px;
   color: var(--text-muted);
@@ -988,6 +1016,7 @@
     height: 240px;
   }
 
+  .guide-completed-gallery,
   .guide-pcb-gallery {
     grid-template-columns: 1fr;
   }

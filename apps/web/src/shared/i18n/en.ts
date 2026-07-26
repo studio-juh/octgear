@@ -87,6 +87,21 @@ export const en: typeof ja = {
     encoderLabel: "Rotary",
     encoderOperations: "CCW / CW / SW",
     ledStripLabel: "Side LEDs",
+    completedReferenceTitle: "Completed build",
+    completedReferenceDescription:
+      "See the assembled device and the side LED glow through the transparent or translucent Case Middle. Select an image to enlarge it.",
+    completedImages: [
+      {
+        file: "octgear-completed-top.jpg",
+        title: "Top view",
+        alt: "Top view of a completed OctGear",
+      },
+      {
+        file: "octgear-completed-front.jpg",
+        title: "Front view",
+        alt: "Front view of a completed OctGear with illuminated side LEDs",
+      },
+    ],
     pcbReferenceTitle: "PCB manufacturing previews",
     pcbReferenceDescription:
       "Open the Top, routing layers, or Bottom preview at full size to inspect switch positions, board outline, and terminal rows.",
@@ -107,8 +122,8 @@ export const en: typeof ja = {
         alt: "Manufacturing preview of the OctGear PCB bottom side",
       },
     ],
-    enlargePcbImage: (title) => `Enlarge ${title}`,
-    closePcbImage: "Close enlarged image",
+    enlargeGuideImage: (title) => `Enlarge ${title}`,
+    closeGuideImage: "Close enlarged image",
     assemblyKicker: "Assembly",
     assemblyTitle: "Assembly steps",
     assemblyDescription:

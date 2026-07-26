@@ -85,6 +85,21 @@ export const ja = {
     encoderLabel: "Rotary",
     encoderOperations: "CCW / CW / SW",
     ledStripLabel: "Side LEDs",
+    completedReferenceTitle: "完成例",
+    completedReferenceDescription:
+      "組み立て後の外観と、透明／半透明のCase Middleから側面LEDの光が見える状態を確認できます。画像を選択すると拡大表示します。",
+    completedImages: [
+      {
+        file: "octgear-completed-top.jpg",
+        title: "上面ビュー",
+        alt: "完成したOctGearを上面から見た写真",
+      },
+      {
+        file: "octgear-completed-front.jpg",
+        title: "正面ビュー",
+        alt: "側面LEDが発光している完成したOctGearの正面写真",
+      },
+    ],
     pcbReferenceTitle: "PCB製造プレビュー",
     pcbReferenceDescription:
       "Top、配線レイヤー、Bottomを拡大して、スイッチ位置、外形、端子列を確認できます。画像を選択すると原寸で開きます。",
@@ -105,8 +120,8 @@ export const ja = {
         alt: "OctGear PCBのBottom面製造プレビュー",
       },
     ],
-    enlargePcbImage: (title: string) => `${title}を拡大表示`,
-    closePcbImage: "拡大画像を閉じる",
+    enlargeGuideImage: (title: string) => `${title}を拡大表示`,
+    closeGuideImage: "拡大画像を閉じる",
     assemblyKicker: "Assembly",
     assemblyTitle: "組み立て手順",
     assemblyDescription:
