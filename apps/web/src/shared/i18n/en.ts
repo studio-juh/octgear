@@ -81,9 +81,9 @@ export const en: typeof ja = {
     layoutKicker: "Control Layout",
     layoutTitle: "Finished control layout",
     layoutDescription:
-      "The board has Key 1–4 on the top row, Key 5–8 on the bottom row, and the rotary encoder on the right. Side LEDs are numbered 1–5 from left to right.",
+      "The finished layout has Key 1–4 on top, a right-shifted Key 5–8 row below, and the rotary encoder extending from the lower right. Side LEDs are numbered 1–5 from left to right.",
     layoutAriaLabel:
-      "Layout with four keys on the top row, four keys on the bottom row, a rotary encoder on the right, and five side LEDs",
+      "Finished layout with Key 1 through 4 on top, a right-shifted Key 5 through 8 row below, the rotary encoder at lower right, and five side LEDs shown separately below",
     keyLabel: (index) => `Key ${index}`,
     encoderLabel: "Rotary",
     encoderOperations: "CCW / CW / SW",

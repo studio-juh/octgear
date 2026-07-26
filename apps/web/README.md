@@ -35,7 +35,7 @@ src/
 
 Dependency directionはpageからfeatureへ向けます。TransportはUI stateを持たず、protocol moduleはDOMを参照しません。特定featureだけで使う処理は`shared`へ移さず、そのfeature内に置きます。
 
-HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を製品visualとして使用します。Build Guideは現在の8キー、Encoder、側面5灯の配置をHTML / CSSで表示し、同directoryの完成写真と`public/build-guide/pcb/`のPCB製造previewを併記します。写真とpreviewはページ内で拡大表示できます。Three.jsのSTL Viewerではcase 3層とencoder knobをbrowser内で読み込み、回転・zoom・表示resetを提供します。組み立て、製造データdownload、Firmware導入、Diagnosticsによる完成検査を1ページで案内し、印刷時はnavigationとWeb操作buttonを省略します。
+HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を製品visualとして使用します。Build Guideの完成配置図は`public/build-guide/layout/`のSVG外形へHTML / CSSの8キー、Encoder、側面5灯を重ね、同directoryの完成写真と`public/build-guide/pcb/`のPCB製造previewを併記します。写真とpreviewはページ内で拡大表示できます。Three.jsのSTL Viewerではcase 3層とencoder knobをbrowser内で読み込み、回転・zoom・表示resetを提供します。組み立て、製造データdownload、Firmware導入、Diagnosticsによる完成検査を1ページで案内し、印刷時はnavigationとWeb操作buttonを省略します。
 
 配布用GerberとSTLは`public/build-guide/downloads/`で管理します。公開名には製品名と部品用途を含め、Gerber ZIP内のfile prefixも`octgear-`へ統一します。
 

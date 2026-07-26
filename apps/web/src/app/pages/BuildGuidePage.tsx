@@ -136,6 +136,12 @@ export function BuildGuidePage() {
           />
           <div className="guide-device" role="img" aria-label={t.buildGuide.layoutAriaLabel}>
             <div className="guide-device-board">
+              <img
+                className="guide-device-outline"
+                src={`${BUILD_GUIDE_ASSET_URL}layout/octgear-control-layout.svg`}
+                alt=""
+                aria-hidden="true"
+              />
               <div className="guide-device-keys">
                 {Array.from(
                   { length: HARDWARE_CONFIG.physicalKeyCount },

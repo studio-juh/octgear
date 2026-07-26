@@ -311,68 +311,126 @@
 
 .guide-device {
   display: grid;
-  gap: 18px;
+  gap: 14px;
   max-width: 900px;
   margin: 0 auto;
 }
 
 .guide-device-board {
-  display: grid;
-  align-items: center;
-  gap: 24px;
-  grid-template-columns: minmax(0, 1fr) 150px;
-  padding: clamp(18px, 4vw, 34px);
-  border: 2px solid rgba(78, 61, 38, 0.22);
-  border-radius: 22px;
-  background: #244b46;
-  box-shadow:
-    inset 0 0 0 5px rgba(255, 255, 255, 0.06),
-    0 18px 28px rgba(39, 28, 12, 0.18);
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+}
+
+.guide-device-outline {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 18px 18px rgba(39, 28, 12, 0.2));
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .guide-device-keys {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .guide-device-key {
+  position: absolute;
   display: grid;
   place-items: center;
+  width: 11.7%;
   aspect-ratio: 1;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 9px;
-  background: #f7f0e6;
-  color: #473e35;
-  font-size: clamp(11px, 2vw, 14px);
+  border: clamp(1px, 0.3vw, 3px) solid rgba(255, 255, 255, 0.42);
+  border-radius: clamp(5px, 1vw, 9px);
+  background: #b86d58;
+  color: #fff8f1;
+  font-size: clamp(7px, 1.6vw, 14px);
   font-weight: 800;
-  box-shadow: inset 0 -7px 0 rgba(78, 61, 38, 0.13);
+  box-shadow:
+    inset 0 clamp(-7px, -0.8vw, -3px) 0 rgba(78, 61, 38, 0.18),
+    0 5px 9px rgba(78, 61, 38, 0.16);
+}
+
+.guide-device-key:nth-child(1),
+.guide-device-key:nth-child(5) {
+  background: #eef0dd;
+  color: #4b493e;
+}
+
+.guide-device-key:nth-child(1) {
+  top: 17%;
+  left: 9.3%;
+}
+
+.guide-device-key:nth-child(2) {
+  top: 17%;
+  left: 27.2%;
+}
+
+.guide-device-key:nth-child(3) {
+  top: 17%;
+  left: 42.9%;
+}
+
+.guide-device-key:nth-child(4) {
+  top: 17%;
+  left: 58.6%;
+}
+
+.guide-device-key:nth-child(5) {
+  top: 48.5%;
+  left: 11.4%;
+}
+
+.guide-device-key:nth-child(6) {
+  top: 48.5%;
+  left: 31.4%;
+}
+
+.guide-device-key:nth-child(7) {
+  top: 48.5%;
+  left: 47.1%;
+}
+
+.guide-device-key:nth-child(8) {
+  top: 48.5%;
+  left: 62.8%;
 }
 
 .guide-device-encoder {
+  position: absolute;
+  right: 0;
+  bottom: 0;
   display: grid;
   place-items: center;
-  justify-self: center;
-  width: 126px;
-  height: 126px;
-  padding: 14px;
-  border: 5px solid rgba(255, 255, 255, 0.28);
+  width: 21%;
+  aspect-ratio: 1;
+  padding: clamp(5px, 1.6vw, 14px);
+  border: clamp(3px, 0.55vw, 5px) solid rgba(255, 255, 255, 0.34);
   border-radius: 50%;
-  background: #d9c8b2;
+  background: linear-gradient(145deg, #e5dfd6, #c8c0b5);
   color: #40372e;
   text-align: center;
   box-shadow:
-    inset 0 0 0 9px rgba(78, 61, 38, 0.15),
+    inset 0 0 0 clamp(4px, 1vw, 9px) rgba(78, 61, 38, 0.12),
     0 10px 18px rgba(0, 0, 0, 0.2);
+  z-index: 2;
 }
 
 .guide-device-encoder span {
-  font-size: 14px;
+  font-size: clamp(8px, 1.6vw, 14px);
   font-weight: 900;
 }
 
 .guide-device-encoder small {
-  font-size: 9px;
+  font-size: clamp(5px, 1vw, 9px);
   font-weight: 700;
 }
 
@@ -380,11 +438,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  justify-self: center;
+  gap: clamp(6px, 1.8vw, 18px);
+  box-sizing: border-box;
+  width: min(66%, 590px);
+  min-height: clamp(28px, 5vw, 42px);
+  padding: 3px clamp(6px, 1.2vw, 12px);
+  border: 2px solid rgba(13, 122, 114, 0.14);
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(96, 220, 196, 0.28),
+    rgba(244, 207, 91, 0.3),
+    rgba(223, 89, 131, 0.3),
+    rgba(112, 117, 238, 0.3)
+  );
+  box-shadow: 0 0 18px rgba(50, 201, 188, 0.22);
 }
 
 .guide-device-led-strip > span {
-  color: var(--text-muted);
+  color: #4b493e;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -393,22 +466,22 @@
 
 .guide-device-led-strip > div {
   display: flex;
-  gap: 12px;
+  gap: clamp(5px, 1.3vw, 12px);
 }
 
 .guide-device-led-strip i {
   display: grid;
   place-items: center;
-  width: 25px;
-  height: 25px;
-  border: 3px solid rgba(13, 122, 114, 0.2);
+  width: clamp(18px, 2.8vw, 25px);
+  aspect-ratio: 1;
+  border: clamp(1px, 0.3vw, 3px) solid rgba(78, 73, 66, 0.24);
   border-radius: 50%;
-  background: #32c9bc;
-  color: #173d39;
-  font-size: 9px;
+  background: #d7d5d1;
+  color: #45433f;
+  font-size: clamp(7px, 1vw, 9px);
   font-style: normal;
   font-weight: 900;
-  box-shadow: 0 0 16px rgba(50, 201, 188, 0.54);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.62);
 }
 
 .guide-completed-reference,
@@ -944,15 +1017,6 @@
     border-bottom: 0;
   }
 
-  .guide-device-board {
-    grid-template-columns: minmax(0, 1fr) 116px;
-  }
-
-  .guide-device-encoder {
-    width: 100px;
-    height: 100px;
-  }
-
   .guide-footer {
     grid-template-columns: 1fr;
   }
@@ -989,21 +1053,6 @@
 
   .guide-facts div:nth-last-child(2) {
     border-bottom: 1px solid rgba(78, 61, 38, 0.1);
-  }
-
-  .guide-device-board {
-    gap: 20px;
-    grid-template-columns: 1fr;
-  }
-
-  .guide-device-keys {
-    gap: 8px;
-  }
-
-  .guide-device-led-strip {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
   }
 
   .guide-stl-viewer-heading,

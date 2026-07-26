@@ -79,9 +79,9 @@ export const ja = {
     layoutKicker: "Control Layout",
     layoutTitle: "完成時の操作配置",
     layoutDescription:
-      "盤面は上段Key 1〜4、下段Key 5〜8、右側にロータリーエンコーダを配置します。側面LEDは左からLED 1〜5として扱います。",
+      "盤面は上段Key 1〜4、右へずれた下段Key 5〜8、右下に張り出すロータリーエンコーダの配置です。側面LEDは左からLED 1〜5として扱います。",
     layoutAriaLabel:
-      "上段4キー、下段4キー、右側のロータリーエンコーダ、側面5灯LEDの配置図",
+      "上段Key 1から4、右へずれた下段Key 5から8、右下のロータリーエンコーダ、下に分けて示した側面5灯LEDの完成配置図",
     keyLabel: (index: number) => `Key ${index}`,
     encoderLabel: "Rotary",
     encoderOperations: "CCW / CW / SW",
