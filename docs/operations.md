@@ -11,7 +11,7 @@ PCとタブレットでは、画面上部の「表示倍率」でWorkspaceを`80
 ### Connect And Edit
 
 1. OctGearを通常起動でUSB接続します。
-2. `/remapper.html`をChromium系browserで開きます。
+2. `/octgear-remapper.html`をChromium系browserで開きます。
 3. Connectから`OctGear`を選択します。
 4. 接続時に全layer / controlのkeymapが読み込まれます。
 5. layerとcontrolを選び、割り当てを編集します。
@@ -66,7 +66,7 @@ WebHIDからBOOTSELへ移行できない場合は、boardのBOOTSEL操作を使�
 
 ## Diagnostics
 
-`/diagnostics.html`は出荷前・販売前の個体検査用です。
+`/octgear-diagnostics.html`は出荷前・販売前の個体検査用です。
 
 検査項目:
 

@@ -26,9 +26,9 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 | Page | Path | Role |
 | --- | --- | --- |
 | Home | `/` | 製品情報と各ツールへの入口 |
-| Build Guide | `/build-guide.html` | 組み立て、Firmware導入、完成検査 |
-| Remapper | `/remapper.html` | キーマップ設定とファームウェア更新 |
-| Diagnostics | `/diagnostics.html` | 出荷前・販売前の個体検査 |
+| Build Guide | `/octgear.html` | 組み立て、Firmware導入、完成検査 |
+| Remapper | `/octgear-remapper.html` | キーマップ設定とファームウェア更新 |
+| Diagnostics | `/octgear-diagnostics.html` | 出荷前・販売前の個体検査 |
 
 RemapperとDiagnosticsは独立したHTMLとして直接開けます。WebHIDを使うため、対応ブラウザかつsecure contextで実行してください。通常はChromium系ブラウザのHTTPS配信またはlocalhostを想定しています。
 

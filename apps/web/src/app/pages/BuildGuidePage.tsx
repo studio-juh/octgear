@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { StlViewer } from "../components/StlViewer";
-import { diagnosticsUrl, homeUrl, remapperUrl } from "../appUrls";
+import { buildGuideUrl, diagnosticsUrl, homeUrl, remapperUrl } from "../appUrls";
 import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
 import { t } from "../../shared/i18n";
 
@@ -54,7 +54,11 @@ export function BuildGuidePage() {
   return (
     <main className="app-shell guide-shell">
       <header className="guide-topbar">
-        <a className="guide-brand" href={homeUrl} aria-label={t.home.backHome}>
+        <a
+          className="guide-brand"
+          href={buildGuideUrl}
+          aria-label={t.home.openBuildGuide}
+        >
           <img
             className="brand-mark"
             src={`${import.meta.env.BASE_URL}brand/octgear-mark.png`}

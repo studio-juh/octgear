@@ -9,9 +9,9 @@ React 19 + TypeScript + Viteで構成する、OctGearのWeb toolsです。Home�
 | Page | HTML | React entry | Page component |
 | --- | --- | --- | --- |
 | Home | `index.html` | `src/main.tsx` | `src/app/pages/HomePage.tsx` |
-| Build Guide | `build-guide.html` | `src/pages/build-guide.tsx` | `src/app/pages/BuildGuidePage.tsx` |
-| Remapper | `remapper.html` | `src/pages/remapper.tsx` | `src/app/pages/RemapperApp.tsx` |
-| Diagnostics | `diagnostics.html` | `src/pages/diagnostics.tsx` | `src/app/pages/DiagnosticsApp.tsx` |
+| Build Guide | `octgear.html` | `src/pages/build-guide.tsx` | `src/app/pages/BuildGuidePage.tsx` |
+| Remapper | `octgear-remapper.html` | `src/pages/remapper.tsx` | `src/app/pages/RemapperApp.tsx` |
+| Diagnostics | `octgear-diagnostics.html` | `src/pages/diagnostics.tsx` | `src/app/pages/DiagnosticsApp.tsx` |
 
 GitHub Pages modeではVite baseが`/octgear/`、通常のdevelopment / buildでは`/`です。内部linkとfirmware asset URLはbaseを考慮して組み立てます。
 
