@@ -275,17 +275,18 @@ select {
 }
 
 .product-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   grid-area: actions;
   gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.product-secondary-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-left: auto;
+.product-actions .product-action {
+  width: 100%;
+  min-width: 0;
+  padding-inline: 12px;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .topbar {

@@ -240,3 +240,10 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 400px) {
+  .product-actions .product-action {
+    padding-inline: 6px;
+    font-size: 11px;
+  }
+}

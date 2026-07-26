@@ -64,27 +64,25 @@ export function ProductCard({ product }: ProductCardProps) {
         >
           {t.home.openRemapper}
         </a>
-        <div className="product-secondary-actions">
-          <a
-            className="product-action secondary"
-            href={productPageUrl(product, "buildGuide")}
-          >
-            {t.home.openBuildGuide}
-          </a>
-          <a
-            className="product-action secondary"
-            href={productPageUrl(product, "diagnostics")}
-          >
-            {t.home.openDiagnostics}
-          </a>
-          <a
-            className="product-action secondary"
-            href={product.links.store}
-            rel="noreferrer"
-          >
-            {t.home.openStore}
-          </a>
-        </div>
+        <a
+          className="product-action secondary"
+          href={productPageUrl(product, "buildGuide")}
+        >
+          {t.home.openBuildGuide}
+        </a>
+        <a
+          className="product-action secondary"
+          href={productPageUrl(product, "diagnostics")}
+        >
+          {t.home.openDiagnostics}
+        </a>
+        <a
+          className="product-action secondary"
+          href={product.links.store}
+          rel="noreferrer"
+        >
+          {t.home.openStore}
+        </a>
       </div>
     </article>
   );
