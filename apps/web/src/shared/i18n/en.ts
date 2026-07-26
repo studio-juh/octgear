@@ -63,10 +63,13 @@ export const en: typeof ja = {
       "Compare everything against the package list first. If a part is missing or damaged, contact the distributor before applying power or soldering.",
     packageTitle: "Main parts",
     packageItems: [
-      "OctGear main PCB / controller",
+      "OctGear main PCB",
+      "Waveshare RP2040-Zero or a compatible board (RP2350-Zero is a compatibility candidate; it needs a separate firmware build and is not hardware-tested)",
       "Eight key switches and eight keycaps (all positions support 1U)",
+      "Eight key hot-swap sockets",
       "Rotary encoder and knob when supplied unassembled",
-      "Plate, case, screws, and spacers as included",
+      "M2 × 8 mm screws or compatible self-tapping screws",
+      "Plate, case, and spacers as included",
     ],
     toolsTitle: "What you need",
     toolItems: [
