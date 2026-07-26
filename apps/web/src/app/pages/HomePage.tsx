@@ -7,13 +7,6 @@ export function HomePage() {
     <main className="app-shell home-shell">
       <section className="home-hero" aria-labelledby="home-title">
         <div className="brand home-brand">
-          <img
-            className="brand-logo"
-            src={`${import.meta.env.BASE_URL}brand/octgear-logo.png`}
-            width="1153"
-            height="307"
-            alt=""
-          />
           <div className="brand-copy">
             <span className="eyebrow">{t.home.eyebrow}</span>
             <h1 id="home-title">{t.home.title}</h1>
@@ -26,8 +19,19 @@ export function HomePage() {
         {t.home.products.map((product) => (
           <article className="product-card" key={product.name}>
             <div className="product-card-copy">
-              <span className="eyebrow">{product.status}</span>
-              <h2>{product.name}</h2>
+              <div className="product-title-row">
+                <img
+                  className="product-mark"
+                  src={`${import.meta.env.BASE_URL}brand/octgear-mark.png`}
+                  width="322"
+                  height="307"
+                  alt=""
+                />
+                <div>
+                  <span className="eyebrow">{product.status}</span>
+                  <h2>{product.name}</h2>
+                </div>
+              </div>
               <p>{product.description}</p>
             </div>
             <dl className="product-specs">
@@ -49,15 +53,17 @@ export function HomePage() {
               </div>
             </dl>
             <div className="product-actions">
-              <a className="product-action secondary" href={buildGuideUrl}>
-                {t.home.openBuildGuide}
-              </a>
               <a className="product-action" href={remapperUrl}>
                 {t.home.openRemapper}
               </a>
-              <a className="product-action secondary" href={diagnosticsUrl}>
-                {t.home.openDiagnostics}
-              </a>
+              <div className="product-secondary-actions">
+                <a className="product-action secondary" href={buildGuideUrl}>
+                  {t.home.openBuildGuide}
+                </a>
+                <a className="product-action secondary" href={diagnosticsUrl}>
+                  {t.home.openDiagnostics}
+                </a>
+              </div>
             </div>
           </article>
         ))}

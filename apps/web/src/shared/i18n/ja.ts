@@ -8,7 +8,7 @@ export const ja = {
     workspaceScaleValue: (scale: number) => `${scale}%`,
   },
   home: {
-    eyebrow: "OctGear",
+    eyebrow: "Studio Juh",
     title: "Device Hub",
     description: "ビルドガイド、Remapper、Firmware updaterから必要なツールを開きます。",
     productListLabel: "製品一覧",

@@ -10,7 +10,7 @@ export const en: typeof ja = {
     workspaceScaleValue: (scale) => `${scale}%`,
   },
   home: {
-    eyebrow: "OctGear",
+    eyebrow: "Studio Juh",
     title: "Device Hub",
     description: "Open the build guide, remapper, or firmware updater for your device.",
     productListLabel: "Product list",

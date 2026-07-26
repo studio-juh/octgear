@@ -167,6 +167,24 @@ select {
   letter-spacing: -0.02em;
 }
 
+.product-title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.product-title-row .eyebrow {
+  margin-bottom: 5px;
+}
+
+.product-mark {
+  display: block;
+  flex: 0 0 auto;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+
 .product-card p {
   margin-top: 10px;
   color: var(--text-muted);
@@ -231,6 +249,13 @@ select {
   gap: 10px;
 }
 
+.product-secondary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+}
+
 .topbar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -274,11 +299,6 @@ select {
   border-radius: 8px;
   background: rgba(255, 250, 244, 0.92);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
-}
-
-.brand-logo {
-  width: min(32vw, 260px);
-  height: auto;
 }
 
 .brand-copy {
