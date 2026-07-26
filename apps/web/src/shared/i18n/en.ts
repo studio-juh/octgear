@@ -52,6 +52,7 @@ export const en: typeof ja = {
     pageIndex: [
       { href: "#prepare", label: "Preparation" },
       { href: "#assembly", label: "Assembly" },
+      { href: "#downloads", label: "Downloads" },
       { href: "#firmware", label: "Firmware" },
       { href: "#final-check", label: "Final check" },
     ],
@@ -86,6 +87,28 @@ export const en: typeof ja = {
     encoderLabel: "Rotary",
     encoderOperations: "CCW / CW / SW",
     ledStripLabel: "Side LEDs",
+    pcbReferenceTitle: "PCB manufacturing previews",
+    pcbReferenceDescription:
+      "Open the Top, routing layers, or Bottom preview at full size to inspect switch positions, board outline, and terminal rows.",
+    pcbImages: [
+      {
+        file: "octgear-pcb-top.png",
+        title: "PCB Top",
+        alt: "Manufacturing preview of the OctGear PCB top side",
+      },
+      {
+        file: "octgear-pcb-layers.png",
+        title: "PCB Layers",
+        alt: "Routing layer preview of the OctGear PCB",
+      },
+      {
+        file: "octgear-pcb-bottom.png",
+        title: "PCB Bottom",
+        alt: "Manufacturing preview of the OctGear PCB bottom side",
+      },
+    ],
+    enlargePcbImage: (title) => `Enlarge ${title}`,
+    closePcbImage: "Close enlarged image",
     assemblyKicker: "Assembly",
     assemblyTitle: "Assembly steps",
     assemblyDescription:
@@ -112,9 +135,10 @@ export const en: typeof ja = {
       {
         title: "Fasten the case",
         description:
-          "Place the PCB into the case and tighten spacers and screws a little at a time in a diagonal pattern. Install keycaps and the knob last.",
+          "Place the PCB into the case, confirm the Bottom, light-transmitting Middle, and Top order, then tighten spacers and screws a little at a time in a diagonal pattern. Install keycaps and the knob last.",
         checks: [
           "The case does not pinch the PCB or wiring",
+          "Case Middle uses a transparent or translucent material",
           "Screws are not overtightened and the knob clears the case while rotating",
         ],
       },
@@ -128,6 +152,56 @@ export const en: typeof ja = {
         ],
       },
     ],
+    downloadsKicker: "Manufacturing Files",
+    downloadsTitle: "Manufacturing and 3D print files",
+    downloadsDescription:
+      "Download the PCB fabrication Gerbers plus STL files for the three case layers and encoder knob. File names use consistent OctGear part names.",
+    stlViewerTitle: "Inspect the case and knob in 3D",
+    stlViewerDescription:
+      "Switch models and drag to inspect the shape and hole positions. STL data is processed only in your browser.",
+    stlViewerLoading: "Loading STL",
+    stlViewerError: "The 3D view could not load. Download the STL directly instead.",
+    stlViewerReset: "Reset view",
+    stlViewerInstructions: "Drag: rotate / Wheel or pinch: zoom",
+    middleCaseMaterialTitle: "Use transparent or translucent material for Case Middle",
+    middleCaseMaterialDescription:
+      "The Middle layer acts as a light guide that carries the side LED light to the outer edge. Clear, frosted, or other translucent filament or resin lets layer colors and animations glow through the side.",
+    downloads: [
+      {
+        format: "ZIP",
+        title: "PCB Gerber v2",
+        description: "Copper, mask, silkscreen, outline, and drill files",
+        file: "octgear-pcb-gerbers-v2.zip",
+      },
+      {
+        format: "STL",
+        title: "Case Top",
+        description: "Top case layer",
+        file: "octgear-case-top.stl",
+      },
+      {
+        format: "STL",
+        title: "Case Middle",
+        description: "Light-transmitting middle layer; clear or translucent recommended",
+        file: "octgear-case-middle.stl",
+      },
+      {
+        format: "STL",
+        title: "Case Bottom",
+        description: "Bottom case layer",
+        file: "octgear-case-bottom.stl",
+      },
+      {
+        format: "STL",
+        title: "Encoder Knob",
+        description: "Knob for a D-shaft rotary encoder",
+        file: "octgear-encoder-knob.stl",
+      },
+    ],
+    downloadAction: "Download",
+    downloadNoticeTitle: "Inspect the files before manufacturing",
+    downloadNoticeDescription:
+      "These Gerber and STL files target the current hardware. Verify dimensions, hole positions, and component fit before ordering or printing. Use and redistribution are governed by the",
     firmwareKicker: "Firmware & Keymap",
     firmwareTitle: "Install firmware and configure",
     firmwareDescription:

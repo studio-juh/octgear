@@ -50,6 +50,7 @@ export const ja = {
     pageIndex: [
       { href: "#prepare", label: "準備" },
       { href: "#assembly", label: "組み立て" },
+      { href: "#downloads", label: "配布データ" },
       { href: "#firmware", label: "Firmware" },
       { href: "#final-check", label: "動作確認" },
     ],
@@ -84,6 +85,28 @@ export const ja = {
     encoderLabel: "Rotary",
     encoderOperations: "CCW / CW / SW",
     ledStripLabel: "Side LEDs",
+    pcbReferenceTitle: "PCB製造プレビュー",
+    pcbReferenceDescription:
+      "Top、配線レイヤー、Bottomを拡大して、スイッチ位置、外形、端子列を確認できます。画像を選択すると原寸で開きます。",
+    pcbImages: [
+      {
+        file: "octgear-pcb-top.png",
+        title: "PCB Top",
+        alt: "OctGear PCBのTop面製造プレビュー",
+      },
+      {
+        file: "octgear-pcb-layers.png",
+        title: "PCB Layers",
+        alt: "OctGear PCBの配線レイヤープレビュー",
+      },
+      {
+        file: "octgear-pcb-bottom.png",
+        title: "PCB Bottom",
+        alt: "OctGear PCBのBottom面製造プレビュー",
+      },
+    ],
+    enlargePcbImage: (title: string) => `${title}を拡大表示`,
+    closePcbImage: "拡大画像を閉じる",
     assemblyKicker: "Assembly",
     assemblyTitle: "組み立て手順",
     assemblyDescription:
@@ -110,9 +133,10 @@ export const ja = {
       {
         title: "ケースを固定する",
         description:
-          "PCBをケースへ収め、スペーサーとねじを対角順に少しずつ締めます。最後にキーキャップとノブを取り付けます。",
+          "PCBをケースへ収め、Bottom、光を通すMiddle、Topの順を確認して、スペーサーとねじを対角順に少しずつ締めます。最後にキーキャップとノブを取り付けます。",
         checks: [
           "PCBや配線をケースで挟んでいない",
+          "Case Middleには透明または半透明の素材を使用している",
           "ねじを締めすぎず、ノブとケースの間に回転できる隙間がある",
         ],
       },
@@ -126,6 +150,56 @@ export const ja = {
         ],
       },
     ],
+    downloadsKicker: "Manufacturing Files",
+    downloadsTitle: "製造・3Dプリントデータ",
+    downloadsDescription:
+      "PCB発注用Gerberと、ケース3層・エンコーダノブのSTLをダウンロードできます。ファイル名はOctGearの部品名へ統一しています。",
+    stlViewerTitle: "ケースとノブを3Dで確認",
+    stlViewerDescription:
+      "モデルを切り替え、ドラッグで回転しながら形状と穴位置を確認できます。STLはブラウザ内だけで処理します。",
+    stlViewerLoading: "STLを読み込み中",
+    stlViewerError: "3D表示を読み込めませんでした。STLを直接ダウンロードしてください。",
+    stlViewerReset: "表示をリセット",
+    stlViewerInstructions: "ドラッグ: 回転 / ホイール・ピンチ: ズーム",
+    middleCaseMaterialTitle: "Case Middleは透明／半透明素材を推奨",
+    middleCaseMaterialDescription:
+      "Middle層は側面LEDの光を外周へ通すライトガイドとして機能します。透明または乳白色などの半透明フィラメント／レジンを使用すると、側面からLayer色とアニメーションが見える構造です。",
+    downloads: [
+      {
+        format: "ZIP",
+        title: "PCB Gerber v2",
+        description: "銅箔、Mask、Silkscreen、外形、Drill",
+        file: "octgear-pcb-gerbers-v2.zip",
+      },
+      {
+        format: "STL",
+        title: "Case Top",
+        description: "ケース上層",
+        file: "octgear-case-top.stl",
+      },
+      {
+        format: "STL",
+        title: "Case Middle",
+        description: "LED光を通す中間層／透明・半透明推奨",
+        file: "octgear-case-middle.stl",
+      },
+      {
+        format: "STL",
+        title: "Case Bottom",
+        description: "ケース下層",
+        file: "octgear-case-bottom.stl",
+      },
+      {
+        format: "STL",
+        title: "Encoder Knob",
+        description: "D軸ロータリーエンコーダ用ノブ",
+        file: "octgear-encoder-knob.stl",
+      },
+    ],
+    downloadAction: "Download",
+    downloadNoticeTitle: "製造前に内容を確認してください",
+    downloadNoticeDescription:
+      "GerberとSTLは現行構成向けです。発注・造形前に寸法、穴位置、使用部品との適合を確認してください。利用・再頒布には",
     firmwareKicker: "Firmware & Keymap",
     firmwareTitle: "Firmwareを導入して初期設定",
     firmwareDescription:

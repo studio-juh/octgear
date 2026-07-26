@@ -151,7 +151,7 @@
 
 .guide-jump-nav {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   overflow: hidden;
 }
 
@@ -271,9 +271,9 @@
 .guide-notice {
   margin-top: 14px;
   padding: 16px 18px;
-  border-left: 4px solid var(--accent);
+  border-left: 4px solid #b36a2e;
   border-radius: 6px;
-  background: var(--selection-soft);
+  background: rgba(211, 140, 74, 0.1);
 }
 
 .guide-notice.warning {
@@ -411,6 +411,132 @@
   box-shadow: 0 0 16px rgba(50, 201, 188, 0.54);
 }
 
+.guide-pcb-reference {
+  display: grid;
+  gap: 16px;
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(78, 61, 38, 0.1);
+}
+
+.guide-pcb-reference h3,
+.guide-pcb-reference p {
+  margin: 0;
+}
+
+.guide-pcb-reference h3 {
+  font-size: 18px;
+}
+
+.guide-pcb-reference p {
+  max-width: 760px;
+  margin-top: 5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.guide-pcb-gallery {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.guide-pcb-gallery figure {
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid rgba(78, 61, 38, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 252, 247, 0.82);
+}
+
+.guide-pcb-gallery button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: #20211f;
+  box-shadow: none;
+  cursor: zoom-in;
+}
+
+.guide-pcb-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1366 / 604;
+  object-fit: contain;
+  transition: transform 160ms ease;
+}
+
+.guide-pcb-gallery button:hover img {
+  transform: scale(1.025);
+}
+
+.guide-pcb-gallery figcaption {
+  padding: 10px 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.guide-image-lightbox {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(20, 23, 22, 0.86);
+  backdrop-filter: blur(8px);
+  z-index: 50;
+}
+
+.guide-image-lightbox-dialog {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  width: min(1366px, calc(100vw - 40px));
+  max-height: calc(100vh - 40px);
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: #171918;
+  color: #f7f3ed;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+}
+
+.guide-image-lightbox-dialog img {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 104px);
+  object-fit: contain;
+}
+
+.guide-image-lightbox-dialog > strong {
+  padding: 0 4px;
+  font-size: 13px;
+}
+
+.guide-image-lightbox-close {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  min-height: 42px;
+  padding: 0;
+  border-color: rgba(255, 255, 255, 0.34);
+  border-radius: 50%;
+  background: rgba(18, 20, 19, 0.84);
+  color: white;
+  font-size: 25px;
+  line-height: 1;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+  z-index: 1;
+}
+
 .guide-steps {
   display: grid;
   gap: 0;
@@ -457,6 +583,202 @@
   margin-top: 7px;
   color: var(--text-muted);
   line-height: 1.65;
+}
+
+.guide-download-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.guide-stl-viewer {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 780px);
+  margin: 0 auto 20px;
+  padding: 16px;
+  border: 1px solid rgba(78, 61, 38, 0.13);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 85% 0%, rgba(13, 122, 114, 0.14), transparent 34%),
+    #202725;
+  color: #f7f3ed;
+}
+
+.guide-material-notice {
+  width: min(100%, 780px);
+  margin: 0 auto 18px;
+}
+
+.guide-stl-viewer-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.guide-stl-viewer-heading h3,
+.guide-stl-viewer-heading p {
+  margin: 0;
+}
+
+.guide-stl-viewer-heading h3 {
+  margin-top: 4px;
+  font-size: 19px;
+}
+
+.guide-stl-viewer-heading p {
+  max-width: 680px;
+  margin-top: 6px;
+  color: rgba(247, 243, 237, 0.66);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.guide-stl-viewer-heading .panel-kicker {
+  color: #8fddd5;
+}
+
+.guide-stl-viewer-heading .ghost-button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 12px;
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f7f3ed;
+}
+
+.guide-stl-model-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.guide-stl-model-tabs button {
+  min-height: 34px;
+  padding: 0 12px;
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(247, 243, 237, 0.72);
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.guide-stl-model-tabs button.active {
+  border-color: rgba(143, 221, 213, 0.62);
+  background: rgba(143, 221, 213, 0.16);
+  color: #d9fffa;
+}
+
+.guide-stl-viewport-shell {
+  position: relative;
+  overflow: hidden;
+  height: clamp(240px, 30vw, 340px);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(77, 166, 155, 0.15), transparent 43%),
+    #131716;
+}
+
+.guide-stl-viewport,
+.guide-stl-viewport canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.guide-stl-status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(19, 23, 22, 0.52);
+  color: rgba(247, 243, 237, 0.8);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  pointer-events: none;
+}
+
+.guide-stl-status.loading::before {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  margin-top: -52px;
+  border: 3px solid rgba(143, 221, 213, 0.18);
+  border-top-color: #8fddd5;
+  border-radius: 50%;
+  animation: guide-stl-spin 800ms linear infinite;
+  content: "";
+}
+
+.guide-stl-viewer-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: rgba(247, 243, 237, 0.58);
+  font-size: 11px;
+}
+
+.guide-stl-viewer-footer a {
+  color: #8fddd5;
+  font-weight: 800;
+}
+
+@keyframes guide-stl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.guide-download-card {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-height: 174px;
+  padding: 18px;
+  border: 1px solid rgba(78, 61, 38, 0.13);
+  border-radius: 8px;
+  background: rgba(255, 252, 247, 0.76);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.guide-download-card:hover {
+  border-color: rgba(13, 122, 114, 0.34);
+  box-shadow: 0 12px 24px rgba(39, 28, 12, 0.1);
+  transform: translateY(-2px);
+}
+
+.guide-download-card > span {
+  color: var(--accent-strong);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.guide-download-card > strong {
+  font-size: 17px;
+}
+
+.guide-download-card > small {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.guide-download-card > b {
+  align-self: end;
+  margin-top: auto;
+  padding-top: 10px;
+  color: var(--accent-strong);
+  font-size: 12px;
 }
 
 .guide-action-card {
@@ -581,12 +903,17 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .guide-jump-nav a:nth-child(2) {
+  .guide-jump-nav a {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .guide-jump-nav a:nth-child(2n) {
     border-right: 0;
   }
 
-  .guide-jump-nav a:nth-child(-n + 2) {
-    border-bottom: 1px solid var(--line);
+  .guide-jump-nav a:last-child {
+    grid-column: 1 / -1;
+    border-bottom: 0;
   }
 
   .guide-device-board {
@@ -651,6 +978,20 @@
     gap: 8px;
   }
 
+  .guide-stl-viewer-heading,
+  .guide-stl-viewer-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .guide-stl-viewport-shell {
+    height: 240px;
+  }
+
+  .guide-pcb-gallery {
+    grid-template-columns: 1fr;
+  }
+
   .guide-steps > li {
     gap: 12px;
     grid-template-columns: 42px minmax(0, 1fr);
@@ -671,6 +1012,8 @@
   .guide-topbar,
   .guide-hero-actions,
   .guide-jump-nav,
+  .guide-image-lightbox,
+  .guide-stl-viewer,
   .guide-action-card .product-action,
   .guide-diagnostics-action {
     display: none;

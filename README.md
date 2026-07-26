@@ -17,7 +17,7 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 - Keyboard、Consumer Control、次／前レイヤー、Momentary Layer割り当て
 - WebHID Remapperによる読込、編集、差分保存
 - 物理入力、設定report、Flash保存領域のDiagnostics
-- 頒布キット向けの組み立て・Firmware導入・動作確認ビルドガイド
+- 頒布キット向けの組み立て・Firmware導入・動作確認ガイドと製造データ配布
 - WebHIDからのBOOTSEL移行と、同梱UF2の更新
 - Key 5起動によるREADME drive / Serial rescue
 

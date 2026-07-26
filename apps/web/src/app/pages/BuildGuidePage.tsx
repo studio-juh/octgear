@@ -1,11 +1,42 @@
+import { useEffect, useState } from "react";
+import { StlViewer } from "../components/StlViewer";
 import { diagnosticsUrl, homeUrl, remapperUrl } from "../appUrls";
 import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
 import { t } from "../../shared/i18n";
 
 const HARDWARE_LICENSE_URL =
   "https://github.com/falxala/octgear/blob/main/HARDWARE-LICENSE.md";
+const BUILD_GUIDE_ASSET_URL = `${import.meta.env.BASE_URL}build-guide/`;
 
 export function BuildGuidePage() {
+  const [expandedPcbImageIndex, setExpandedPcbImageIndex] = useState<number | null>(
+    null,
+  );
+  const expandedPcbImage =
+    expandedPcbImageIndex === null
+      ? null
+      : t.buildGuide.pcbImages[expandedPcbImageIndex];
+
+  useEffect(() => {
+    if (!expandedPcbImage) {
+      return;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setExpandedPcbImageIndex(null);
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [expandedPcbImage]);
+
   return (
     <main className="app-shell guide-shell">
       <header className="guide-topbar">
@@ -128,6 +159,32 @@ export function BuildGuidePage() {
               </div>
             </div>
           </div>
+          <div className="guide-pcb-reference">
+            <div>
+              <h3>{t.buildGuide.pcbReferenceTitle}</h3>
+              <p>{t.buildGuide.pcbReferenceDescription}</p>
+            </div>
+            <div className="guide-pcb-gallery">
+              {t.buildGuide.pcbImages.map((image, imageIndex) => (
+                <figure key={image.file}>
+                  <button
+                    type="button"
+                    aria-label={t.buildGuide.enlargePcbImage(image.title)}
+                    onClick={() => setExpandedPcbImageIndex(imageIndex)}
+                  >
+                    <img
+                      src={`${BUILD_GUIDE_ASSET_URL}pcb/${image.file}`}
+                      alt={image.alt}
+                      loading="lazy"
+                      width="1366"
+                      height="604"
+                    />
+                  </button>
+                  <figcaption>{image.title}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
         </section>
 
         <section className="guide-section" id="assembly" aria-labelledby="assembly-title">
@@ -155,6 +212,57 @@ export function BuildGuidePage() {
               </li>
             ))}
           </ol>
+        </section>
+
+        <section className="guide-section" id="downloads" aria-labelledby="downloads-title">
+          <GuideHeading
+            kicker={t.buildGuide.downloadsKicker}
+            title={t.buildGuide.downloadsTitle}
+            description={t.buildGuide.downloadsDescription}
+            id="downloads-title"
+          />
+          <StlViewer
+            assetBaseUrl={`${BUILD_GUIDE_ASSET_URL}downloads/`}
+            labels={{
+              title: t.buildGuide.stlViewerTitle,
+              description: t.buildGuide.stlViewerDescription,
+              loading: t.buildGuide.stlViewerLoading,
+              error: t.buildGuide.stlViewerError,
+              reset: t.buildGuide.stlViewerReset,
+              instructions: t.buildGuide.stlViewerInstructions,
+            }}
+            models={t.buildGuide.downloads.filter(
+              (download) => download.format === "STL",
+            )}
+          />
+          <div className="guide-notice warning guide-material-notice">
+            <strong>{t.buildGuide.middleCaseMaterialTitle}</strong>
+            <p>{t.buildGuide.middleCaseMaterialDescription}</p>
+          </div>
+          <div className="guide-download-grid">
+            {t.buildGuide.downloads.map((download) => (
+              <a
+                className="guide-download-card"
+                href={`${BUILD_GUIDE_ASSET_URL}downloads/${download.file}`}
+                download
+                key={download.file}
+              >
+                <span>{download.format}</span>
+                <strong>{download.title}</strong>
+                <small>{download.description}</small>
+                <b>{t.buildGuide.downloadAction}</b>
+              </a>
+            ))}
+          </div>
+          <div className="guide-notice">
+            <strong>{t.buildGuide.downloadNoticeTitle}</strong>
+            <p>
+              {t.buildGuide.downloadNoticeDescription}{" "}
+              <a href={HARDWARE_LICENSE_URL} rel="noreferrer">
+                {t.buildGuide.licenseLink}
+              </a>
+            </p>
+          </div>
         </section>
 
         <section className="guide-section" id="firmware" aria-labelledby="firmware-title">
@@ -241,6 +349,39 @@ export function BuildGuidePage() {
           </p>
         </footer>
       </article>
+
+      {expandedPcbImage ? (
+        <div
+          className="guide-image-lightbox"
+          role="presentation"
+          onClick={() => setExpandedPcbImageIndex(null)}
+        >
+          <div
+            className="guide-image-lightbox-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label={expandedPcbImage.title}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="guide-image-lightbox-close"
+              aria-label={t.buildGuide.closePcbImage}
+              autoFocus
+              onClick={() => setExpandedPcbImageIndex(null)}
+            >
+              ×
+            </button>
+            <img
+              src={`${BUILD_GUIDE_ASSET_URL}pcb/${expandedPcbImage.file}`}
+              alt={expandedPcbImage.alt}
+              width="1366"
+              height="604"
+            />
+            <strong>{expandedPcbImage.title}</strong>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }

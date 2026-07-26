@@ -10,6 +10,8 @@ The materials in this directory are provided under the [OctGear Hardware License
 | --- | --- |
 | `profile.json` | 手動編集するsingle source of truth |
 | `pinout.md` | profileから生成する人向けpin table |
+| `../../apps/web/public/build-guide/pcb/` | Build Guide掲載用のPCB製造preview |
+| `../../apps/web/public/build-guide/downloads/` | 頒布用Gerber ZIPとcase / knob STL |
 
 同じprofileから次も生成します。
 
@@ -31,6 +33,8 @@ pnpm firmware:build
 
 Generated filesは直接編集しません。Generatorはindex順とencoder control IDを検証し、不整合時は失敗します。
 
+PCB preview、Gerber、STLはgenerator対象ではありません。製造データを更新した場合はBuild Guideの表示とdownload linkを確認し、Gerber ZIP内のprefixも`octgear-`へ揃えます。
+
 ## Electrical Assumptions
 
 - 2 Row x 4 Columnのmatrixで、ダイオードは使用しない
@@ -39,6 +43,7 @@ Generated filesは直接編集しません。Generatorはindex順とencoder cont
 - Encoder A/B/SWは`INPUT_PULLUP`、専用Common GPIOは常時`OUTPUT LOW`
 - External WS2812Bのdata inputはGPIO 14へ接続し、5 pixels分のdataを送る。4連実機では5番目のdataは無視される
 - Status表示は外付けWS2812Bへ出力し、対応boardではonboard WS2812にもミラーする
+- Case Middleは側面LEDの光を外周へ通す構造のため、透明または半透明の造形素材を推奨する
 - OLEDは使用しない
 - Key 5は通常inputとrescue boot triggerを兼用
 
