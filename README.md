@@ -100,10 +100,13 @@ Key 5を押しながらUSB接続すると、その起動だけread-onlyの`OCTGE
 
 | Document | 内容 |
 | --- | --- |
+| [Documentation Index](docs/index.md) | 目的別の文書案内と更新条件 |
 | [Architecture](docs/architecture.md) | システム構成、責務、実行時データフロー |
 | [Development](docs/development.md) | 環境構築、コマンド、変更別ワークフロー |
 | [Operations](docs/operations.md) | Remapper、更新、Diagnostics、Serial rescue |
 | [HID Report Protocol](docs/hid-report.md) | WebHID vendor reportのwire format |
+| [AI Context](docs/ai-context.md) | AI向けのproject map、正本、領域間契約 |
+| [Agent Guide](AGENTS.md) | AI agentの作業規約と検証checklist |
 | [Web App](apps/web/README.md) | Webアプリ内部の構成 |
 | [Firmware](firmware/octgear/README.md) | Firmwareの構成とbuild |
 | [Hardware](hardware/octgear/README.md) | Hardware profileと生成物 |
