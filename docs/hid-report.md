@@ -80,6 +80,8 @@ byte 3..31  response payload
 
 `enabledLayerMask`はbit indexをlayer indexとして使います。Bit 0は常に`1`です。`SetLayerEnabled`でLayer 0を無効にするrequestは`OutOfRange`になります。Active layerを無効にするとfirmwareはLayer 0へ戻ります。`SetLayer`とMomentary Layerは無効layerへ遷移せず、Layer Cycleは無効layerをskipします。
 
+`SetLayer`、Layer Cycle、Previous Layer、Serial rescueで変更した通常のactive layerは、最後の切り替えから10秒後にFlashへ保存され、次回起動時に復元されます。Momentary Layerは保存対象外です。
+
 旧firmwareの`GetState` responseは4 bytesです。Webはmask byteがない場合に全layer有効として扱います。`SetLayerEnabled`自体は新firmwareが必要です。
 
 Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常modeのLayer LEDを消灯します。Webは`GetLayerColor`未対応firmwareではprofileの既定色を表示し、色の書込時にfirmware更新を要求します。
@@ -102,7 +104,7 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 旧firmwareの`GetState` responseに10 byte目がない場合、Webはアニメーション輝度設定を未対応として扱います。
 
-`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、打鍵アニメーション、アニメーション輝度上限をcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerはLayer 0へ戻ります。
+`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、打鍵アニメーション、アニメーション輝度上限をcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerと次回起動LayerはLayer 0へ戻ります。
 
 ## Session Lifecycle
 

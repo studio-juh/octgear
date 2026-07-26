@@ -7,6 +7,7 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 - ダイオードなし2 x 4 key matrixと、独立GPIOのロータリーエンコーダCCW / CW / SW
 - 8 layers x 11 controlsのキーマップ
 - Layer 1-7の個別有効化。Layer 0は常時有効、既定有効はLayer 0/1
+- 通常のLayer切り替えは10秒間変化がなければFlashへ保存し、次回起動時に復元
 - LayerごとのRGB LED色設定。`0,0,0`で消灯
 - 外付けWS2812Bと内蔵mirrorの輝度上限を`0-128`で設定、Flash保存
 - 外付けWS2812Bのphysical pixel順を標準／反転で設定、Flash保存

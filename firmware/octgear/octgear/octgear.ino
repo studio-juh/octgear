@@ -2,6 +2,7 @@
 #include "config.h"
 #include "key_scanner.h"
 #include "keymap.h"
+#include "keymap_storage.h"
 #include "readme_drive.h"
 #include "serial_rescue.h"
 #include "status_led.h"
@@ -53,6 +54,7 @@ void loop() {
   }
 
   updateHidDevice();
+  updateKeymapStorage();
   if (readmeActive) {
     updateSerialRescue();
   }

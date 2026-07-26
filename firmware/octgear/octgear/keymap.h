@@ -20,7 +20,10 @@ enum class StatusKeyAnimation : uint8_t {
 void beginKeymap();
 void resetKeymapToDefaults();
 uint8_t activeLayer();
+uint8_t persistentLayer();
 void setActiveLayer(uint8_t layer);
+void setTransientActiveLayer(uint8_t layer);
+void restoreActiveLayers(uint8_t persistent, uint8_t active);
 uint8_t enabledLayerMask();
 bool layerEnabled(uint8_t layer);
 bool setLayerEnabled(uint8_t layer, bool enabled);

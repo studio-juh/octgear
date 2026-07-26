@@ -85,6 +85,7 @@ Assignmentは`None`、`Keyboard`、`Consumer`、`LayerCycle`、`MomentaryLayer`�
 - `LayerCycle`は有効なlayerだけを次方向へ循環します。
 - `LayerPrevious`は有効なlayerだけを前方向へ循環します。
 - `MomentaryLayer`はtarget layerが有効な場合だけ押下中に切り替え、releaseで通常layerへ戻ります。
+- 通常のactive layerは最後の切り替えから10秒間変化がなければFlashへ保存し、次回起動時に復元します。連続切り替えでは保存期限を延長し、Momentary Layerは保存しません。
 - Keyboard assignmentはmodifier bitmapと最大6 keycodesを持ちます。
 - Consumer assignmentは16-bit usageを1つ持ちます。
 - 押下中のKeyboard assignmentは単一の6KRO reportへ統合し、modifierはOR、keycodeは重複を除いて送ります。6種類を超える場合はErrorRollOverを送ります。
@@ -93,7 +94,7 @@ Assignmentは`None`、`Keyboard`、`Consumer`、`LayerCycle`、`MomentaryLayer`�
 
 Compile済みdefault keymapはLayer 0/1だけにassignmentを持ち、Layer 2-7は全controlが`None`です。具体的な割り当ては[Firmware Default Keymap](../firmware/octgear/README.md#default-keymap)を参照してください。
 
-起動時はcompile済みdefault keymap、layer設定、Encoder方向、LEDテープ方向、打鍵アニメーション、各輝度上限をRAMへ作成してから保存領域を読みます。保存領域のmagic、version、layer数、key数、record sizeのいずれかが一致しない場合は、現在のdefault設定を保存して初期化します。
+起動時はcompile済みdefault keymap、layer設定、Encoder方向、LEDテープ方向、打鍵アニメーション、各輝度上限をRAMへ作成してから保存領域を読みます。保存済みの通常Layerが有効なら、そのLayerをactiveにして開始します。保存領域のmagic、version、layer数、key数、record sizeのいずれかが一致しない場合は、現在のdefault設定を保存して初期化します。
 
 ## Web Modules
 

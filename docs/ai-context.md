@@ -15,7 +15,7 @@ OctGearはRP2040 Zero互換boardで動く、8キー + ロータリーエンコ�
 | Default identity | `0xCAFE:0xC608`、Manufacturer / Productは`OctGear` |
 | Web | React 19 + TypeScript + Vite multi-page app |
 | Firmware | RP2040 Arduino core + Adafruit TinyUSB |
-| Persistence | External SPI Flashの3-slot journal + CRC |
+| Persistence | External SPI Flashの3-slot journal + CRC。通常Layerは切り替え後10秒で保存 |
 | Status LED | GPIO 14のWS2812B 5 pixels、対応boardでは内蔵LEDへmirror |
 
 ## System Map
@@ -56,7 +56,7 @@ RP2040 firmware
 
 ### Normal
 
-Scannerがmatrixとencoderを読み、active layerのassignmentをKeyboard / Consumer reportへ変換します。Layer変更は有効なlayerだけを対象にします。
+Scannerがmatrixとencoderを読み、active layerのassignmentをKeyboard / Consumer reportへ変換します。Layer変更は有効なlayerだけを対象にします。通常のLayer変更は最後の切り替えから10秒後にFlashへ保存され、次回起動時に復元されます。Momentary Layerは一時状態のため保存しません。
 
 ### Remapper / Diagnostics
 

@@ -14,7 +14,8 @@ namespace {
 
 constexpr uint8_t STORAGE_MAGIC[4] = { 'C', 'M', '8', 'J' };
 constexpr uint8_t STORAGE_SELF_TEST_MAGIC[4] = { 'C', 'M', '8', 'T' };
-constexpr uint8_t STORAGE_VERSION = 4;
+constexpr uint8_t STORAGE_VERSION = 5;
+constexpr uint8_t LEGACY_STORAGE_VERSION_4 = 4;
 constexpr uint8_t LEGACY_STORAGE_VERSION_3 = 3;
 constexpr uint8_t LEGACY_STORAGE_VERSION_2 = 2;
 constexpr uint8_t SLOT_COUNT = 3;
@@ -39,7 +40,10 @@ constexpr int LAYER_COLORS_ADDRESS = ENABLED_LAYER_MASK_ADDRESS + 1;
 constexpr int LEGACY_STORAGE_DATA_SIZE =
   LAYER_COLORS_ADDRESS + (Config::LAYER_COUNT * LAYER_COLOR_SIZE);
 constexpr int STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS = LEGACY_STORAGE_DATA_SIZE;
-constexpr int STORAGE_DATA_SIZE = STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS + 1;
+constexpr int VERSION_4_STORAGE_DATA_SIZE =
+  STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS + 1;
+constexpr int PERSISTENT_LAYER_ADDRESS = VERSION_4_STORAGE_DATA_SIZE;
+constexpr int STORAGE_DATA_SIZE = PERSISTENT_LAYER_ADDRESS + 1;
 constexpr int PROGRAM_SIZE = ((STORAGE_DATA_SIZE + FLASH_PAGE_SIZE - 1) / FLASH_PAGE_SIZE) * FLASH_PAGE_SIZE;
 
 static_assert(STORAGE_DATA_SIZE <= static_cast<int>(SLOT_SIZE), "Keymap must fit in one flash sector");
@@ -48,6 +52,9 @@ static_assert(PROGRAM_SIZE <= static_cast<int>(SLOT_SIZE), "Program data must fi
 bool storageAvailable = false;
 int8_t currentSlot = -1;
 uint32_t currentGeneration = 0;
+bool activeLayerSavePending = false;
+uint32_t activeLayerChangedAtMs = 0;
+uint8_t lastSavedActiveLayer = 0;
 
 enum class SlotKind : uint8_t {
   Normal,
@@ -120,7 +127,13 @@ uint32_t calculateSlotCrc(const uint8_t* data, int storageDataSize) {
 }
 
 int storageDataSizeForVersion(uint8_t version) {
-  return version == STORAGE_VERSION ? STORAGE_DATA_SIZE : LEGACY_STORAGE_DATA_SIZE;
+  if (version == STORAGE_VERSION) {
+    return STORAGE_DATA_SIZE;
+  }
+  if (version == LEGACY_STORAGE_VERSION_4) {
+    return VERSION_4_STORAGE_DATA_SIZE;
+  }
+  return LEGACY_STORAGE_DATA_SIZE;
 }
 
 bool validKind(uint8_t value) {
@@ -154,6 +167,7 @@ bool slotValid(uint8_t slot, SlotKind kind) {
 
 bool slotReadable(uint8_t slot, SlotKind kind) {
   return slotValid(slot, kind) ||
+         slotValidForVersion(slot, kind, LEGACY_STORAGE_VERSION_4) ||
          slotValidForVersion(slot, kind, LEGACY_STORAGE_VERSION_3) ||
          slotValidForVersion(slot, kind, LEGACY_STORAGE_VERSION_2);
 }
@@ -237,6 +251,7 @@ void buildSlotData(uint8_t* data, uint32_t generation, SlotKind kind) {
   data[STATUS_LED_BRIGHTNESS_ADDRESS] = statusLedBrightness();
   data[STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS] =
     statusKeyAnimationBrightness();
+  data[PERSISTENT_LAYER_ADDRESS] = persistentLayer();
 
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
@@ -296,6 +311,8 @@ void beginKeymapStorage() {
   currentGeneration = currentSlot >= 0
     ? readUint32(slotData(static_cast<uint8_t>(currentSlot)), GENERATION_ADDRESS)
     : 0;
+  activeLayerSavePending = false;
+  lastSavedActiveLayer = 0;
 }
 
 bool loadKeymapFromStorage() {
@@ -342,10 +359,15 @@ bool loadKeymapFromStorage() {
         )
   );
   setStatusKeyAnimationBrightness(
-    storageVersion == STORAGE_VERSION
+    storageVersion >= LEGACY_STORAGE_VERSION_4
       ? data[STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS]
       : Config::DEFAULT_STATUS_KEY_ANIMATION_BRIGHTNESS
   );
+  const uint8_t loadedActiveLayer = storageVersion == STORAGE_VERSION
+    ? data[PERSISTENT_LAYER_ADDRESS]
+    : 0;
+  restoreActiveLayers(loadedActiveLayer, loadedActiveLayer);
+  lastSavedActiveLayer = persistentLayer();
   if (storageVersion != STORAGE_VERSION) {
     saveKeymapToStorage();
   }
@@ -353,7 +375,12 @@ bool loadKeymapFromStorage() {
 }
 
 bool saveKeymapToStorage() {
-  return saveCurrentKeymapToStorage(SlotKind::Normal);
+  const bool saved = saveCurrentKeymapToStorage(SlotKind::Normal);
+  if (saved) {
+    lastSavedActiveLayer = persistentLayer();
+    activeLayerSavePending = false;
+  }
+  return saved;
 }
 
 bool saveAssignmentToStorage(uint8_t layer, uint8_t keyIndex) {
@@ -394,11 +421,35 @@ bool saveStatusKeyAnimationBrightnessToStorage() {
   return saveKeymapToStorage();
 }
 
+void scheduleActiveLayerSave() {
+  if (persistentLayer() == lastSavedActiveLayer) {
+    activeLayerSavePending = false;
+    return;
+  }
+
+  activeLayerSavePending = true;
+  activeLayerChangedAtMs = millis();
+}
+
+void updateKeymapStorage() {
+  if (
+    !activeLayerSavePending ||
+    millis() - activeLayerChangedAtMs < Config::ACTIVE_LAYER_SAVE_DELAY_MS
+  ) {
+    return;
+  }
+
+  if (!saveKeymapToStorage()) {
+    activeLayerChangedAtMs = millis();
+  }
+}
+
 bool runKeymapStorageSelfTest() {
   KeyAssignment backup[Config::LAYER_COUNT][Config::KEY_COUNT];
   KeyAssignment pattern[Config::LAYER_COUNT][Config::KEY_COUNT];
   const uint8_t backupLayerMask = enabledLayerMask();
   const uint8_t backupActiveLayer = activeLayer();
+  const uint8_t backupPersistentLayer = persistentLayer();
   const bool backupEncoderReversed = encoderReversed();
   const bool patternEncoderReversed = !backupEncoderReversed;
   const bool backupStatusLedReversed = statusLedReversed();
@@ -415,6 +466,7 @@ bool runKeymapStorageSelfTest() {
   const uint8_t patternStatusKeyAnimationBrightness =
     backupStatusKeyAnimationBrightness == 91 ? 90 : 91;
   const uint8_t patternLayerMask = static_cast<uint8_t>(0x55U & ((1U << Config::LAYER_COUNT) - 1U));
+  const uint8_t patternActiveLayer = Config::LAYER_COUNT > 2 ? 2 : 0;
   LayerColor backupLayerColors[Config::LAYER_COUNT];
   LayerColor patternLayerColors[Config::LAYER_COUNT];
 
@@ -443,6 +495,7 @@ bool runKeymapStorageSelfTest() {
   }
 
   setEnabledLayerMask(patternLayerMask);
+  setActiveLayer(patternActiveLayer);
   setEncoderReversed(patternEncoderReversed);
   setStatusLedReversed(patternStatusLedReversed);
   setStatusLedBrightness(patternStatusLedBrightness);
@@ -462,6 +515,10 @@ bool runKeymapStorageSelfTest() {
   }
 
   if (ok && enabledLayerMask() != patternLayerMask) {
+    ok = false;
+  }
+
+  if (ok && persistentLayer() != patternActiveLayer) {
     ok = false;
   }
 
@@ -533,7 +590,7 @@ bool runKeymapStorageSelfTest() {
   }
 
   setEnabledLayerMask(backupLayerMask);
-  setActiveLayer(backupActiveLayer);
+  restoreActiveLayers(backupPersistentLayer, backupActiveLayer);
   setEncoderReversed(backupEncoderReversed);
   setStatusLedReversed(backupStatusLedReversed);
   setStatusLedBrightness(backupStatusLedBrightness);

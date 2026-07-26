@@ -45,6 +45,7 @@ struct KeymapSnapshot {
   KeyAssignment assignments[Config::LAYER_COUNT][Config::KEY_COUNT];
   LayerColor colors[Config::LAYER_COUNT];
   uint8_t activeLayerIndex;
+  uint8_t persistentLayerIndex;
   uint8_t enabledMask;
   bool encoderReversedValue;
   bool statusLedReversedValue;
@@ -55,6 +56,7 @@ struct KeymapSnapshot {
 
 void captureKeymapSnapshot(KeymapSnapshot& snapshot) {
   snapshot.activeLayerIndex = activeLayer();
+  snapshot.persistentLayerIndex = persistentLayer();
   snapshot.enabledMask = enabledLayerMask();
   snapshot.encoderReversedValue = encoderReversed();
   snapshot.statusLedReversedValue = statusLedReversed();
@@ -87,7 +89,10 @@ void restoreKeymapSnapshot(const KeymapSnapshot& snapshot) {
   setStatusKeyAnimationBrightness(
     snapshot.statusKeyAnimationBrightnessValue
   );
-  setActiveLayer(snapshot.activeLayerIndex);
+  restoreActiveLayers(
+    snapshot.persistentLayerIndex,
+    snapshot.activeLayerIndex
+  );
 }
 
 bool sendConfigReportWhenReady(const uint8_t* report, uint8_t length) {
@@ -163,6 +168,7 @@ void handleSetLayerEnabled(const uint8_t* buffer, uint16_t size) {
   const bool enabled = buffer[2] != 0;
   const uint8_t previousMask = enabledLayerMask();
   const uint8_t previousActiveLayer = activeLayer();
+  const uint8_t previousPersistentLayer = persistentLayer();
   if (!setLayerEnabled(layer, enabled)) {
     sendConfigResponse(ConfigCommand::SetLayerEnabled, ConfigStatus::OutOfRange, nullptr, 0);
     return;
@@ -170,7 +176,7 @@ void handleSetLayerEnabled(const uint8_t* buffer, uint16_t size) {
 
   if (!saveEnabledLayerMaskToStorage()) {
     setEnabledLayerMask(previousMask);
-    setActiveLayer(previousActiveLayer);
+    restoreActiveLayers(previousPersistentLayer, previousActiveLayer);
     sendConfigResponse(ConfigCommand::SetLayerEnabled, ConfigStatus::StorageError, nullptr, 0);
     return;
   }
@@ -642,7 +648,7 @@ void applyMomentaryLayerState() {
     }
   }
 
-  setActiveLayer(layer);
+  setTransientActiveLayer(layer);
 }
 
 void pressMomentaryLayer(uint8_t keyIndex, uint8_t sourceLayer, uint8_t targetLayer) {
@@ -696,6 +702,7 @@ uint8_t previousEnabledLayer(uint8_t layer) {
 void cyclePersistentLayer() {
   if (anyMomentaryLayerActive()) {
     momentaryBaseLayer = nextEnabledLayer(momentaryBaseLayer);
+    setActiveLayer(momentaryBaseLayer);
     applyMomentaryLayerState();
     return;
   }
@@ -706,6 +713,7 @@ void cyclePersistentLayer() {
 void cyclePersistentLayerBackward() {
   if (anyMomentaryLayerActive()) {
     momentaryBaseLayer = previousEnabledLayer(momentaryBaseLayer);
+    setActiveLayer(momentaryBaseLayer);
     applyMomentaryLayerState();
     return;
   }

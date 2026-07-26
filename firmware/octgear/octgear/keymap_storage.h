@@ -13,4 +13,6 @@ bool saveStatusLedReversedToStorage();
 bool saveStatusLedBrightnessToStorage();
 bool saveStatusKeyAnimationToStorage();
 bool saveStatusKeyAnimationBrightnessToStorage();
+void scheduleActiveLayerSave();
+void updateKeymapStorage();
 bool runKeymapStorageSelfTest();

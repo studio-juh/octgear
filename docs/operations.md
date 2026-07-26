@@ -35,6 +35,8 @@ PCがスリープしてUSBがサスペンド状態になると、外付けLEDと
 
 初期キーマップはLayer 0/1だけに割り当てがあり、Layer 2〜7は空です。Firmwareを更新しただけでは保存済み設定を上書きしません。初期値へ戻す場合はRemapperのRead左側にあるメニューから初期化します。
 
+Next Layer、Previous Layer、Remapper、Serial rescueで通常Layerを切り替えると、最後の切り替えから10秒後に現在LayerをFlashへ自動保存します。10秒以内の連続切り替えは1回の保存へまとめられ、次回起動時は保存したLayerから始まります。Momentary Layerは押している間だけの一時状態なので保存しません。
+
 物理キーやencoderを操作すると、対応するcontrol tileが選択されます。接続中はheartbeatにより通常のKeyboard / Consumer出力がfirmware側で抑止されるため、設定操作がPC入力として流れません。
 
 ### Assignment Types
@@ -112,7 +114,7 @@ Layerは`0-7`、key番号は`1-11`です。数値はdecimalまたは`0x`付きhe
 | `help` / `?` | command一覧 | No |
 | `state` | active layerとcountを表示 | No |
 | `dump` | 全assignmentを表示 | No |
-| `layer <layer>` | active layerを変更 | No |
+| `layer <layer>` | active layerを変更 | 10秒後 |
 | `get <layer> <key>` | assignmentを表示 | No |
 | `none <layer> <key>` | assignmentを消去 | Yes |
 | `key <layer> <key> <modifier> <keycode...>` | Keyboard assignmentを設定 | Yes |

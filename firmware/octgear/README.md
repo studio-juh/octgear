@@ -7,6 +7,7 @@ RP2040 Arduino coreとAdafruit TinyUSBを使う、現行8キー + rotary encoder
 - ダイオードなし2 x 4 key matrixとencoder A/B/SWのscan
 - 8 layers x 11 controlsのkeymap解決
 - Layer 1-7の有効状態を保存し、layer遷移から無効layerを除外。既定有効はLayer 0/1
+- 通常のactive layerを最後の切り替えから10秒後に保存し、次回起動時に復元。Momentary Layerは保存対象外
 - LayerごとのRGB LED色を保存。`0,0,0`で消灯
 - LEDテープのphysical pixel順を標準／反転で保存
 - 打鍵アニメーションを無効／波紋／フラッシュ／スパークから選択して保存
@@ -96,11 +97,11 @@ Layer 2〜7は全controlが`None`です。既定で有効なのはLayer 0/1だ�
 
 ## Storage
 
-Keymap、layer enable mask、layer RGB colors、各LED輝度上限、Encoder方向、LEDテープ方向、打鍵アニメーションはexternal SPI Flash上の独立した3つの4KB sectorへ循環保存します。各slotはgenerationとCRCを持ち、起動時はCRCが正常な最新generationを読み込みます。保存中に電源が切れて新slotが不完全になっても、直前の正常slotへfallbackします。
+Keymap、通常のactive layer、layer enable mask、layer RGB colors、各LED輝度上限、Encoder方向、LEDテープ方向、打鍵アニメーションはexternal SPI Flash上の独立した3つの4KB sectorへ循環保存します。各slotはgenerationとCRCを持ち、起動時はCRCが正常な最新generationを読み込みます。保存中に電源が切れて新slotが不完全になっても、直前の正常slotへfallbackします。
 
-現行storage versionは`4`です。Version 3の保存設定は内容を保持したまま自動移行し、追加されたアニメーション輝度上限だけhardware profileの既定値`96`で補います。Version 2はさらにLEDテープ方向と打鍵アニメーションも既定値で補います。Version 1以前の保存設定は移行せず、Firmware更新後の初回起動でcompile済み既定値へ初期化します。
+現行storage versionは`5`です。Version 4の保存設定は内容を保持したまま自動移行し、保存LayerだけLayer 0で初期化します。Version 3はさらにアニメーション輝度上限をhardware profileの既定値`96`で補い、Version 2はLEDテープ方向と打鍵アニメーションも既定値で補います。Version 1以前の保存設定は移行せず、Firmware更新後の初回起動でcompile済み既定値へ初期化します。
 
-標準buildはArduino coreがfilesystem用として扱う64KBをFirmware領域から分離して予約します。Filesystemはmountせず、その先頭12KBをjournalに直接使用します。設定変更時はRAM上の設定全体を次slotへ書き、1回の保存で消去するsectorを1つに限定します。保存形式が無効または未初期化ならcompile済みdefaultで初期化します。
+標準buildはArduino coreがfilesystem用として扱う64KBをFirmware領域から分離して予約します。Filesystemはmountせず、その先頭12KBをjournalに直接使用します。設定変更時はRAM上の設定全体を次slotへ書き、1回の保存で消去するsectorを1つに限定します。通常Layerの切り替えは10秒間変化がなければ保存し、連続操作を1回の書き込みへまとめます。この間に別の設定を保存した場合は、その書き込みへ現在Layerも含めます。保存形式が無効または未初期化ならcompile済みdefaultで初期化します。
 
 Diagnostics / Serial rescueのstorage self-testはtest patternのwrite、readback、元keymapのrestoreを行います。Test patternのslotは通常journalと異なるmagicを持ち、復元前に電源が切れても通常起動では読み込みません。実Flashへ書くため、必要な検査時だけ実行します。
 

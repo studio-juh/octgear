@@ -6,6 +6,7 @@
 namespace {
 
 uint8_t currentLayer = 0;
+uint8_t currentPersistentLayer = 0;
 static_assert(Config::LAYER_COUNT > 0 && Config::LAYER_COUNT <= 8, "Layer mask supports 1-8 layers");
 constexpr uint8_t ALL_LAYERS_ENABLED_MASK = static_cast<uint8_t>((1U << Config::LAYER_COUNT) - 1U);
 uint8_t currentEnabledLayerMask = Config::DEFAULT_ENABLED_LAYER_MASK;
@@ -69,6 +70,7 @@ void beginKeymap() {
 
 void resetKeymapToDefaults() {
   currentLayer = 0;
+  currentPersistentLayer = 0;
   currentEnabledLayerMask = Config::DEFAULT_ENABLED_LAYER_MASK;
   currentEncoderReversed = Config::ENCODER_REVERSED;
   currentStatusLedReversed = Config::EXTERNAL_RGB_LED_REVERSED;
@@ -162,9 +164,32 @@ uint8_t activeLayer() {
   return currentLayer;
 }
 
+uint8_t persistentLayer() {
+  return currentPersistentLayer;
+}
+
 void setActiveLayer(uint8_t layer) {
   if (layerEnabled(layer)) {
+    const bool changed = currentPersistentLayer != layer;
+    currentPersistentLayer = layer;
     currentLayer = layer;
+    if (changed) {
+      scheduleActiveLayerSave();
+    }
+  }
+}
+
+void setTransientActiveLayer(uint8_t layer) {
+  if (layerEnabled(layer)) {
+    currentLayer = layer;
+  }
+}
+
+void restoreActiveLayers(uint8_t persistent, uint8_t active) {
+  currentPersistentLayer = layerEnabled(persistent) ? persistent : 0;
+  currentLayer = layerEnabled(active) ? active : currentPersistentLayer;
+  if (!layerEnabled(currentLayer)) {
+    currentLayer = 0;
   }
 }
 
@@ -187,8 +212,11 @@ bool setLayerEnabled(uint8_t layer, bool enabled) {
     ? static_cast<uint8_t>(currentEnabledLayerMask | bit)
     : static_cast<uint8_t>(currentEnabledLayerMask & ~bit);
 
+  if (!layerEnabled(currentPersistentLayer)) {
+    currentPersistentLayer = 0;
+  }
   if (!layerEnabled(currentLayer)) {
-    currentLayer = 0;
+    currentLayer = currentPersistentLayer;
   }
 
   return true;
@@ -196,8 +224,11 @@ bool setLayerEnabled(uint8_t layer, bool enabled) {
 
 void setEnabledLayerMask(uint8_t mask) {
   currentEnabledLayerMask = static_cast<uint8_t>((mask & ALL_LAYERS_ENABLED_MASK) | 0x01U);
+  if (!layerEnabled(currentPersistentLayer)) {
+    currentPersistentLayer = 0;
+  }
   if (!layerEnabled(currentLayer)) {
-    currentLayer = 0;
+    currentLayer = currentPersistentLayer;
   }
 }
 
