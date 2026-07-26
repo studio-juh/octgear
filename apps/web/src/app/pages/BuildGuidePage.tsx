@@ -95,14 +95,16 @@ export function BuildGuidePage() {
           </dl>
         </section>
 
-        <nav className="guide-jump-nav" aria-label={t.buildGuide.pageIndexLabel}>
-          {t.buildGuide.pageIndex.map((item, index) => (
-            <a href={item.href} key={item.href}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <div className="guide-body">
+          <nav className="guide-jump-nav" aria-label={t.buildGuide.pageIndexLabel}>
+            {t.buildGuide.pageIndex.map((item, index) => (
+              <a href={item.href} key={item.href}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <div className="guide-main">
 
         <section className="guide-section" id="prepare" aria-labelledby="prepare-title">
           <GuideHeading
@@ -404,6 +406,8 @@ export function BuildGuidePage() {
             </a>
           </p>
         </footer>
+          </div>
+        </div>
       </article>
 
       {expandedImage ? (
