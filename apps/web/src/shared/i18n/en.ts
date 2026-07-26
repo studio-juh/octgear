@@ -64,7 +64,7 @@ export const en: typeof ja = {
     packageTitle: "Main parts",
     packageItems: [
       "OctGear main PCB / controller",
-      "Eight key switches and eight keycaps",
+      "Eight key switches and eight keycaps (all positions support 1U)",
       "Rotary encoder and knob when supplied unassembled",
       "Plate, case, screws, and spacers as included",
     ],
@@ -81,10 +81,11 @@ export const en: typeof ja = {
     layoutKicker: "Control Layout",
     layoutTitle: "Finished control layout",
     layoutDescription:
-      "The finished layout has Key 1–4 on top, a right-shifted Key 5–8 row below, and the rotary encoder extending from the lower right. Side LEDs are numbered 1–5 from left to right.",
+      "The finished layout has Key 1–4 on top, a right-shifted Key 5–8 row below, and the rotary encoder extending from the lower right. Every position works with a 1U keycap. To close the visual gaps, Key 1 can optionally use 1.25U and Key 5 can use 1.5U. Side LEDs are numbered 1–5 from left to right.",
     layoutAriaLabel:
-      "Finished layout with Key 1 through 4 on top, a right-shifted Key 5 through 8 row below, the rotary encoder at lower right, and five side LEDs shown separately below",
+      "Finished layout with optional 1.25U Key 1 in the top Key 1 through 4 row, optional 1.5U Key 5 in the right-shifted Key 5 through 8 row, the rotary encoder at lower right, and five side LEDs shown separately below; every key also supports 1U",
     keyLabel: (index) => `Key ${index}`,
+    optionalKeycapSize: (size) => `${size} opt.`,
     encoderLabel: "Rotary",
     encoderOperations: "CCW / CW / SW",
     ledStripLabel: "Side LEDs",

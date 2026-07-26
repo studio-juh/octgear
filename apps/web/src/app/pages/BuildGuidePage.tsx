@@ -7,6 +7,16 @@ import { t } from "../../shared/i18n";
 const HARDWARE_LICENSE_URL =
   "https://github.com/falxala/octgear/blob/main/HARDWARE-LICENSE.md";
 const BUILD_GUIDE_ASSET_URL = `${import.meta.env.BASE_URL}build-guide/`;
+const KEYCAP_SIZE_LABELS = [
+  "1.25U",
+  null,
+  null,
+  null,
+  "1.5U",
+  null,
+  null,
+  null,
+] as const;
 
 type ExpandedGuideImage = {
   src: string;
@@ -150,6 +160,13 @@ export function BuildGuidePage() {
                   (_, keyIndex) => (
                     <div className="guide-device-key" key={keyIndex}>
                       <span>{t.buildGuide.keyLabel(keyIndex + 1)}</span>
+                      {KEYCAP_SIZE_LABELS[keyIndex] ? (
+                        <small>
+                          {t.buildGuide.optionalKeycapSize(
+                            KEYCAP_SIZE_LABELS[keyIndex],
+                          )}
+                        </small>
+                      ) : null}
                     </div>
                   ),
                 )}

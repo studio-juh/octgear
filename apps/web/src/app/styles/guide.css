@@ -361,9 +361,11 @@
 .guide-device-key {
   position: absolute;
   display: grid;
-  place-items: center;
+  align-content: center;
+  justify-items: center;
+  gap: 1px;
   width: 11.7%;
-  aspect-ratio: 1;
+  height: 23.4%;
   border: clamp(1px, 0.3vw, 3px) solid rgba(255, 255, 255, 0.42);
   border-radius: clamp(5px, 1vw, 9px);
   background: #b86d58;
@@ -375,6 +377,13 @@
     0 5px 9px rgba(78, 61, 38, 0.16);
 }
 
+.guide-device-key small {
+  font-size: 0.68em;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  opacity: 0.72;
+}
+
 .guide-device-key:nth-child(1),
 .guide-device-key:nth-child(5) {
   background: #eef0dd;
@@ -383,7 +392,8 @@
 
 .guide-device-key:nth-child(1) {
   top: 17%;
-  left: 9.3%;
+  left: 7.85%;
+  width: 14.625%;
 }
 
 .guide-device-key:nth-child(2) {
@@ -403,7 +413,8 @@
 
 .guide-device-key:nth-child(5) {
   top: 48.5%;
-  left: 11.4%;
+  left: 8.475%;
+  width: 17.55%;
 }
 
 .guide-device-key:nth-child(6) {

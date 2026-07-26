@@ -62,7 +62,7 @@ export const ja = {
     packageTitle: "主な構成品",
     packageItems: [
       "OctGear メインPCB／コントローラ",
-      "キースイッチ8個とキーキャップ8個",
+      "キースイッチ8個とキーキャップ8個（すべて1Uで使用可能）",
       "ロータリーエンコーダとノブ（未実装構成の場合）",
       "プレート、ケース、ねじ、スペーサー（同梱構成に応じて）",
     ],
@@ -79,10 +79,11 @@ export const ja = {
     layoutKicker: "Control Layout",
     layoutTitle: "完成時の操作配置",
     layoutDescription:
-      "盤面は上段Key 1〜4、右へずれた下段Key 5〜8、右下に張り出すロータリーエンコーダの配置です。側面LEDは左からLED 1〜5として扱います。",
+      "盤面は上段Key 1〜4、右へずれた下段Key 5〜8、右下に張り出すロータリーエンコーダの配置です。すべて1Uのキーキャップで使用できます。隙間を詰めたい場合のみ、Key 1に1.25U、Key 5に1.5Uを選べます。側面LEDは左からLED 1〜5として扱います。",
     layoutAriaLabel:
-      "上段Key 1から4、右へずれた下段Key 5から8、右下のロータリーエンコーダ、下に分けて示した側面5灯LEDの完成配置図",
+      "オプションの1.25U Key 1を含む上段Key 1から4、オプションの1.5U Key 5を含む右へずれた下段Key 5から8、右下のロータリーエンコーダ、下に分けて示した側面5灯LEDの完成配置図。全キー1Uでも使用可能",
     keyLabel: (index: number) => `Key ${index}`,
+    optionalKeycapSize: (size: string) => `${size} 任意`,
     encoderLabel: "Rotary",
     encoderOperations: "CCW / CW / SW",
     ledStripLabel: "Side LEDs",
