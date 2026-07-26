@@ -63,20 +63,31 @@ export const en: typeof ja = {
       "Compare everything against the package list first. If a part is missing or damaged, contact the distributor before applying power or soldering.",
     packageTitle: "Main parts",
     packageItems: [
-      "OctGear main PCB",
+      "OctGear main PCB (order from JLCPCB or another PCB manufacturer using the Gerber files)",
       "Waveshare RP2040-Zero or a compatible board (RP2350-Zero is a compatibility candidate; it needs a separate firmware build and is not hardware-tested)",
       "Eight key switches and eight keycaps (all positions support 1U)",
       "Eight key hot-swap sockets",
-      "Rotary encoder and knob when supplied unassembled",
+      "EC11 rotary encoder (15 mm height) and knob",
+      "WS2812B LED strip (DC 5 V, 1 m / 60 LEDs; five LEDs used)",
       "M2 × 8 mm screws or compatible self-tapping screws",
-      "Plate, case, and spacers as included",
+      "Case and plate (self-print in 3D or order from JLC3DP or a similar service)",
+      "Spacers are normally unnecessary; use cushioning tape or similar material only if adjustment is needed",
+      "Four rubber bumpers (used as non-slip feet on the case bottom)",
     ],
     toolsTitle: "What you need",
     toolItems: [
       "A USB cable that supports data",
       "A small screwdriver that fits the case hardware",
       "Tweezers for inspecting bent terminals",
-      "Soldering iron, solder, and ventilation only for soldered kits",
+      "Soldering iron",
+      "Solder",
+      "Hookup wire such as AWG 24",
+      "Ventilation equipment",
+    ],
+    optionalToolsTitle: "Helpful extras",
+    optionalToolItems: [
+      "Switch puller",
+      "Pliers for tightening the rotary encoder nut",
     ],
     safetyTitle: "Disconnect USB before working",
     safetyDescription:
@@ -155,7 +166,7 @@ export const en: typeof ja = {
       {
         title: "Fasten the case",
         description:
-          "Place the PCB into the case, confirm the Bottom, light-transmitting Middle, and Top order, then tighten spacers and screws a little at a time in a diagonal pattern. Install keycaps and the knob last.",
+          "Place the PCB into the case, confirm the Bottom, light-transmitting Middle, and Top order, then tighten the screws a little at a time in a diagonal pattern. Spacers are normally unnecessary; use cushioning tape or similar material only if play needs adjustment. Install keycaps and the knob last.",
         checks: [
           "The case does not pinch the PCB or wiring",
           "Case Middle uses a transparent or translucent material",

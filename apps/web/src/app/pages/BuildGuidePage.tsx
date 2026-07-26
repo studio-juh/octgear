@@ -132,6 +132,10 @@ export function BuildGuidePage() {
               title={t.buildGuide.toolsTitle}
               items={t.buildGuide.toolItems}
             />
+            <GuideChecklist
+              title={t.buildGuide.optionalToolsTitle}
+              items={t.buildGuide.optionalToolItems}
+            />
           </div>
           <div className="guide-notice warning">
             <strong>{t.buildGuide.safetyTitle}</strong>
