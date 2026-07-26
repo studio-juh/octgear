@@ -7,6 +7,7 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       input: {
         index: "index.html",
+        buildGuide: "build-guide.html",
         remapper: "remapper.html",
         diagnostics: "diagnostics.html",
       },

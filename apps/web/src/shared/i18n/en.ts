@@ -12,7 +12,7 @@ export const en: typeof ja = {
   home: {
     eyebrow: "OctGear",
     title: "Device Hub",
-    description: "Choose a supported device to open its remapper or firmware updater.",
+    description: "Open the build guide, remapper, or firmware updater for your device.",
     productListLabel: "Product list",
     products: [
       {
@@ -27,9 +27,181 @@ export const en: typeof ja = {
     layers: "Layers",
     connection: "Connection",
     connectionValue: "WebHID",
+    openBuildGuide: "Build Guide",
     openRemapper: "Open Remapper",
     openDiagnostics: "Open Diagnostics",
     backHome: "Home",
+  },
+  buildGuide: {
+    brandKicker: "Build Guide",
+    navigationLabel: "Build guide navigation",
+    kicker: "Assembly & Setup",
+    title: "OctGear Build Guide",
+    description:
+      "Follow the distributed kit from inspection and assembly through firmware setup and a complete input check. If your package differs, follow the instructions supplied by its distributor.",
+    start: "Start assembly",
+    jumpToCheck: "View final check",
+    factsLabel: "Build overview",
+    facts: [
+      { label: "INPUT", value: "8 Keys + Rotary" },
+      { label: "LAYOUT", value: "2 × 4 Matrix" },
+      { label: "STATUS LED", value: "Side 5 Pixels" },
+      { label: "FINAL CHECK", value: "Web Diagnostics" },
+    ],
+    pageIndexLabel: "Page index",
+    pageIndex: [
+      { href: "#prepare", label: "Preparation" },
+      { href: "#assembly", label: "Assembly" },
+      { href: "#firmware", label: "Firmware" },
+      { href: "#final-check", label: "Final check" },
+    ],
+    prepareKicker: "Before You Start",
+    prepareTitle: "Check the parts and tools",
+    prepareDescription:
+      "Compare everything against the package list first. If a part is missing or damaged, contact the distributor before applying power or soldering.",
+    packageTitle: "Main parts",
+    packageItems: [
+      "OctGear main PCB / controller",
+      "Eight key switches and eight keycaps",
+      "Rotary encoder and knob when supplied unassembled",
+      "Plate, case, screws, and spacers as included",
+    ],
+    toolsTitle: "What you need",
+    toolItems: [
+      "A USB cable that supports data",
+      "A small screwdriver that fits the case hardware",
+      "Tweezers for inspecting bent terminals",
+      "Soldering iron, solder, and ventilation only for soldered kits",
+    ],
+    safetyTitle: "Disconnect USB before working",
+    safetyDescription:
+      "Install parts, tighten screws, and solder only while power is disconnected. Never force a terminal; remove the part and check its orientation if it does not seat easily.",
+    layoutKicker: "Control Layout",
+    layoutTitle: "Finished control layout",
+    layoutDescription:
+      "The board has Key 1–4 on the top row, Key 5–8 on the bottom row, and the rotary encoder on the right. Side LEDs are numbered 1–5 from left to right.",
+    layoutAriaLabel:
+      "Layout with four keys on the top row, four keys on the bottom row, a rotary encoder on the right, and five side LEDs",
+    keyLabel: (index) => `Key ${index}`,
+    encoderLabel: "Rotary",
+    encoderOperations: "CCW / CW / SW",
+    ledStripLabel: "Side LEDs",
+    assemblyKicker: "Assembly",
+    assemblyTitle: "Assembly steps",
+    assemblyDescription:
+      "The set of pre-installed parts depends on the distributed package. Complete only the relevant steps and check for tilt or interference at each stage.",
+    steps: [
+      {
+        title: "Test-fit parts and orientation",
+        description:
+          "Stack the PCB, plate, and case before fastening them. Confirm that the USB connector, Key 1 position, and encoder side all align.",
+        checks: [
+          "The PCB has no cracks, deep scratches, or bent terminals",
+          "Key 1–4 are on top, Key 5–8 below, and the rotary is on the right",
+        ],
+      },
+      {
+        title: "Install switches and encoder",
+        description:
+          "For builds with a plate, secure the switches in the plate first, align each terminal vertically, and insert them into the PCB.",
+        checks: [
+          "No switch terminal is folded or trapped underneath",
+          "For soldered builds, confirm every part is fully seated before soldering",
+        ],
+      },
+      {
+        title: "Fasten the case",
+        description:
+          "Place the PCB into the case and tighten spacers and screws a little at a time in a diagonal pattern. Install keycaps and the knob last.",
+        checks: [
+          "The case does not pinch the PCB or wiring",
+          "Screws are not overtightened and the knob clears the case while rotating",
+        ],
+      },
+      {
+        title: "Inspect before applying power",
+        description:
+          "Before connecting USB, check for metal debris, solder bridges, lifted parts, and contact between terminals and the case.",
+        checks: [
+          "Adjacent terminals are not touching unintentionally",
+          "Every key moves freely and the encoder both rotates and presses",
+        ],
+      },
+    ],
+    firmwareKicker: "Firmware & Keymap",
+    firmwareTitle: "Install firmware and configure",
+    firmwareDescription:
+      "Connect the assembled device with a data-capable USB cable. Updating to the latest firmware is recommended even if your unit was supplied pre-flashed.",
+    firmwareCardTitle: "Install the latest firmware",
+    firmwareCardDescription:
+      "Use Updater in Remapper to enter BOOTSEL and write the bundled UF2 to the RPI-RP2 drive.",
+    remapCardTitle: "Configure keys and LEDs",
+    remapCardDescription:
+      "Set key assignments, layer colors, encoder direction, LED strip direction, and animations after connecting.",
+    configureKeymap: "Configure keymap",
+    recoveryTitle: "If Remapper cannot find the device",
+    recoveryDescription:
+      "Hold BOOT, press and release RESET, then release BOOT. Write the UF2 file to the RPI-RP2 drive that appears on the PC.",
+    checkKicker: "Final Check",
+    checkTitle: "Check all 11 controls",
+    checkDescription:
+      "Connect to Diagnostics and test all eight keys plus encoder counterclockwise, clockwise, and press. The same flow can be used before distribution.",
+    checks: [
+      {
+        title: "USB connection",
+        description: "The device is recognized as OctGear and connects to Diagnostics.",
+      },
+      {
+        title: "Key 1–8",
+        description: "Press each key once and confirm every key becomes OK.",
+      },
+      {
+        title: "Rotary",
+        description: "CCW, CW, and SW are recorded as three separate controls.",
+      },
+      {
+        title: "LED and storage",
+        description: "The layer color appears and saved settings persist after reconnecting.",
+      },
+    ],
+    openFinalCheck: "Open Diagnostics",
+    troubleKicker: "Troubleshooting",
+    troubleTitle: "When something does not work",
+    troubleDescription:
+      "Disconnect USB before checking the affected terminal, orientation, or contact instead of repeatedly cycling power.",
+    troubleshooting: [
+      {
+        problem: "The PC does not recognize OctGear",
+        solution:
+          "Use a USB data cable and try another port. If it still fails, enter RPI-RP2 with the BOOT / RESET sequence and reinstall firmware.",
+      },
+      {
+        problem: "Only one key does not respond",
+        solution:
+          "Disconnect USB and inspect the switch terminal, seating, and solder joint. Because the matrix has no diodes, rectangular multi-key combinations are limited.",
+      },
+      {
+        problem: "Encoder direction is reversed",
+        solution:
+          "Toggle Direction / Reverse under Hardware in Remapper. Resoldering is not required.",
+      },
+      {
+        problem: "The LED animation runs in the wrong direction",
+        solution:
+          "Toggle LED strip direction / Reverse under Hardware in Remapper.",
+      },
+      {
+        problem: "LEDs turn off while the PC sleeps",
+        solution:
+          "This is expected. LEDs turn off during USB suspend and return to the current layer color after resume.",
+      },
+    ],
+    completeTitle: "Build complete",
+    completeDescription:
+      "The build is complete when every control passes Diagnostics. Use Remapper to configure layers for your workflow.",
+    licenseNote:
+      "This page provides assembly instructions and does not grant permission for third-party manufacture or sale. Terms for using and redistributing the hardware materials are in the",
+    licenseLink: "Hardware License",
   },
   diagnostics: {
     nav: "Diagnostics",

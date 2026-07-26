@@ -7,6 +7,7 @@ OctGearの文書索引です。目的に合う文書から読み、値を変更�
 | Task | Read first | Then |
 | --- | --- | --- |
 | 製品概要・導入 | [`../README.md`](../README.md) | [`operations.md`](operations.md) |
+| ビルドガイド変更 | [`../apps/web/README.md`](../apps/web/README.md) | [`development.md`](development.md)、[`../hardware/octgear/README.md`](../hardware/octgear/README.md) |
 | Web UI変更 | [`../apps/web/README.md`](../apps/web/README.md) | [`architecture.md`](architecture.md)、[`development.md`](development.md) |
 | Firmware変更 | [`../firmware/octgear/README.md`](../firmware/octgear/README.md) | [`architecture.md`](architecture.md)、[`development.md`](development.md) |
 | Hardware profile変更 | [`../hardware/octgear/README.md`](../hardware/octgear/README.md) | [`development.md`](development.md) |
@@ -51,4 +52,3 @@ OctGearの文書索引です。目的に合う文書から読み、値を変更�
 | [`../LICENSE`](../LICENSE) | Softwareとsoftware documentation |
 | [`../HARDWARE-LICENSE.md`](../HARDWARE-LICENSE.md) | `hardware/`以下のdesign materials |
 | [`../TRADEMARKS.md`](../TRADEMARKS.md) | 名称、ロゴ、公式性の表示 |
-

@@ -1,4 +1,4 @@
-import { diagnosticsUrl, remapperUrl } from "../appUrls";
+import { buildGuideUrl, diagnosticsUrl, remapperUrl } from "../appUrls";
 import { HARDWARE_CONFIG } from "../../features/hardware/hardwareConfig";
 import { t } from "../../shared/i18n";
 
@@ -49,6 +49,9 @@ export function HomePage() {
               </div>
             </dl>
             <div className="product-actions">
+              <a className="product-action secondary" href={buildGuideUrl}>
+                {t.home.openBuildGuide}
+              </a>
               <a className="product-action" href={remapperUrl}>
                 {t.home.openRemapper}
               </a>

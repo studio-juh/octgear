@@ -7,7 +7,7 @@ OctGearは、hardware profile、RP2040 firmware、Webアプリの3領域で構�
 ```text
                         ┌──────────────────────────────┐
                         │ Browser                      │
-                        │ Home / Remapper / Diagnostics│
+                        │ Home / Guide / Remapper / Diag│
                         └──────────────┬───────────────┘
                                        │ WebHID report ID 3
                                        │ 32-byte input/output
@@ -102,7 +102,7 @@ Web entry pointはページごとに分かれ、共通実装を`src/app`と`src/
 | Path | Responsibility |
 | --- | --- |
 | `src/pages/*.tsx` | Vite multi-page entry points |
-| `src/app/pages/` | Home、Remapper、Diagnosticsの画面状態とworkflow |
+| `src/app/pages/` | Home、Build Guide、Remapper、Diagnosticsの画面状態とworkflow |
 | `src/app/components/` | UI panelとkeycap表示 |
 | `src/app/hooks/useDeviceSession.ts` | heartbeat、timeout、disconnect cleanup |
 | `src/features/device/` | WebHID transport、protocol encode/decode、device commands |

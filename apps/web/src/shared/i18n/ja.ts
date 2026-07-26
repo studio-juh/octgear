@@ -10,7 +10,7 @@ export const ja = {
   home: {
     eyebrow: "OctGear",
     title: "Device Hub",
-    description: "対応デバイスを選んで、Remapper や Firmware updater を開きます。",
+    description: "ビルドガイド、Remapper、Firmware updaterから必要なツールを開きます。",
     productListLabel: "製品一覧",
     products: [
       {
@@ -25,9 +25,181 @@ export const ja = {
     layers: "Layers",
     connection: "Connection",
     connectionValue: "WebHID",
+    openBuildGuide: "Build Guide",
     openRemapper: "Open Remapper",
     openDiagnostics: "Open Diagnostics",
     backHome: "Home",
+  },
+  buildGuide: {
+    brandKicker: "Build Guide",
+    navigationLabel: "ビルドガイドのナビゲーション",
+    kicker: "Assembly & Setup",
+    title: "OctGear ビルドガイド",
+    description:
+      "頒布キットの確認から組み立て、Firmware導入、全入力の動作確認までを順番に案内します。構成が異なる場合は、頒布元から同梱された案内を優先してください。",
+    start: "組み立てを始める",
+    jumpToCheck: "最終確認を見る",
+    factsLabel: "ビルド概要",
+    facts: [
+      { label: "INPUT", value: "8 Keys + Rotary" },
+      { label: "LAYOUT", value: "2 × 4 Matrix" },
+      { label: "STATUS LED", value: "Side 5 Pixels" },
+      { label: "FINAL CHECK", value: "Web Diagnostics" },
+    ],
+    pageIndexLabel: "ページ内目次",
+    pageIndex: [
+      { href: "#prepare", label: "準備" },
+      { href: "#assembly", label: "組み立て" },
+      { href: "#firmware", label: "Firmware" },
+      { href: "#final-check", label: "動作確認" },
+    ],
+    prepareKicker: "Before You Start",
+    prepareTitle: "部品と工具を確認",
+    prepareDescription:
+      "最初に頒布物の同梱一覧と照合します。外観や部品数に問題がある場合は、通電やはんだ付けを始める前に頒布元へ確認してください。",
+    packageTitle: "主な構成品",
+    packageItems: [
+      "OctGear メインPCB／コントローラ",
+      "キースイッチ8個とキーキャップ8個",
+      "ロータリーエンコーダとノブ（未実装構成の場合）",
+      "プレート、ケース、ねじ、スペーサー（同梱構成に応じて）",
+    ],
+    toolsTitle: "用意するもの",
+    toolItems: [
+      "データ通信に対応したUSBケーブル",
+      "ケースに合う小型ドライバー",
+      "曲がった端子の確認に使うピンセット",
+      "はんだ付け構成の場合のみ、こて・はんだ・換気設備",
+    ],
+    safetyTitle: "作業前にUSBを外してください",
+    safetyDescription:
+      "部品の取り付け、ねじ締め、はんだ付けは必ず電源を外した状態で行います。端子を無理に押し込まず、向きが合わない場合はいったん取り外して確認してください。",
+    layoutKicker: "Control Layout",
+    layoutTitle: "完成時の操作配置",
+    layoutDescription:
+      "盤面は上段Key 1〜4、下段Key 5〜8、右側にロータリーエンコーダを配置します。側面LEDは左からLED 1〜5として扱います。",
+    layoutAriaLabel:
+      "上段4キー、下段4キー、右側のロータリーエンコーダ、側面5灯LEDの配置図",
+    keyLabel: (index: number) => `Key ${index}`,
+    encoderLabel: "Rotary",
+    encoderOperations: "CCW / CW / SW",
+    ledStripLabel: "Side LEDs",
+    assemblyKicker: "Assembly",
+    assemblyTitle: "組み立て手順",
+    assemblyDescription:
+      "頒布形態によって実装済み部品は異なります。該当する工程だけを行い、各段階で傾きや干渉がないことを確認します。",
+    steps: [
+      {
+        title: "部品と向きを仮合わせする",
+        description:
+          "PCB、プレート、ケースを固定する前に重ね、USB端子、Key 1の位置、エンコーダ側が一致することを確認します。",
+        checks: [
+          "PCBに割れ、深い傷、曲がった端子がない",
+          "上段Key 1〜4、下段Key 5〜8、右側Rotaryの向きになっている",
+        ],
+      },
+      {
+        title: "スイッチとエンコーダを取り付ける",
+        description:
+          "プレートを使用する構成では先にプレートへスイッチを固定し、端子を垂直に合わせてPCBへ差し込みます。",
+        checks: [
+          "スイッチ端子が折れたり、下へ潜り込んだりしていない",
+          "はんだ付け構成では全パーツの密着を確認してから作業する",
+        ],
+      },
+      {
+        title: "ケースを固定する",
+        description:
+          "PCBをケースへ収め、スペーサーとねじを対角順に少しずつ締めます。最後にキーキャップとノブを取り付けます。",
+        checks: [
+          "PCBや配線をケースで挟んでいない",
+          "ねじを締めすぎず、ノブとケースの間に回転できる隙間がある",
+        ],
+      },
+      {
+        title: "通電前の外観検査を行う",
+        description:
+          "USBを接続する前に、金属片、はんだブリッジ、浮いた部品、ケースと端子の接触がないことを確認します。",
+        checks: [
+          "隣接端子が意図せず接触していない",
+          "全キーを軽く押せて、エンコーダを回転・押下できる",
+        ],
+      },
+    ],
+    firmwareKicker: "Firmware & Keymap",
+    firmwareTitle: "Firmwareを導入して初期設定",
+    firmwareDescription:
+      "組み立て後はデータ対応USBケーブルでPCへ接続します。Firmware書き込み済みの頒布物でも、最新版への更新を推奨します。",
+    firmwareCardTitle: "最新版Firmwareを書き込む",
+    firmwareCardDescription:
+      "RemapperのUpdaterからBOOTSELへ切り替え、同梱UF2をRPI-RP2ドライブへ書き込みます。",
+    remapCardTitle: "キーとLEDを設定する",
+    remapCardDescription:
+      "接続後にキーマップ、Layer色、エンコーダ方向、LEDテープ方向とアニメーションを設定します。",
+    configureKeymap: "キーマップを設定",
+    recoveryTitle: "Remapperで認識できない場合",
+    recoveryDescription:
+      "本体のBOOTを押したままRESETを押して離し、最後にBOOTを離します。PCに現れたRPI-RP2ドライブへUF2を書き込んでください。",
+    checkKicker: "Final Check",
+    checkTitle: "全11操作を確認",
+    checkDescription:
+      "Diagnosticsへ接続し、8キーとエンコーダの左回転・右回転・押し込みを一つずつ確認します。頒布前検査にも同じ手順を利用できます。",
+    checks: [
+      {
+        title: "USB接続",
+        description: "OctGearとして認識され、DiagnosticsへConnectできる。",
+      },
+      {
+        title: "Key 1〜8",
+        description: "各キーを一度ずつ押し、すべてOKになる。",
+      },
+      {
+        title: "Rotary",
+        description: "CCW、CW、SWの3操作が個別に記録される。",
+      },
+      {
+        title: "LEDと保存",
+        description: "Layer色が点灯し、設定後の再接続でも内容が保持される。",
+      },
+    ],
+    openFinalCheck: "Diagnosticsを開く",
+    troubleKicker: "Troubleshooting",
+    troubleTitle: "うまく動かないとき",
+    troubleDescription:
+      "再通電を繰り返す前にUSBを外し、該当箇所の端子、向き、接触を確認してください。",
+    troubleshooting: [
+      {
+        problem: "PCがOctGearを認識しない",
+        solution:
+          "充電専用ではないUSBケーブルへ交換し、別のUSBポートを試します。改善しない場合はBOOT／RESET操作でRPI-RP2を表示し、Firmwareを書き直します。",
+      },
+      {
+        problem: "特定のキーだけ反応しない",
+        solution:
+          "USBを外し、スイッチ端子の曲がり、差し込み不足、はんだ接合を確認します。ダイオードなしMatrixのため、矩形になる複数キー同時押しは制限があります。",
+      },
+      {
+        problem: "エンコーダの回転方向が逆",
+        solution:
+          "RemapperのHardwareにある「回転方向 / 反転」を切り替えます。再はんだ付けは不要です。",
+      },
+      {
+        problem: "LEDアニメーションの左右が逆",
+        solution:
+          "RemapperのHardwareにある「LEDテープ方向 / 反転」を切り替えます。",
+      },
+      {
+        problem: "PCのスリープ中にLEDが消える",
+        solution:
+          "正常な動作です。USBサスペンド中は消灯し、PCが復帰すると現在Layerの色へ戻ります。",
+      },
+    ],
+    completeTitle: "Build complete",
+    completeDescription:
+      "Diagnosticsですべての操作を確認できたら組み立て完了です。Remapperで用途に合わせたLayerを設定してください。",
+    licenseNote:
+      "このページは組み立て手順であり、第三者による製造・販売の許諾を示すものではありません。Hardware materialsの利用・再頒布条件は",
+    licenseLink: "Hardware License",
   },
   diagnostics: {
     nav: "Diagnostics",

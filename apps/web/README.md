@@ -1,6 +1,6 @@
 # Web App
 
-React 19 + TypeScript + Viteで構成する、OctGearのWebHID toolsです。Home、Remapper、Diagnosticsをmulti-page buildで出力します。
+React 19 + TypeScript + Viteで構成する、OctGearのWeb toolsです。Home、Build Guide、Remapper、Diagnosticsをmulti-page buildで出力します。
 
 システム全体の関係は[`docs/architecture.md`](../../docs/architecture.md)、利用手順は[`docs/operations.md`](../../docs/operations.md)を参照してください。
 
@@ -9,6 +9,7 @@ React 19 + TypeScript + Viteで構成する、OctGearのWebHID toolsです。Hom
 | Page | HTML | React entry | Page component |
 | --- | --- | --- | --- |
 | Home | `index.html` | `src/main.tsx` | `src/app/pages/HomePage.tsx` |
+| Build Guide | `build-guide.html` | `src/pages/build-guide.tsx` | `src/app/pages/BuildGuidePage.tsx` |
 | Remapper | `remapper.html` | `src/pages/remapper.tsx` | `src/app/pages/RemapperApp.tsx` |
 | Diagnostics | `diagnostics.html` | `src/pages/diagnostics.tsx` | `src/app/pages/DiagnosticsApp.tsx` |
 
@@ -33,6 +34,8 @@ src/
 ```
 
 Dependency directionはpageからfeatureへ向けます。TransportはUI stateを持たず、protocol moduleはDOMを参照しません。特定featureだけで使う処理は`shared`へ移さず、そのfeature内に置きます。
+
+Build Guideは実物写真に依存せず、現在の8キー、Encoder、側面5灯の配置をHTML / CSSで表示します。組み立て、Firmware導入、Diagnosticsによる完成検査を1ページで案内し、印刷時はnavigationとWeb操作buttonを省略します。
 
 ## Device Session
 

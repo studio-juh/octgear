@@ -27,7 +27,7 @@ hardware/octgear/profile.json
         ├─ generate ─> Web control metadata
         └─ generate ─> Human-readable pinout
 
-Browser Remapper / Diagnostics
+Browser Build Guide / Remapper / Diagnostics
         │  WebHID report ID 3 / fixed 32 bytes
         ▼
 RP2040 firmware
@@ -132,4 +132,3 @@ pnpm build
 5. [`operations.md`](operations.md): 利用・更新・復旧手順
 
 すべての文書と更新条件は[`index.md`](index.md)にあります。AI agent向けの作業規約は[`../AGENTS.md`](../AGENTS.md)です。
-
