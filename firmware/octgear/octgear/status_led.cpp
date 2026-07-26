@@ -20,6 +20,7 @@ uint32_t layerTransitionStartColor = 0;
 uint32_t layerTransitionTargetColor = 0;
 bool remapperSessionActive = false;
 uint32_t remapperAnimationStartMs = 0;
+bool suspendOffShown = false;
 
 struct KeyAnimationEvent {
   bool active;
@@ -496,7 +497,31 @@ void triggerStatusLedKeyAnimation(uint8_t keyIndex) {
   startKeyAnimation(keyIndex);
 }
 
-void updateStatusHeartbeat(bool mounted, bool remapperConnected, bool rescueActive, uint8_t layer) {
+void updateStatusHeartbeat(
+  bool mounted,
+  bool suspended,
+  bool remapperConnected,
+  bool rescueActive,
+  uint8_t layer
+) {
+  if (mounted && suspended) {
+    remapperSessionActive = false;
+    if (previewActive) {
+      clearStatusLedPreview();
+    }
+    cancelKeyAnimations();
+    cancelLayerTransition();
+    if (!suspendOffShown) {
+      setStatusLed(false);
+      suspendOffShown = true;
+    }
+    idleShown = false;
+    lastUpdateMs = 0;
+    return;
+  }
+
+  suspendOffShown = false;
+
   if (!mounted) {
     remapperSessionActive = false;
     if (previewActive) {

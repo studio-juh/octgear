@@ -787,6 +787,10 @@ bool hidDeviceMounted() {
   return TinyUSBDevice.mounted();
 }
 
+bool hidDeviceSuspended() {
+  return TinyUSBDevice.suspended();
+}
+
 void updateHidDevice() {
   flushWakeKeyChange();
   serviceConsumerReports();

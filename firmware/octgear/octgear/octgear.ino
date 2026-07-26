@@ -56,6 +56,12 @@ void loop() {
   if (readmeActive) {
     updateSerialRescue();
   }
-  updateStatusHeartbeat(hidDeviceMounted(), remapperActive, rescueIndicatorActive, activeLayer());
+  updateStatusHeartbeat(
+    hidDeviceMounted(),
+    hidDeviceSuspended(),
+    remapperActive,
+    rescueIndicatorActive,
+    activeLayer()
+  );
   sleepBetweenScans(configActive);
 }

@@ -16,7 +16,7 @@ RP2040 Arduino coreとAdafruit TinyUSBを使う、現行8キー + rotary encoder
 - 3-sector Flash journalへのkeymap保存
 - UF2 bootloaderへのreboot
 - Key 5 boot時のread-only README drive / Serial rescue
-- GPIO 14の外付けWS2812Bへ、USB未mount時は5 pixelsを流れるカラーホイール、Remapper接続時は1秒間のカラーホイール、その後は5 pixels同色のlayer状態、rescue時は緑を表示。Layer色は200 msで滑らかに遷移し、打鍵時は選択した白色アニメーションをLayer色へ重ねる。対応boardでは内蔵WS2812にもlayer色をミラーする。Layer表示と打鍵アニメーションの輝度上限を個別に`0-128`で保存
+- GPIO 14の外付けWS2812Bへ、USB未mount時は5 pixelsを流れるカラーホイール、PCのUSBサスペンド中は消灯、Remapper接続時は1秒間のカラーホイール、その後は5 pixels同色のlayer状態、rescue時は緑を表示。Layer色は200 msで滑らかに遷移し、打鍵時は選択した白色アニメーションをLayer色へ重ねる。対応boardでは内蔵WS2812にもlayer色をミラーする。Layer表示と打鍵アニメーションの輝度上限を個別に`0-128`で保存
 
 通常時は低遅延scanを行い、Remapper / Diagnostics heartbeat中は通常HID出力を抑止します。Rescue boot中も通常HID出力は行いません。
 

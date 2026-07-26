@@ -27,7 +27,7 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 
 `setup()`はLED、keymap、scannerを初期化し、Key 5のboot状態を判定してからUSB deviceを開始します。
 
-`loop()`はscanner、通常HID送信、config report、Serial rescue、status LEDを順に更新します。Remapperまたはrescueがactiveな間は通常HID出力を止め、長いscan sleepへ切り替えます。
+`loop()`はscanner、通常HID送信、config report、Serial rescue、status LEDを順に更新します。Remapperまたはrescueがactiveな間は通常HID出力を止め、長いscan sleepへ切り替えます。PCがUSBをサスペンドしている間は外付け・内蔵status LEDを消灯し、resume後は現在Layerの表示へ戻します。
 
 ## Timing
 
