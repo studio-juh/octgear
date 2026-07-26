@@ -31,6 +31,7 @@ export const en: typeof ja = {
     openBuildGuide: "Build Guide",
     openRemapper: "Open Remapper",
     openDiagnostics: "Open Diagnostics",
+    openStore: "Store / Contact",
     backHome: "Home",
   },
   octgearBuildGuide: {
@@ -304,6 +305,10 @@ export const en: typeof ja = {
     completeTitle: "Build complete",
     completeDescription:
       "The build is complete when every control passes Diagnostics. Use Remapper to configure layers for your workflow.",
+    distributionTitle: "Contact & primary distribution",
+    distributionDescription:
+      "See the BOOTH shop for OctGear availability and inquiries.",
+    distributionLink: "Open BOOTH shop",
     licenseNote:
       "This page provides assembly instructions and does not grant permission for third-party manufacture or sale. Terms for using and redistributing the hardware materials are in the",
     licenseLink: "Hardware License",

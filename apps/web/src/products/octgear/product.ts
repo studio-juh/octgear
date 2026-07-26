@@ -21,6 +21,9 @@ export const octgearProduct = {
     remapper: "octgear-remapper.html",
     diagnostics: "octgear-diagnostics.html",
   },
+  links: {
+    store: "https://hanairo-m.booth.pm/",
+  },
   assets: {
     mark: "brand/octgear-mark.png",
     homeImage: "build-guide/completed/octgear-completed-front.jpg",

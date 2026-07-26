@@ -12,6 +12,9 @@ export type ProductDefinition = {
   readonly usbIdentity: UsbIdentity;
   readonly firmware: FirmwareArtifact;
   readonly routes: Record<ProductPage, string>;
+  readonly links: {
+    readonly store: string;
+  };
   readonly assets: {
     readonly mark: string;
     readonly homeImage: string;

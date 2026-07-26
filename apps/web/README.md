@@ -38,7 +38,7 @@ Dependency directionはpageからfeatureへ向けます。TransportはUI state�
 
 ## Product Definitions
 
-`src/products/<product-id>/product.ts`がWeb側の製品単位の正本です。製品名、page route、markとBuild Guide asset、USB VID/PID、配布UF2、生成Hardware metadataを1つの`ProductDefinition`へまとめます。Homeは`src/products/catalog.ts`を`ProductCard`で描画し、Remapper、Diagnostics、Build Guideは各entry pointから`ProductProvider`で対象製品を受け取ります。共通のWebHID transportとFirmware updaterは製品固有値を保持しません。
+`src/products/<product-id>/product.ts`がWeb側の製品単位の正本です。製品名、page route、公式頒布・問い合わせ先、markとBuild Guide asset、USB VID/PID、配布UF2、生成Hardware metadataを1つの`ProductDefinition`へまとめます。Homeは`src/products/catalog.ts`を`ProductCard`で描画し、Remapper、Diagnostics、Build Guideは各entry pointから`ProductProvider`で対象製品を受け取ります。共通のWebHID transportとFirmware updaterは製品固有値を保持しません。
 
 対応製品を追加する場合:
 

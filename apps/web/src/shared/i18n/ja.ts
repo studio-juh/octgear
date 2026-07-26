@@ -29,6 +29,7 @@ export const ja = {
     openBuildGuide: "Build Guide",
     openRemapper: "Open Remapper",
     openDiagnostics: "Open Diagnostics",
+    openStore: "頒布・問い合わせ",
     backHome: "Home",
   },
   octgearBuildGuide: {
@@ -302,6 +303,10 @@ export const ja = {
     completeTitle: "Build complete",
     completeDescription:
       "Diagnosticsですべての操作を確認できたら組み立て完了です。Remapperで用途に合わせたLayerを設定してください。",
+    distributionTitle: "問い合わせ・主要頒布先",
+    distributionDescription:
+      "OctGearの頒布情報と問い合わせはBOOTHショップをご確認ください。",
+    distributionLink: "BOOTHショップを開く",
     licenseNote:
       "このページは組み立て手順であり、第三者による製造・販売の許諾を示すものではありません。Hardware materialsの利用・再頒布条件は",
     licenseLink: "Hardware License",

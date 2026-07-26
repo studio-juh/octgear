@@ -974,7 +974,31 @@
   line-height: 1.6;
 }
 
+.guide-footer-meta {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+}
+
+.guide-distribution strong {
+  font-size: 14px;
+}
+
+.guide-distribution p {
+  color: rgba(247, 243, 237, 0.82);
+  font-size: 13px;
+}
+
+.guide-distribution a {
+  display: inline-block;
+  margin-top: 8px;
+  color: #9ce4dc;
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .guide-license-note {
+  margin-top: 0 !important;
   color: rgba(247, 243, 237, 0.72);
   font-size: 12px;
 }

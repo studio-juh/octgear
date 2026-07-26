@@ -113,6 +113,10 @@ Key 5を押しながらUSB接続すると、その起動だけread-onlyの`OCTGE
 | [Firmware](firmware/octgear/README.md) | Firmwareの構成とbuild |
 | [Hardware](hardware/octgear/README.md) | Hardware profileと生成物 |
 
+## Distribution And Contact
+
+OctGearの主要頒布先と問い合わせ窓口は[BOOTHショップ](https://hanairo-m.booth.pm/)です。
+
 ## Project Policy
 
 OctGearは個人プロジェクトとして管理しています。IssueやPull Requestは送信できますが、確認、返信、レビュー、マージ、対応時期は保証しません。対応まで長期間かかる場合や、対応しない場合があります。必要に応じてForkし、各Forkで管理してください。

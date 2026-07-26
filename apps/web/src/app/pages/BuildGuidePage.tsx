@@ -448,12 +448,21 @@ export function BuildGuidePage() {
             <strong>{guide.completeTitle}</strong>
             <p>{guide.completeDescription}</p>
           </div>
-          <p className="guide-license-note">
-            {guide.licenseNote}{" "}
-            <a href={product.buildGuide.hardwareLicenseUrl} rel="noreferrer">
-              {guide.licenseLink}
-            </a>
-          </p>
+          <div className="guide-footer-meta">
+            <div className="guide-distribution">
+              <strong>{guide.distributionTitle}</strong>
+              <p>{guide.distributionDescription}</p>
+              <a href={product.links.store} rel="noreferrer">
+                {guide.distributionLink}
+              </a>
+            </div>
+            <p className="guide-license-note">
+              {guide.licenseNote}{" "}
+              <a href={product.buildGuide.hardwareLicenseUrl} rel="noreferrer">
+                {guide.licenseLink}
+              </a>
+            </p>
+          </div>
         </footer>
           </div>
         </div>

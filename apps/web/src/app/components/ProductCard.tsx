@@ -77,6 +77,13 @@ export function ProductCard({ product }: ProductCardProps) {
           >
             {t.home.openDiagnostics}
           </a>
+          <a
+            className="product-action secondary"
+            href={product.links.store}
+            rel="noreferrer"
+          >
+            {t.home.openStore}
+          </a>
         </div>
       </div>
     </article>
