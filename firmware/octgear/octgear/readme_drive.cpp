@@ -24,7 +24,7 @@ constexpr char README_TEXT[] =
   "レスキューモード中は、本体LEDが弱い緑色で点灯します。\r\n"
   "\r\n"
   "オンライン設定ページ:\r\n"
-  "https://falxala.github.io/octgear/\r\n"
+  "https://studio-juh.github.io/octgear/\r\n"
   "\r\n"
   "このドライブのファイル:\r\n"
   "- REMAPPER.URL: オンライン設定ページを開きます。\r\n"
@@ -45,7 +45,7 @@ constexpr char README_EN_TEXT[] =
   "The onboard LED stays dim green while rescue mode is active.\r\n"
   "\r\n"
   "Online key remapper:\r\n"
-  "https://falxala.github.io/octgear/\r\n"
+  "https://studio-juh.github.io/octgear/\r\n"
   "\r\n"
   "Files on this drive:\r\n"
   "- REMAPPER.URL opens the online remapper.\r\n"
@@ -60,7 +60,7 @@ constexpr char README_EN_TEXT[] =
 
 constexpr char URL_TEXT[] =
   "[InternetShortcut]\r\n"
-  "URL=https://falxala.github.io/octgear/\r\n";
+  "URL=https://studio-juh.github.io/octgear/\r\n";
 
 constexpr uint32_t CLUSTER_SIZE = BLOCK_SIZE * SECTORS_PER_CLUSTER;
 constexpr uint16_t clusterCount(uint32_t size) {

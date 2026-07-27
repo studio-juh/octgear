@@ -63,7 +63,7 @@ export const octgearProduct = {
     },
     translucentStlFiles: ["octgear-case-middle.stl"],
     hardwareLicenseUrl:
-      "https://github.com/falxala/octgear/blob/main/HARDWARE-LICENSE.md",
+      "https://github.com/studio-juh/octgear/blob/main/HARDWARE-LICENSE.md",
   },
   storageNamespace: "octgear",
 } as const satisfies ProductDefinition;
