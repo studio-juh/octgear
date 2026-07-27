@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
+import { SiteFooter } from "../components/SiteFooter";
 import { StlViewer } from "../components/StlViewer";
 import {
   productAssetUrl,
@@ -6,7 +7,7 @@ import {
 } from "../appUrls";
 import { useProductDefinition } from "../../products/ProductContext";
 import { getProductMessages } from "../../products/productMessages";
-import { t } from "../../shared/i18n";
+import { useI18n } from "../../shared/i18n";
 
 type ExpandedGuideImage = {
   src: string;
@@ -20,6 +21,7 @@ type GuideLayoutStyle = CSSProperties &
   Record<`--guide-${string}`, string>;
 
 export function BuildGuidePage() {
+  const { t } = useI18n();
   const product = useProductDefinition();
   const guide = getProductMessages(product.id).buildGuide;
   const buildGuideAssetUrl = productAssetUrl(product.assets.buildGuideRoot);
@@ -467,6 +469,8 @@ export function BuildGuidePage() {
           </div>
         </div>
       </article>
+
+      <SiteFooter />
 
       {expandedImage ? (
         <div

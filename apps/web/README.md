@@ -108,7 +108,7 @@ BOOTSEL移行command自体はdevice featureにあり、page componentがsession 
 
 ## Localization
 
-`src/shared/i18n/ja.ts`をshapeの基準にし、`en.ts`はその型を満たします。現在のdefault localeは`ja`です。表示文言を追加する場合は両方を更新します。
+`src/shared/i18n/ja.ts`をshapeの基準にし、`en.ts`はその型を満たします。各ページの`Language`ボタンから日本語と英語を即時に切り替えられ、選択値は`studio-juh.locale`としてbrowserのlocal storageへ保存されます。保存値がない場合のdefault localeは`ja`です。表示文言を追加する場合は両方を更新します。
 
 ## Development
 

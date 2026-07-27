@@ -134,6 +134,12 @@ select {
   backdrop-filter: blur(16px);
 }
 
+.home-hero-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
 .home-brand {
   align-items: flex-start;
 }
@@ -498,6 +504,57 @@ a.ghost-button {
   background: rgba(255, 252, 247, 0.86);
   color: var(--text);
   box-shadow: none;
+}
+
+button.language-switch {
+  gap: 10px;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
+.language-switch-label {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.language-switch-options {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.language-switch-options strong {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.language-switch-options strong.active {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.site-footer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 1400px;
+  margin: 20px auto 0;
+}
+
+.guide-shell .site-footer {
+  max-width: 1360px;
+  margin-top: 0;
+}
+
+.diagnostics-workspace + .site-footer {
+  max-width: 1240px;
 }
 
 .workspace-viewport {

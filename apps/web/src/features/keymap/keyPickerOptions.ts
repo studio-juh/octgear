@@ -280,12 +280,14 @@ export const modifierOptions: ModifierKeyOption[] = [
   mod(0x80, "RMeta"),
 ];
 
-export const blankOption: BlankKeyOption = {
-  kind: "blank",
-  label: t.keymap.unassigned,
-  accent: true,
-  width: 2,
-};
+export function getBlankOption(): BlankKeyOption {
+  return {
+    kind: "blank",
+    label: t.keymap.unassigned,
+    accent: true,
+    width: 2,
+  };
+}
 
 export function keyOptionLabel(option: KeyPickerOption, layout: KeyboardLayoutMode) {
   if (option.kind === "spacer") {

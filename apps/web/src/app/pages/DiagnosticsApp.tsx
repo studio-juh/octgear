@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { SiteFooter } from "../components/SiteFooter";
 import { productAssetUrl, productPageUrl } from "../appUrls";
 import { useDeviceSession } from "../hooks/useDeviceSession";
 import {
@@ -12,9 +13,10 @@ import {
 } from "../../features/device/deviceCommands";
 import { WebHidTransport } from "../../features/device/webHidTransport";
 import { useProductDefinition } from "../../products/ProductContext";
-import { t } from "../../shared/i18n";
+import { useI18n } from "../../shared/i18n";
 
 export function DiagnosticsApp() {
+  const { locale, t } = useI18n();
   const product = useProductDefinition();
   const transport = useMemo(
     () => new WebHidTransport(product.usbIdentity),
@@ -42,6 +44,12 @@ export function DiagnosticsApp() {
     setStorageTestDetail("-");
     setStatus(t.connection.initialStatus);
   });
+
+  useEffect(() => {
+    if (!connected) {
+      setStatus(t.connection.initialStatus);
+    }
+  }, [locale]);
 
   useEffect(() => {
     if (!connected || !deviceState) {
@@ -249,11 +257,15 @@ export function DiagnosticsApp() {
           </dl>
         </aside>
       </section>
+
+      <SiteFooter />
     </main>
   );
 }
 
 function DiagnosticResult({ passed }: { passed: boolean }) {
+  const { t } = useI18n();
+
   return (
     <dd className={passed ? "diagnostics-result passed" : "diagnostics-result failed"}>
       {passed ? t.diagnostics.ok : t.diagnostics.ng}

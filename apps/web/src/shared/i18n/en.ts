@@ -6,6 +6,8 @@ export const en: typeof ja = {
     workspaceLabel: "Remapper workspace",
     workspaceScale: "Display scale",
     workspaceScaleValue: (scale) => `${scale}%`,
+    language: "Language",
+    switchLanguageLabel: "Switch display language to Japanese",
   },
   home: {
     eyebrow: "Studio Juh",

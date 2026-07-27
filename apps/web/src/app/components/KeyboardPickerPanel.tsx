@@ -3,8 +3,8 @@ import type { CSSProperties } from "react";
 import { ConsumerKeycapSvg } from "./ConsumerKeycapSvg";
 import { KeycapSvg } from "./KeycapSvg";
 import {
-  blankOption,
   consumerOptions,
+  getBlankOption,
   keyboardRowsForLayout,
   keyOptionLabel,
   navigationRows,
@@ -39,6 +39,7 @@ export function KeyboardPickerPanel({
   onMomentaryLayerOption,
 }: KeyboardPickerPanelProps) {
   const { hardware } = useProductDefinition();
+  const blankOption = getBlankOption();
   const systemRows = navigationRows.slice(0, 1);
   const navigationBodyRows = navigationRows.slice(1);
   const keyboardRows = keyboardRowsForLayout(keyboardLayout);

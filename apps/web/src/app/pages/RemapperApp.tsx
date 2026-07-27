@@ -4,6 +4,7 @@ import { FirmwarePanel } from "../components/FirmwarePanel";
 import { HardwarePanel } from "../components/HardwarePanel";
 import { KeyboardPickerPanel } from "../components/KeyboardPickerPanel";
 import { RemapPanel } from "../components/RemapPanel";
+import { SiteFooter } from "../components/SiteFooter";
 import { productAssetUrl, productPageUrl } from "../appUrls";
 import { useDeviceSession } from "../hooks/useDeviceSession";
 import {
@@ -62,12 +63,13 @@ import {
   createLayerPreviousAssignment,
   createMomentaryLayerAssignment,
   normalizeAssignment,
+  type DeviceKeymap,
   type KeyAssignment,
   type KeyAssignmentKind,
 } from "../../features/keymap/keymapTypes";
 import { useProductDefinition } from "../../products/ProductContext";
 import { getProductMessages } from "../../products/productMessages";
-import { t } from "../../shared/i18n";
+import { useI18n } from "../../shared/i18n";
 
 const LAYER_COLOR_PREVIEW_DEBOUNCE_MS = 60;
 const WORKSPACE_SCALE_OPTIONS = [80, 90, 100] as const;
@@ -79,6 +81,7 @@ type RemapperAppProps = {
 };
 
 export function RemapperApp({ homeHref }: RemapperAppProps) {
+  const { locale, t } = useI18n();
   const product = useProductDefinition();
   const hardware = product.hardware;
   const productMessages = getProductMessages(product.id);
@@ -146,6 +149,20 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
     setDeviceState(null);
     setStatus(t.connection.initialStatus);
   });
+
+  useEffect(() => {
+    setReadKeymap(localizeKeymap);
+    setWriteKeymap(localizeKeymap);
+    setDraftAssignment((current) => normalizeAssignment(current));
+
+    if (!connected) {
+      setStatus(t.connection.initialStatus);
+    }
+
+    if (!firmwareModalOpen) {
+      setFirmwareStatus(t.firmware.initialStatus);
+    }
+  }, [locale]);
 
   useEffect(() => {
     setDraftAssignment(selectedAssignment);
@@ -870,6 +887,8 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
         </section>
       </div>
 
+      <SiteFooter />
+
       {firmwareModalOpen ? (
         <div
           className="modal-backdrop"
@@ -973,6 +992,12 @@ function loadWorkspaceScale(storageKey: string): WorkspaceScale {
 
 function createInitialKeymap(hardware: HardwareConfig) {
   return createBlankKeymap(hardware.layerCount, hardware.keyCount);
+}
+
+function localizeKeymap(keymap: DeviceKeymap): DeviceKeymap {
+  return keymap.map((layer) =>
+    layer.map((assignment) => normalizeAssignment(assignment)),
+  );
 }
 
 function createInitialEnabledLayers(hardware: HardwareConfig) {

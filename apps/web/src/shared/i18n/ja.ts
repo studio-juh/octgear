@@ -4,6 +4,8 @@ export const ja = {
     workspaceLabel: "リマッパー作業領域",
     workspaceScale: "表示倍率",
     workspaceScaleValue: (scale: number) => `${scale}%`,
+    language: "Language",
+    switchLanguageLabel: "表示言語を英語に切り替え",
   },
   home: {
     eyebrow: "Studio Juh",
