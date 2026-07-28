@@ -17,6 +17,12 @@ type ExpandedGuideImage = {
   height: number;
 };
 
+type GuidePhoto = {
+  file: string;
+  title: string;
+  alt: string;
+};
+
 type GuideLayoutStyle = CSSProperties &
   Record<`--guide-${string}`, string>;
 
@@ -147,6 +153,31 @@ export function BuildGuidePage() {
           <div className="guide-notice warning">
             <strong>{guide.safetyTitle}</strong>
             <p>{guide.safetyDescription}</p>
+          </div>
+          <div className="guide-part-reference">
+            <div className="guide-part-reference-heading">
+              <h3>{guide.partsReferenceTitle}</h3>
+              <p>{guide.partsReferenceDescription}</p>
+            </div>
+            <div className="guide-part-reference-grid">
+              {guide.partReferences.map((part, index) => (
+                <article className="guide-part-card" key={part.title}>
+                  <GuidePhotoSlot
+                    assetBaseUrl={`${buildGuideAssetUrl}assembly/`}
+                    photo={part.photo}
+                    placeholder={guide.photoPlaceholder(index + 1)}
+                    pendingLabel={guide.photoPending}
+                    enlargeLabel={guide.enlargeGuideImage(part.photo.title)}
+                    onExpand={setExpandedImage}
+                  />
+                  <div className="guide-part-card-copy">
+                    <span>{part.quantity}</span>
+                    <h4>{part.title}</h4>
+                    <p>{part.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -309,14 +340,24 @@ export function BuildGuidePage() {
                 <div className="guide-step-number">
                   {String(index + 1).padStart(2, "0")}
                 </div>
-                <div className="guide-step-copy">
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                  <ul>
-                    {step.checks.map((check) => (
-                      <li key={check}>{check}</li>
-                    ))}
-                  </ul>
+                <div className="guide-step-content">
+                  <div className="guide-step-copy">
+                    <h3>{step.title}</h3>
+                    <p>{step.description}</p>
+                    <ul>
+                      {step.checks.map((check) => (
+                        <li key={check}>{check}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <GuidePhotoSlot
+                    assetBaseUrl={`${buildGuideAssetUrl}assembly/`}
+                    photo={step.photo}
+                    placeholder={guide.photoPlaceholder(index + 1)}
+                    pendingLabel={guide.photoPending}
+                    enlargeLabel={guide.enlargeGuideImage(step.photo.title)}
+                    onExpand={setExpandedImage}
+                  />
                 </div>
               </li>
             ))}
@@ -539,5 +580,64 @@ function GuideChecklist({ title, items }: GuideChecklistProps) {
         ))}
       </ul>
     </article>
+  );
+}
+
+type GuidePhotoSlotProps = {
+  assetBaseUrl: string;
+  photo: GuidePhoto;
+  placeholder: string;
+  pendingLabel: string;
+  enlargeLabel: string;
+  onExpand: (image: ExpandedGuideImage) => void;
+};
+
+function GuidePhotoSlot({
+  assetBaseUrl,
+  photo,
+  placeholder,
+  pendingLabel,
+  enlargeLabel,
+  onExpand,
+}: GuidePhotoSlotProps) {
+  if (!photo.file) {
+    return (
+      <div
+        className="guide-photo-slot placeholder"
+        role="img"
+        aria-label={`${photo.title}: ${pendingLabel}`}
+      >
+        <span>{placeholder}</span>
+        <strong>{photo.title}</strong>
+        <small>{pendingLabel}</small>
+      </div>
+    );
+  }
+
+  const src = `${assetBaseUrl}${photo.file}`;
+
+  return (
+    <button
+      type="button"
+      className="guide-photo-slot available"
+      aria-label={enlargeLabel}
+      onClick={() =>
+        onExpand({
+          src,
+          title: photo.title,
+          alt: photo.alt,
+          width: 1200,
+          height: 900,
+        })
+      }
+    >
+      <img
+        src={src}
+        alt={photo.alt}
+        loading="lazy"
+        width="1200"
+        height="900"
+      />
+    </button>
   );
 }

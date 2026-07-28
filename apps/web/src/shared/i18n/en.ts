@@ -92,6 +92,102 @@ export const en: typeof ja = {
       "Switch puller",
       "Pliers for tightening the rotary encoder nut",
     ],
+    photoPlaceholder: (index) =>
+      `PHOTO ${String(index).padStart(2, "0")}`,
+    photoPending: "Assembly photo to be added",
+    partsReferenceTitle: "Identify the parts",
+    partsReferenceDescription:
+      "Check the shape, quantity, and orientation of every part before assembly. Each frame is a placeholder for a real build photo.",
+    partReferences: [
+      {
+        title: "Complete parts set",
+        quantity: "1 set",
+        description:
+          "Lay out the PCB, electronics, case, fasteners, switches, and keycaps and check for missing parts.",
+        photo: {
+          file: "",
+          title: "Overhead view of every included part",
+          alt: "All OctGear parts arranged by type",
+        },
+      },
+      {
+        title: "OctGear main PCB",
+        quantity: "1",
+        description:
+          "Identify the back with Key 1–8 labels, the RP2040 and encoder side, and the USB connector side.",
+        photo: {
+          file: "",
+          title: "PCB front, back, and reference orientation",
+          alt: "Front and back of the OctGear main PCB with its assembly orientation",
+        },
+      },
+      {
+        title: "RP2040-Zero",
+        quantity: "1",
+        description:
+          "Use a Waveshare RP2040-Zero or pin-compatible board. Check the USB connector and pin labels before assembly.",
+        photo: {
+          file: "",
+          title: "RP2040-Zero sides and USB orientation",
+          alt: "Both sides of an RP2040-Zero and its orientation on the OctGear PCB",
+        },
+      },
+      {
+        title: "Hot-swap sockets",
+        quantity: "8",
+        description:
+          "These mount to Key 1–8 on the PCB back. Identify the switch contact and two solder pads.",
+        photo: {
+          file: "",
+          title: "Correct socket orientation and contacts",
+          alt: "Correct orientation and contacts of a key hot-swap socket",
+        },
+      },
+      {
+        title: "EC11 encoder and knob",
+        quantity: "1 each",
+        description:
+          "Use a 15 mm EC11. Identify its A/C/B/SW pins, mounting tabs, and D-shaft knob orientation.",
+        photo: {
+          file: "",
+          title: "EC11 pins, mounting tabs, and knob",
+          alt: "Pins and mounting tabs of an EC11 rotary encoder with its knob",
+        },
+      },
+      {
+        title: "WS2812B LED strip",
+        quantity: "5 pixels",
+        description:
+          "Identify the cut marks, 5 V, GND, DIN, and data arrows, then prepare a five-pixel segment.",
+        photo: {
+          file: "",
+          title: "Five-pixel strip and data direction",
+          alt: "Five-pixel WS2812B LED strip showing the cut marks and data direction",
+        },
+      },
+      {
+        title: "Case, plate, and fasteners",
+        quantity: "1 set",
+        description:
+          "Separate the Top, clear or translucent Middle, Bottom, plate, screws, and rubber bumpers.",
+        photo: {
+          file: "",
+          title: "Case layers and fastening parts",
+          alt: "OctGear case layers, plate, screws, and rubber bumpers",
+        },
+      },
+      {
+        title: "Switches and keycaps",
+        quantity: "8 each",
+        description:
+          "Prepare MX-compatible switches and keycaps. All positions accept 1U; only Key 1 and Key 5 optionally use wider caps.",
+        photo: {
+          file: "",
+          title: "Switch pins and keycap size comparison",
+          alt: "Switch pins beside 1U, 1.25U, and 1.5U keycaps",
+        },
+      },
+    ],
     safetyTitle: "Disconnect USB before working",
     safetyDescription:
       "Install parts, tighten screws, and solder only while power is disconnected. Never force a terminal; remove the part and check its orientation if it does not seat easily.",
@@ -146,44 +242,157 @@ export const en: typeof ja = {
     assemblyKicker: "Assembly",
     assemblyTitle: "Assembly steps",
     assemblyDescription:
-      "The set of pre-installed parts depends on the distributed package. Complete only the relevant steps and check for tilt or interference at each stage.",
+      "The set of pre-installed parts depends on the distributed package. Complete only the relevant steps, then install firmware and run Diagnostics before closing the case.",
     steps: [
       {
-        title: "Test-fit parts and orientation",
+        title: "Prepare the work area and test-fit the parts",
         description:
-          "Stack the PCB, plate, and case before fastening them. Confirm that the USB connector, Key 1 position, and encoder side all align.",
+          "Lay out the parts on a heat-resistant mat and stack the PCB, plate, and case without fastening them. Confirm the USB connector, Key 1, encoder side, and screw holes align.",
         checks: [
           "The PCB has no cracks, deep scratches, or bent terminals",
           "Key 1–4 are on top, Key 5–8 below, and the rotary is on the right",
+          "USB is disconnected and the work area has ventilation",
         ],
+        photo: {
+          file: "",
+          title: "Part sides and test-fit orientation",
+          alt: "All OctGear parts test-fitted with the correct side and orientation",
+        },
       },
       {
-        title: "Install switches and encoder",
+        title: "Solder the hot-swap sockets",
         description:
-          "For builds with a plate, secure the switches in the plate first, align each terminal vertically, and insert them into the PCB.",
+          "Seat each socket against Key 1–8 on the PCB back. Tack one side, correct any lift or rotation, and then solder the other side.",
         checks: [
-          "No switch terminal is folded or trapped underneath",
-          "For soldered builds, confirm every part is fully seated before soldering",
+          "All eight sockets follow the footprint outline and pads",
+          "Each socket sits flat and solder wets both its contact and PCB pad",
+          "No solder bridge reaches an adjacent pad",
         ],
+        photo: {
+          file: "",
+          title: "Socket orientation and a sound solder joint",
+          alt: "Hot-swap sockets soldered flat in the correct orientation on the OctGear PCB back",
+        },
       },
       {
-        title: "Fasten the case",
+        title: "Install the RP2040-Zero",
         description:
-          "Place the PCB into the case, confirm the Bottom, light-transmitting Middle, and Top order, then tighten the screws a little at a time in a diagonal pattern. Spacers are normally unnecessary; use cushioning tape or similar material only if play needs adjustment. Install keycaps and the knob last.",
+          "Orient the RP2040-Zero so its USB connector faces the case opening. For a compatible board, compare the pinout first, then confirm every pin and the mounting height before soldering.",
         checks: [
-          "The case does not pinch the PCB or wiring",
+          "The USB connector and PCB are not reversed",
+          "The RP2040-Zero is parallel to the PCB with no bridged pins",
+          "A compatible board matches the OctGear GPIO pinout",
+        ],
+        photo: {
+          file: "",
+          title: "Correct RP2040-Zero orientation and height",
+          alt: "RP2040-Zero mounted on the OctGear PCB with the correct orientation and height",
+        },
+      },
+      {
+        title: "Install the EC11 encoder",
+        description:
+          "Insert the encoder vertically and solder its mounting tabs and A/C/B/SW pins. Leave the nut lightly tightened until the case and knob height can be checked.",
+        checks: [
+          "The encoder body sits against the PCB and its shaft is vertical",
+          "Every pin and mounting tab has a sound solder joint",
+          "Rotation and the push switch move without binding",
+        ],
+        photo: {
+          file: "",
+          title: "Encoder orientation, pins, and temporary nut position",
+          alt: "EC11 encoder mounted vertically on the OctGear PCB with its pins and nut visible",
+        },
+      },
+      {
+        title: "Prepare and wire a five-pixel LED strip",
+        description:
+          "Cut the WS2812B strip at a cut mark after five pixels and connect GPIO 14 to DIN on the first pixel. Verify 5 V, GND, and data direction, then insulate exposed joints.",
+        checks: [
+          "The arrows run from the first pixel toward the fifth",
+          "5 V and GND are not reversed",
+          "Wires reach the case edge without crossing moving parts or screw holes",
+        ],
+        photo: {
+          file: "",
+          title: "LED cut mark, DIN, and three wires",
+          alt: "Five-pixel WS2812B strip showing its cut mark and DIN, 5 V, and GND wires",
+        },
+      },
+      {
+        title: "Inspect all soldering",
+        description:
+          "Inspect both PCB sides under bright light before applying power. Remove metal debris and solder balls, and repair lifted contacts, bridges, or damaged wire insulation.",
+        checks: [
+          "No adjacent terminals touch unintentionally",
+          "Nothing suggests a short between USB 5 V and GND",
+          "A gentle movement of each wire does not loosen its joint",
+        ],
+        photo: {
+          file: "",
+          title: "Good joint and solder bridge comparison",
+          alt: "Comparison between a sound solder joint and a solder bridge that needs repair",
+        },
+      },
+      {
+        title: "Install the plate and switches",
+        description:
+          "Secure switches in the plate starting at its corners, straighten each pin, and insert it into the socket. If resistance is high, stop and inspect the pins instead of forcing it.",
+        checks: [
+          "No switch pin is folded or trapped underneath",
+          "The plate and switches sit flat and every key moves freely",
+          "A severely bent pin is not forced back into service",
+        ],
+        photo: {
+          file: "",
+          title: "Switch pins and plate insertion order",
+          alt: "Straight switch pins and the corner-first installation order for the OctGear plate",
+        },
+      },
+      {
+        title: "Power-test before closing the case",
+        description:
+          "Place the assembly on a heat-resistant, nonconductive surface and connect USB. Check for odor or abnormal heat, install firmware, and use Diagnostics to test eight keys, three encoder actions, and the LEDs.",
+        checks: [
+          "Disconnect USB immediately if any part becomes unusually hot",
+          "The device appears as OctGear and connects to Diagnostics",
+          "Correct faults now instead of enclosing them in the case",
+        ],
+        photo: {
+          file: "",
+          title: "Firmware and Diagnostics test outside the case",
+          alt: "OctGear PCB connected to USB and tested in Diagnostics before closing the case",
+        },
+      },
+      {
+        title: "Place the PCB and LEDs in the case",
+        description:
+          "Confirm the Bottom, light-transmitting Middle, and Top order. Position the LED strip slightly away from the body along the side, and keep wires clear of the edge, screw holes, and switches.",
+        checks: [
           "Case Middle uses a transparent or translucent material",
-          "Screws are not overtightened and the knob clears the case while rotating",
+          "LED 1–5 follow the intended left-to-right order",
+          "The case does not pinch the PCB or wiring",
         ],
+        photo: {
+          file: "",
+          title: "Case stack, LED position, and wire routing",
+          alt: "OctGear Bottom, Middle, and Top stack with the LED strip position and wire routing",
+        },
       },
       {
-        title: "Inspect before applying power",
+        title: "Finish the screws, feet, keycaps, and knob",
         description:
-          "Before connecting USB, check for metal debris, solder bridges, lifted parts, and contact between terminals and the case.",
+          "Tighten screws a little at a time in a diagonal pattern and use cushioning tape only if play needs adjustment. Install the rubber feet, keycaps, and knob, then check the feel of every control.",
         checks: [
-          "Adjacent terminals are not touching unintentionally",
-          "Every key moves freely and the encoder both rotates and presses",
+          "Screws do not distort the case or PCB",
+          "The knob clears the case during rotation and pressing",
+          "The unit sits steadily and every key moves freely",
         ],
+        photo: {
+          file: "",
+          title: "Screw order and finished clearances",
+          alt: "Finished OctGear showing the screw order, rubber feet, keycaps, and encoder knob clearance",
+        },
       },
     ],
     downloadsKicker: "Manufacturing Files",
@@ -289,6 +498,11 @@ export const en: typeof ja = {
           "Disconnect USB and inspect the switch terminal, seating, and solder joint. Because the matrix has no diodes, rectangular multi-key combinations are limited.",
       },
       {
+        problem: "A complete row or column of keys does not respond",
+        solution:
+          "Disconnect USB and inspect the corresponding matrix Row / Column and RP2040-Zero pin. Check the shared signal joint or a solder bridge before individual switches.",
+      },
+      {
         problem: "Encoder direction is reversed",
         solution:
           "Toggle Direction / Reverse under Hardware in Remapper. Resoldering is not required.",
@@ -297,6 +511,16 @@ export const en: typeof ja = {
         problem: "The LED animation runs in the wrong direction",
         solution:
           "Toggle LED strip direction / Reverse under Hardware in Remapper.",
+      },
+      {
+        problem: "The side LEDs do not light",
+        solution:
+          "Disconnect USB and check 5 V, GND, DIN on the first pixel, and data direction. Also confirm that the LED brightness limit in Remapper is not zero.",
+      },
+      {
+        problem: "The RP2040 or wiring becomes unusually hot or smells",
+        solution:
+          "Disconnect USB immediately and do not reconnect it. Resolve any 5 V to GND short, reversed LED connection, or solder bridge before inspecting again.",
       },
       {
         problem: "LEDs turn off while the PC sleeps",

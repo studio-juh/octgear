@@ -294,6 +294,124 @@
   font-weight: 900;
 }
 
+.guide-part-reference {
+  display: grid;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.guide-part-reference-heading h3,
+.guide-part-reference-heading p,
+.guide-part-card-copy h4,
+.guide-part-card-copy p {
+  margin: 0;
+}
+
+.guide-part-reference-heading h3 {
+  font-size: 20px;
+}
+
+.guide-part-reference-heading p {
+  max-width: 760px;
+  margin-top: 5px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.guide-part-reference-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.guide-part-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(78, 61, 38, 0.11);
+  border-radius: 8px;
+  background: rgba(255, 252, 247, 0.72);
+}
+
+.guide-part-card-copy {
+  padding: 16px;
+}
+
+.guide-part-card-copy > span {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(13, 122, 114, 0.1);
+  color: var(--accent-strong);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guide-part-card-copy h4 {
+  font-size: 16px;
+}
+
+.guide-part-card-copy p {
+  margin-top: 7px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.guide-photo-slot {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+}
+
+.guide-photo-slot.placeholder {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 7px;
+  padding: 18px;
+  border: 1px dashed rgba(177, 102, 38, 0.38);
+  background:
+    linear-gradient(135deg, rgba(244, 174, 93, 0.12), transparent 64%),
+    rgba(255, 248, 238, 0.82);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.guide-photo-slot.placeholder > span {
+  color: #a45e22;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.guide-photo-slot.placeholder > strong {
+  max-width: 260px;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.guide-photo-slot.placeholder > small {
+  font-size: 11px;
+}
+
+button.guide-photo-slot.available {
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  background: rgba(255, 252, 247, 0.78);
+}
+
+.guide-photo-slot.available img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .guide-notice {
   margin-top: 14px;
   padding: 16px 18px;
@@ -653,6 +771,17 @@
 .guide-steps > li:first-child {
   padding-top: 0;
   border-top: 0;
+}
+
+.guide-step-content {
+  display: grid;
+  align-items: start;
+  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+}
+
+.guide-step-content .guide-photo-slot {
+  border-radius: 8px;
 }
 
 .guide-step-number {
@@ -1118,6 +1247,10 @@
     grid-template-columns: 42px minmax(0, 1fr);
   }
 
+  .guide-step-content {
+    grid-template-columns: 1fr;
+  }
+
   .guide-step-number {
     width: 38px;
     height: 38px;
@@ -1135,6 +1268,7 @@
   .guide-jump-nav,
   .guide-image-lightbox,
   .guide-stl-viewer,
+  .guide-photo-slot.placeholder,
   .guide-action-card .product-action,
   .guide-diagnostics-action {
     display: none;

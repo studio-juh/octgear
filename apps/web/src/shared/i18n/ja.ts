@@ -90,6 +90,102 @@ export const ja = {
       "スイッチプラー",
       "ペンチ（ロータリーエンコーダーのナット締めに使用）",
     ],
+    photoPlaceholder: (index: number) =>
+      `PHOTO ${String(index).padStart(2, "0")}`,
+    photoPending: "撮影写真を追加予定",
+    partsReferenceTitle: "部品を見分ける",
+    partsReferenceDescription:
+      "組み立て前に形状、数量、表裏を確認します。各枠は実物写真へ差し替えるためのプレースホルダーです。",
+    partReferences: [
+      {
+        title: "構成品一式",
+        quantity: "1 set",
+        description:
+          "PCB、電子部品、ケース、ねじ、キー部品をすべて並べ、不足がないか確認します。",
+        photo: {
+          file: "",
+          title: "全構成品を並べた俯瞰写真",
+          alt: "OctGearの全構成品を種類ごとに並べた写真",
+        },
+      },
+      {
+        title: "OctGear メインPCB",
+        quantity: "1",
+        description:
+          "キー番号が見える裏面、RP2040とEncoderを取り付ける右側、USB端子側を確認します。",
+        photo: {
+          file: "",
+          title: "PCBの表面・裏面と基準方向",
+          alt: "OctGearメインPCBの表面と裏面および取り付け方向を示す写真",
+        },
+      },
+      {
+        title: "RP2040-Zero",
+        quantity: "1",
+        description:
+          "Waveshare RP2040-Zeroまたはpin互換品です。USB端子とpin表記を実装前に確認します。",
+        photo: {
+          file: "",
+          title: "RP2040-Zeroの表裏とUSB端子方向",
+          alt: "RP2040-Zeroの表裏とOctGear PCBへの取り付け方向を示す写真",
+        },
+      },
+      {
+        title: "ホットスワップソケット",
+        quantity: "8",
+        description:
+          "PCB裏面のKey 1〜8へ取り付けます。端子と2つのはんだpadの形状を確認します。",
+        photo: {
+          file: "",
+          title: "ソケットの正しい向きと端子",
+          alt: "キーホットスワップソケットの正しい向きと端子を示す写真",
+        },
+      },
+      {
+        title: "EC11 Encoderとノブ",
+        quantity: "各1",
+        description:
+          "高さ15mmのEC11です。A/C/B/SW端子、固定脚、D軸ノブの向きを確認します。",
+        photo: {
+          file: "",
+          title: "EC11の端子・固定脚・ノブ",
+          alt: "EC11ロータリーエンコーダーの端子と固定脚およびノブを示す写真",
+        },
+      },
+      {
+        title: "WS2812B LEDテープ",
+        quantity: "5 pixels",
+        description:
+          "切断位置、5V、GND、DIN、data方向の矢印を確認し、5灯分を使用します。",
+        photo: {
+          file: "",
+          title: "5灯へ切り出したLEDとdata方向",
+          alt: "5灯へ切り出したWS2812B LEDテープとdata方向を示す写真",
+        },
+      },
+      {
+        title: "Case・Plate・固定部品",
+        quantity: "1 set",
+        description:
+          "Top、透明／半透明Middle、Bottom、Plate、ねじ、クッションゴムを区別します。",
+        photo: {
+          file: "",
+          title: "ケース各層と固定部品",
+          alt: "OctGearのケース各層、プレート、ねじ、クッションゴムを示す写真",
+        },
+      },
+      {
+        title: "Switch・Keycap",
+        quantity: "各8",
+        description:
+          "MX互換SwitchとKeycapを用意します。すべて1Uで使用でき、Key 1と5だけ幅広capも任意です。",
+        photo: {
+          file: "",
+          title: "Switch端子とKeycapサイズ比較",
+          alt: "キースイッチの端子と1U、1.25U、1.5Uキーキャップを比較する写真",
+        },
+      },
+    ],
     safetyTitle: "作業前にUSBを外してください",
     safetyDescription:
       "部品の取り付け、ねじ締め、はんだ付けは必ず電源を外した状態で行います。端子を無理に押し込まず、向きが合わない場合はいったん取り外して確認してください。",
@@ -144,44 +240,157 @@ export const ja = {
     assemblyKicker: "Assembly",
     assemblyTitle: "組み立て手順",
     assemblyDescription:
-      "頒布形態によって実装済み部品は異なります。該当する工程だけを行い、各段階で傾きや干渉がないことを確認します。",
+      "頒布形態によって実装済み部品は異なります。該当する工程だけを行い、はんだ付け後はケースを閉じる前にFirmwareとDiagnosticsで確認します。",
     steps: [
       {
-        title: "部品と向きを仮合わせする",
+        title: "作業面を整え、部品を仮合わせする",
         description:
-          "PCB、プレート、ケースを固定する前に重ね、USB端子、Key 1の位置、エンコーダ側が一致することを確認します。",
+          "耐熱マット上に構成品を並べ、PCB、Plate、ケースを固定せずに重ねます。USB端子、Key 1、Encoder側、ねじ穴が一致することを確認します。",
         checks: [
           "PCBに割れ、深い傷、曲がった端子がない",
           "上段Key 1〜4、下段Key 5〜8、右側Rotaryの向きになっている",
+          "USBケーブルを外し、換気できる場所で作業している",
         ],
+        photo: {
+          file: "",
+          title: "全パーツの表裏と仮合わせ方向",
+          alt: "OctGearの全パーツを正しい表裏と向きで仮合わせした写真",
+        },
       },
       {
-        title: "スイッチとエンコーダを取り付ける",
+        title: "ホットスワップソケットをはんだ付けする",
         description:
-          "プレートを使用する構成では先にプレートへスイッチを固定し、端子を垂直に合わせてPCBへ差し込みます。",
+          "PCB裏面のKey 1〜8へソケットを密着させ、片側を仮止めして浮きと向きを直してから反対側をはんだ付けします。",
         checks: [
-          "スイッチ端子が折れたり、下へ潜り込んだりしていない",
-          "はんだ付け構成では全パーツの密着を確認してから作業する",
+          "8個すべてがPCBの外形線とpadへ合っている",
+          "ソケット本体が浮かず、はんだが端子とpadの両方へ流れている",
+          "隣接padへはんだブリッジしていない",
         ],
+        photo: {
+          file: "",
+          title: "ソケットの向きと正常なはんだ接合",
+          alt: "OctGear PCB裏面へ正しい向きではんだ付けしたホットスワップソケットの写真",
+        },
       },
       {
-        title: "ケースを固定する",
+        title: "RP2040-Zeroを取り付ける",
         description:
-          "PCBをケースへ収め、Bottom、光を通すMiddle、Topの順を確認して、ねじを対角順に少しずつ締めます。スペーサーは原則不要です。がたつきの調整が必要な場合のみクッションテープ等を使用し、最後にキーキャップとノブを取り付けます。",
+          "USB端子がケースの開口側になるようRP2040-Zeroを合わせます。互換boardはpin配置を照合し、全pinの向きと高さを確認してからはんだ付けします。",
         checks: [
-          "PCBや配線をケースで挟んでいない",
-          "Case Middleには透明または半透明の素材を使用している",
-          "ねじを締めすぎず、ノブとケースの間に回転できる隙間がある",
+          "USB端子とPCBの向きを逆にしていない",
+          "RP2040-ZeroがPCBと平行で、端子間をブリッジしていない",
+          "互換boardのGPIO配置がOctGear pinoutと一致している",
         ],
+        photo: {
+          file: "",
+          title: "RP2040-Zeroの正しい向きと実装高さ",
+          alt: "OctGear PCBへ正しい向きと高さで取り付けたRP2040-Zeroの写真",
+        },
       },
       {
-        title: "通電前の外観検査を行う",
+        title: "EC11 Encoderを取り付ける",
         description:
-          "USBを接続する前に、金属片、はんだブリッジ、浮いた部品、ケースと端子の接触がないことを確認します。",
+          "EncoderをPCBへ垂直に差し込み、固定脚とA/C/B/SW端子をはんだ付けします。ナットはケースとノブの高さを確認できる状態まで仮締めにします。",
+        checks: [
+          "Encoder本体がPCBへ密着し、軸が傾いていない",
+          "固定脚を含む全端子が確実に接合されている",
+          "回転と押し込みに引っ掛かりがない",
+        ],
+        photo: {
+          file: "",
+          title: "Encoderの向き・端子・仮締め状態",
+          alt: "OctGear PCBへ垂直に取り付けたEC11 Encoderと端子およびナットの写真",
+        },
+      },
+      {
+        title: "LEDテープを5灯へ加工して配線する",
+        description:
+          "WS2812Bを切断markで5灯分にし、GPIO 14側を最初のpixelのDINへ接続します。5V、GND、data方向を確認し、露出部を絶縁します。",
+        checks: [
+          "LEDの矢印が最初のpixelから5灯目へ流れる向きになっている",
+          "5VとGNDを逆接続していない",
+          "配線がケース外周へ届き、可動部やねじ穴を横切らない",
+        ],
+        photo: {
+          file: "",
+          title: "LEDの切断位置・DIN・3本の配線",
+          alt: "5灯へ切り出したWS2812B LEDテープの切断位置とDIN、5V、GND配線を示す写真",
+        },
+      },
+      {
+        title: "はんだ付けを全体検査する",
+        description:
+          "通電前にPCB表裏を明るい場所で確認します。金属片、はんだ球、端子の浮き、bridge、被覆が溶けた配線を取り除きます。",
         checks: [
           "隣接端子が意図せず接触していない",
-          "全キーを軽く押せて、エンコーダを回転・押下できる",
+          "USB 5VとGNDの短絡が疑われる箇所がない",
+          "すべての配線を軽く動かしても接合部が外れない",
         ],
+        photo: {
+          file: "",
+          title: "正常な接合とはんだbridgeの比較",
+          alt: "正常なはんだ接合と修正が必要なはんだbridgeを比較する写真",
+        },
+      },
+      {
+        title: "PlateとSwitchを取り付ける",
+        description:
+          "Plateへ四隅のSwitchから固定し、端子を真っすぐにしてソケットへ差し込みます。抵抗が強い場合は押し込まず、端子の曲がりを確認します。",
+        checks: [
+          "Switch端子が折れたり、下へ潜り込んだりしていない",
+          "PlateとSwitchが浮かず、全キーを軽く押せる",
+          "一度大きく曲がった端子は無理に再使用していない",
+        ],
+        photo: {
+          file: "",
+          title: "Switch端子とPlateへの差し込み順",
+          alt: "Switch端子の正常な状態とOctGear Plateへ四隅から取り付ける手順の写真",
+        },
+      },
+      {
+        title: "ケースを閉じる前に通電確認する",
+        description:
+          "耐熱・非導電面に置いてUSBを接続し、異臭や異常発熱がないことを確認します。Firmwareを書き込み、Diagnosticsで8キー、Encoder 3操作、LEDを確認します。",
+        checks: [
+          "異常に熱い部品がある場合は直ちにUSBを外す",
+          "OctGearとして認識され、Diagnosticsへ接続できる",
+          "不具合をケース内へ残さず、この段階で修正する",
+        ],
+        photo: {
+          file: "",
+          title: "ケース外でのFirmware・Diagnostics確認",
+          alt: "ケースを閉じる前のOctGear PCBをUSB接続してDiagnostics確認している写真",
+        },
+      },
+      {
+        title: "PCBとLEDをケースへ収める",
+        description:
+          "Bottom、光を通すMiddle、Topの順を確認します。LEDテープは本体から少し離した側面位置へ配置し、配線を外周、ねじ穴、Switchで挟まないよう収めます。",
+        checks: [
+          "Case Middleに透明または半透明の素材を使用している",
+          "LED 1〜5が想定する左から右の順に並んでいる",
+          "PCBや配線をケースで挟んでいない",
+        ],
+        photo: {
+          file: "",
+          title: "ケース積層順・LED位置・配線経路",
+          alt: "OctGearのBottom、Middle、Topの積層順とLEDテープ位置および配線経路を示す写真",
+        },
+      },
+      {
+        title: "ねじ、ゴム足、Keycap、ノブを仕上げる",
+        description:
+          "ねじを対角順に少しずつ締め、がたつきがある場合だけクッションテープ等で調整します。ゴム足、Keycap、ノブを取り付けて操作感を確認します。",
+        checks: [
+          "ねじを締めすぎてケースやPCBを変形させていない",
+          "ノブとケースの間に回転・押し込みできる隙間がある",
+          "机上でがたつかず、全キーを軽く押せる",
+        ],
+        photo: {
+          file: "",
+          title: "ねじ締め順と完成時の隙間",
+          alt: "OctGearのねじ締め順、ゴム足、Keycap、Encoderノブの完成状態を示す写真",
+        },
       },
     ],
     downloadsKicker: "Manufacturing Files",
@@ -287,6 +496,11 @@ export const ja = {
           "USBを外し、スイッチ端子の曲がり、差し込み不足、はんだ接合を確認します。ダイオードなしMatrixのため、矩形になる複数キー同時押しは制限があります。",
       },
       {
+        problem: "同じ行または列のキーがまとめて反応しない",
+        solution:
+          "USBを外し、該当するMatrix Row／ColumnとRP2040-Zeroの端子を確認します。個別Switchより共通信号の接合不良やbridgeを優先して調べます。",
+      },
+      {
         problem: "エンコーダの回転方向が逆",
         solution:
           "RemapperのHardwareにある「回転方向 / 反転」を切り替えます。再はんだ付けは不要です。",
@@ -295,6 +509,16 @@ export const ja = {
         problem: "LEDアニメーションの左右が逆",
         solution:
           "RemapperのHardwareにある「LEDテープ方向 / 反転」を切り替えます。",
+      },
+      {
+        problem: "側面LEDが点灯しない",
+        solution:
+          "USBを外し、5V、GND、最初のpixelのDIN、data方向を確認します。RemapperのLED輝度上限が0でないことも確認してください。",
+      },
+      {
+        problem: "RP2040や配線が異常に熱い・異臭がする",
+        solution:
+          "直ちにUSBを外し、再接続しないでください。5VとGNDの短絡、LEDの逆接続、はんだbridgeを解消してから再検査します。",
       },
       {
         problem: "PCのスリープ中にLEDが消える",

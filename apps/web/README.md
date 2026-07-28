@@ -50,7 +50,7 @@ Dependency directionはpageからfeatureへ向けます。TransportはUI state�
 
 RemapperとDiagnosticsの共通利用には現在の32-byte WebHID protocolとの互換性が必要です。protocolが異なる製品はtransport / command adapterも製品定義から切り替えられる境界を追加してください。
 
-HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を製品visualとして使用します。Build Guideの完成配置図は`public/build-guide/layout/`のSVG外形へHTML / CSSの8キー、Encoder、側面5灯を重ね、同directoryの完成写真と`public/build-guide/pcb/`のPCB製造previewを併記します。写真とpreviewはページ内で拡大表示できます。Three.jsのSTL Viewerではcase 3層とencoder knobをbrowser内で読み込み、回転・zoom・表示resetを提供します。組み立て、製造データdownload、Firmware導入、Diagnosticsによる完成検査を1ページで案内し、印刷時はnavigationとWeb操作buttonを省略します。
+HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を製品visualとして使用します。Build Guideの完成配置図は`public/build-guide/layout/`のSVG外形へHTML / CSSの8キー、Encoder、側面5灯を重ね、同directoryの完成写真と`public/build-guide/pcb/`のPCB製造previewを併記します。写真とpreviewはページ内で拡大表示できます。部品識別と組み立て工程の写真は`public/build-guide/assembly/`へ配置し、`ja.ts`と`en.ts`の各`photo.file`へfile名を設定するとプレースホルダーから写真表示へ切り替わります。Three.jsのSTL Viewerではcase 3層とencoder knobをbrowser内で読み込み、回転・zoom・表示resetを提供します。組み立て、製造データdownload、Firmware導入、Diagnosticsによる完成検査を1ページで案内し、印刷時はnavigationとWeb操作buttonを省略します。
 
 配布用GerberとSTLは`public/build-guide/downloads/`で管理します。公開名には製品名と部品用途を含め、Gerber ZIP内のfile prefixも`octgear-`へ統一します。
 
