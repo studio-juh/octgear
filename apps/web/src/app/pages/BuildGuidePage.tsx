@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
-import { SiteFooter } from "../components/SiteFooter";
+import { LanguageSwitch } from "../components/LanguageSwitch";
 import { StlViewer } from "../components/StlViewer";
 import {
   productAssetUrl,
@@ -83,6 +83,7 @@ export function BuildGuidePage() {
           <a className="ghost-button nav-button" href={diagnosticsUrl}>
             {t.home.openDiagnostics}
           </a>
+          <LanguageSwitch />
         </nav>
       </header>
 
@@ -469,8 +470,6 @@ export function BuildGuidePage() {
           </div>
         </div>
       </article>
-
-      <SiteFooter />
 
       {expandedImage ? (
         <div
