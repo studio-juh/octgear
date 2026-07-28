@@ -92,12 +92,12 @@ Key 5を押しながらUSB接続すると、その起動だけread-onlyの`OCTGE
 
 | Field | Default |
 | --- | --- |
-| Vendor ID | `0xCAFE` |
-| Product ID | `0xC608` |
+| Vendor ID | `0x2E8A` |
+| Product ID | `0x1133` |
 | Manufacturer | `OctGear` |
 | Product | `OctGear` |
 
-`0xCAFE`はproject-localな開発用VIDです。商用・広範囲な配布では、割り当て済みVID/PID、許可されたsublicense、またはpid.codes等で取得したPIDへ置き換えてください。Web側の接続filterは`apps/web/src/products/octgear/product.ts`の製品定義で管理します。
+`0x2E8A:0x1133`は[Raspberry Pi USB PID program](https://github.com/raspberrypi/usb-pid)からOctGear向けに割り当てられたidentityです。Firmware build defaultsとWeb側の接続filterで同じ値を使用します。Forkや別製品ではこの組み合わせを流用せず、各製品で使用許可を得たUSB identityへ置き換えてください。
 
 ## Documentation
 

@@ -3,8 +3,8 @@ set -eu
 
 ROOT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
 FQBN="${FQBN:-rp2040:rp2040:waveshare_rp2040_zero}"
-USB_VID="${USB_VID:-0xCAFE}"
-USB_PID="${USB_PID:-0xC608}"
+USB_VID="${USB_VID:-0x2E8A}"
+USB_PID="${USB_PID:-0x1133}"
 USB_MANUFACTURER="${USB_MANUFACTURER:-OctGear}"
 USB_PRODUCT="${USB_PRODUCT:-OctGear}"
 

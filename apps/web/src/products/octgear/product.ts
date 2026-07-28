@@ -6,8 +6,8 @@ export const octgearProduct = {
   name: "OctGear",
   hardware: HARDWARE_CONFIG,
   usbIdentity: {
-    vendorId: 0xcafe,
-    productId: 0xc608,
+    vendorId: 0x2e8a,
+    productId: 0x1133,
     manufacturerName: "OctGear",
     productName: "OctGear",
   },

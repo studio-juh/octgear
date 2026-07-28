@@ -119,7 +119,7 @@ Web entry pointはページごとに分かれ、共通実装を`src/app`と`src/
 
 ### Connect And Read
 
-1. 各entry pointから注入された製品定義の`0xCAFE:0xC608` filterでdevice pickerを開きます。
+1. 各entry pointから注入された製品定義の`0x2E8A:0x1133` filterでdevice pickerを開きます。
 2. Deviceをopenし、最初のheartbeatを送ります。
 3. `GetState`でfirmwareのlayer / key countを取得します。
 4. `GetKey`をlayer x key分、`GetLayerColor`をlayer分送って全設定を読みます。

@@ -12,7 +12,7 @@ OctGearはRP2040 Zero互換boardで動く、8キー + ロータリーエンコ�
 | Logical controls | 8 keys + Encoder CCW / CW / SW = 11 |
 | Layers | 8。Layer 0は常時有効、既定有効はLayer 0/1 |
 | USB | Keyboard HID、Consumer HID、WebHID vendor report |
-| Default identity | `0xCAFE:0xC608`、Manufacturer / Productは`OctGear` |
+| Default identity | `0x2E8A:0x1133`、Manufacturer / Productは`OctGear` |
 | Web | React 19 + TypeScript + Vite multi-page app |
 | Firmware | RP2040 Arduino core + Adafruit TinyUSB |
 | Persistence | External SPI Flashの3-slot journal + CRC。通常Layerは切り替え後10秒で保存 |
