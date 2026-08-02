@@ -114,7 +114,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
     useState<WorkspaceScale>(() =>
       loadWorkspaceScale(workspaceScaleStorageKey),
     );
-  const [status, setStatus] = useState<string>(t.connection.initialStatus);
+  const [status, setStatus] = useState<string | null>(null);
   const [firmwareStatus, setFirmwareStatus] = useState<string>(t.firmware.initialStatus);
   const [deviceState, setDeviceState] = useState<DeviceState | null>(null);
   const [readKeymap, setReadKeymap] = useState(() =>
@@ -147,7 +147,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
   const firmwareInstallSupported = canInstallUf2FromBrowser();
   const disconnectDevice = useDeviceSession(transport, connected, () => {
     setDeviceState(null);
-    setStatus(t.connection.initialStatus);
+    setStatus(null);
   });
 
   useEffect(() => {
@@ -156,7 +156,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
     setDraftAssignment((current) => normalizeAssignment(current));
 
     if (!connected) {
-      setStatus(t.connection.initialStatus);
+      setStatus(null);
     }
 
     if (!firmwareModalOpen) {
@@ -243,7 +243,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       setWriteLayerColors(loadedLayerColors);
       setActiveLayer(state.activeLayer);
       setSelectedKey((current) => (current < state.keyCount ? current : 0));
-      setStatus(t.connection.connectedTo(device.productName || t.device.fallbackName));
+      setStatus(null);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : t.connection.connectFailed);
     }
@@ -796,7 +796,9 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
             <span className={connected ? "status-badge online" : "status-badge offline"}>
               {connected ? t.connection.connected : t.connection.idle}
             </span>
-            <span className="connection-text">{status}</span>
+            {status ? (
+              <span className="connection-text" role="status">{status}</span>
+            ) : null}
           </div>
           <div className="connection-actions">
             <label className="workspace-scale-control">

@@ -22,7 +22,7 @@ export function DiagnosticsApp() {
     () => new WebHidTransport(product.usbIdentity),
     [product.usbIdentity],
   );
-  const [status, setStatus] = useState<string>(t.connection.initialStatus);
+  const [status, setStatus] = useState<string | null>(null);
   const [deviceState, setDeviceState] = useState<DeviceState | null>(null);
   const [reportTestStatus, setReportTestStatus] = useState<"idle" | "running" | "passed" | "failed">("idle");
   const [reportTestDetail, setReportTestDetail] = useState("-");
@@ -42,12 +42,12 @@ export function DiagnosticsApp() {
     setReportTestDetail("-");
     setStorageTestStatus("idle");
     setStorageTestDetail("-");
-    setStatus(t.connection.initialStatus);
+    setStatus(null);
   });
 
   useEffect(() => {
     if (!connected) {
-      setStatus(t.connection.initialStatus);
+      setStatus(null);
     }
   }, [locale]);
 
@@ -70,7 +70,7 @@ export function DiagnosticsApp() {
 
   async function connectDevice() {
     try {
-      const device = await transport.requestDevice();
+      await transport.requestDevice();
       await transport.open();
       await sendRemapperHeartbeat(transport);
       const state = await getDeviceState(transport);
@@ -79,7 +79,7 @@ export function DiagnosticsApp() {
       setLastKey(null);
       await runReportTest();
       await runStorageTest();
-      setStatus(t.connection.connectedTo(device.productName || t.device.fallbackName));
+      setStatus(null);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : t.connection.connectFailed);
     }
@@ -155,7 +155,9 @@ export function DiagnosticsApp() {
             <span className={connected ? "status-badge online" : "status-badge offline"}>
               {connected ? t.connection.connected : t.connection.idle}
             </span>
-            <span className="connection-text">{status}</span>
+            {status ? (
+              <span className="connection-text" role="status">{status}</span>
+            ) : null}
           </div>
           <div className="connection-actions">
             <a

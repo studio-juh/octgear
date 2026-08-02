@@ -305,6 +305,7 @@ select {
 }
 
 .remapper-topbar {
+  grid-template-columns: minmax(320px, 5fr) minmax(0, 7fr);
   max-width: 1400px;
 }
 
@@ -406,6 +407,11 @@ select {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.remapper-topbar .connection-actions {
+  align-items: flex-end;
+  flex-wrap: nowrap;
 }
 
 .workspace-scale-control {

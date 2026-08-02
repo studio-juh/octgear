@@ -83,6 +83,25 @@
   margin-bottom: 4px;
 }
 
+.remap-panel > .panel-heading {
+  flex-wrap: wrap;
+}
+
+.remap-panel > .panel-heading .panel-meta {
+  flex: 0 0 auto;
+  min-width: 88px;
+}
+
+.remap-panel > .panel-heading .panel-kicker,
+.remap-panel > .panel-heading h2 {
+  white-space: nowrap;
+}
+
+.remap-panel > .panel-heading .remap-actions {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+}
+
 .panel-heading.compact {
   grid-column: 1 / -1;
 }

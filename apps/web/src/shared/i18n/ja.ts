@@ -580,8 +580,6 @@ export const ja = {
     connect: "Connect",
     disconnect: "Disconnect",
     updater: "Updater",
-    initialStatus: "未接続",
-    connectedTo: (name: string) => `${name} に接続`,
     connectFailed: "接続に失敗しました",
     deviceNotConnected: "HIDデバイスが接続されていません",
     layerChangeFailed: "レイヤー変更に失敗しました",

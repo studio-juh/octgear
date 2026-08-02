@@ -582,8 +582,6 @@ export const en: typeof ja = {
     connect: "Connect",
     disconnect: "Disconnect",
     updater: "Updater",
-    initialStatus: "Disconnected",
-    connectedTo: (name) => `Connected to ${name}`,
     connectFailed: "Connection failed",
     deviceNotConnected: "No HID device is connected",
     layerChangeFailed: "Failed to change layer",
