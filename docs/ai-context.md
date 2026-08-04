@@ -16,7 +16,7 @@ OctGearはRP2040 Zero互換boardで動く、8キー + ロータリーエンコ�
 | Web | React 19 + TypeScript + Vite multi-page app |
 | Firmware | RP2040 Arduino core + Adafruit TinyUSB |
 | Persistence | External SPI Flashの3-slot journal + CRC。通常Layerは切り替え後10秒で保存 |
-| Status LED | GPIO 14のWS2812B 5 pixels、対応boardでは内蔵LEDへmirror |
+| Status LED | GPIO 14のWS2812B 4 pixels、Encoderは右端LED、対応boardでは内蔵LEDへmirror |
 
 ## System Map
 

@@ -47,7 +47,7 @@ export const ja = {
     facts: [
       { label: "INPUT", value: "8 Keys + Rotary" },
       { label: "LAYOUT", value: "2 × 4 Matrix" },
-      { label: "STATUS LED", value: "Side 5 Pixels" },
+      { label: "STATUS LED", value: "Side 4 Pixels" },
       { label: "FINAL CHECK", value: "Web Diagnostics" },
     ],
     pageIndexLabel: "ページ内目次",
@@ -69,7 +69,7 @@ export const ja = {
       "キースイッチ8個とキーキャップ8個（すべて1Uで使用可能）",
       "キーホットスワップソケット8個",
       "EC11ロータリーエンコーダー（高さ15mm）とノブ",
-      "WS2812B LEDテープ（DC5V、1m／60 LEDs、使用数5灯）",
+      "WS2812B LEDテープ（DC5V、1m／60 LEDs、使用数4灯）",
       "M2 × 8mmねじ、または対応するセルフタッピングねじ",
       "ケース、プレート（セルフ3Dプリント、またはJLC3DP等で発注）",
       "スペーサーは原則不要（必要な場合はクッションテープ等で調整）",
@@ -154,13 +154,13 @@ export const ja = {
       },
       {
         title: "WS2812B LEDテープ",
-        quantity: "5 pixels",
+        quantity: "4 pixels",
         description:
-          "切断位置、5V、GND、DIN、data方向の矢印を確認し、5灯分を使用します。",
+          "切断位置、5V、GND、DIN、data方向の矢印を確認し、4灯分を使用します。",
         photo: {
           file: "",
-          title: "5灯へ切り出したLEDとdata方向",
-          alt: "5灯へ切り出したWS2812B LEDテープとdata方向を示す写真",
+          title: "4灯へ切り出したLEDとdata方向",
+          alt: "4灯へ切り出したWS2812B LEDテープとdata方向を示す写真",
         },
       },
       {
@@ -192,9 +192,9 @@ export const ja = {
     layoutKicker: "Control Layout",
     layoutTitle: "完成時の操作配置",
     layoutDescription:
-      "盤面は上段Key 1〜4、右へずれた下段Key 5〜8、右下に張り出すロータリーエンコーダの配置です。すべて1Uのキーキャップで使用できます。隙間を詰めたい場合のみ、Key 1に1.25U、Key 5に1.5Uを選べます。側面LEDは左からLED 1〜5として扱います。",
+      "盤面は上段Key 1〜4、右へずれた下段Key 5〜8、右下に張り出すロータリーエンコーダの配置です。すべて1Uのキーキャップで使用できます。隙間を詰めたい場合のみ、Key 1に1.25U、Key 5に1.5Uを選べます。側面LEDは左からLED 1〜4として扱い、EncoderのCCW／CW／SWは右端のLED 4をK4／K8と共有します。",
     layoutAriaLabel:
-      "オプションの1.25U Key 1を含む上段Key 1から4、オプションの1.5U Key 5を含む右へずれた下段Key 5から8、右下のロータリーエンコーダ、下に分けて示した側面5灯LEDの完成配置図。全キー1Uでも使用可能",
+      "オプションの1.25U Key 1を含む上段Key 1から4、オプションの1.5U Key 5を含む右へずれた下段Key 5から8、右下のロータリーエンコーダ、下に分けて示した側面4灯LEDの完成配置図。全キー1Uでも使用可能",
     keyLabel: (index: number) => `Key ${index}`,
     optionalKeycapSize: (size: string) => `${size} 任意`,
     encoderLabel: "Rotary",
@@ -303,18 +303,18 @@ export const ja = {
         },
       },
       {
-        title: "LEDテープを5灯へ加工して配線する",
+        title: "LEDテープを4灯へ加工して配線する",
         description:
-          "WS2812Bを切断markで5灯分にし、GPIO 14側を最初のpixelのDINへ接続します。5V、GND、data方向を確認し、露出部を絶縁します。",
+          "WS2812Bを切断markで4灯分にし、GPIO 14側を最初のpixelのDINへ接続します。5V、GND、data方向を確認し、露出部を絶縁します。",
         checks: [
-          "LEDの矢印が最初のpixelから5灯目へ流れる向きになっている",
+          "LEDの矢印が最初のpixelから4灯目へ流れる向きになっている",
           "5VとGNDを逆接続していない",
           "配線がケース外周へ届き、可動部やねじ穴を横切らない",
         ],
         photo: {
           file: "",
           title: "LEDの切断位置・DIN・3本の配線",
-          alt: "5灯へ切り出したWS2812B LEDテープの切断位置とDIN、5V、GND配線を示す写真",
+          alt: "4灯へ切り出したWS2812B LEDテープの切断位置とDIN、5V、GND配線を示す写真",
         },
       },
       {
@@ -368,7 +368,7 @@ export const ja = {
           "Bottom、光を通すMiddle、Topの順を確認します。LEDテープは本体から少し離した側面位置へ配置し、配線を外周、ねじ穴、Switchで挟まないよう収めます。",
         checks: [
           "Case Middleに透明または半透明の素材を使用している",
-          "LED 1〜5が想定する左から右の順に並んでいる",
+          "LED 1〜4が想定する左から右の順に並んでいる",
           "PCBや配線をケースで挟んでいない",
         ],
         photo: {

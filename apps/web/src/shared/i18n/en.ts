@@ -49,7 +49,7 @@ export const en: typeof ja = {
     facts: [
       { label: "INPUT", value: "8 Keys + Rotary" },
       { label: "LAYOUT", value: "2 × 4 Matrix" },
-      { label: "STATUS LED", value: "Side 5 Pixels" },
+      { label: "STATUS LED", value: "Side 4 Pixels" },
       { label: "FINAL CHECK", value: "Web Diagnostics" },
     ],
     pageIndexLabel: "Page index",
@@ -71,7 +71,7 @@ export const en: typeof ja = {
       "Eight key switches and eight keycaps (all positions support 1U)",
       "Eight key hot-swap sockets",
       "EC11 rotary encoder (15 mm height) and knob",
-      "WS2812B LED strip (DC 5 V, 1 m / 60 LEDs; five LEDs used)",
+      "WS2812B LED strip (DC 5 V, 1 m / 60 LEDs; four LEDs used)",
       "M2 × 8 mm screws or compatible self-tapping screws",
       "Case and plate (self-print in 3D or order from JLC3DP or a similar service)",
       "Spacers are normally unnecessary; use cushioning tape or similar material only if adjustment is needed",
@@ -156,13 +156,13 @@ export const en: typeof ja = {
       },
       {
         title: "WS2812B LED strip",
-        quantity: "5 pixels",
+        quantity: "4 pixels",
         description:
-          "Identify the cut marks, 5 V, GND, DIN, and data arrows, then prepare a five-pixel segment.",
+          "Identify the cut marks, 5 V, GND, DIN, and data arrows, then prepare a four-pixel segment.",
         photo: {
           file: "",
-          title: "Five-pixel strip and data direction",
-          alt: "Five-pixel WS2812B LED strip showing the cut marks and data direction",
+          title: "Four-pixel strip and data direction",
+          alt: "Four-pixel WS2812B LED strip showing the cut marks and data direction",
         },
       },
       {
@@ -194,9 +194,9 @@ export const en: typeof ja = {
     layoutKicker: "Control Layout",
     layoutTitle: "Finished control layout",
     layoutDescription:
-      "The finished layout has Key 1–4 on top, a right-shifted Key 5–8 row below, and the rotary encoder extending from the lower right. Every position works with a 1U keycap. To close the visual gaps, Key 1 can optionally use 1.25U and Key 5 can use 1.5U. Side LEDs are numbered 1–5 from left to right.",
+      "The finished layout has Key 1–4 on top, a right-shifted Key 5–8 row below, and the rotary encoder extending from the lower right. Every position works with a 1U keycap. To close the visual gaps, Key 1 can optionally use 1.25U and Key 5 can use 1.5U. Side LEDs are numbered 1–4 from left to right; encoder CCW, CW, and SW share the right-end LED 4 with K4 and K8.",
     layoutAriaLabel:
-      "Finished layout with optional 1.25U Key 1 in the top Key 1 through 4 row, optional 1.5U Key 5 in the right-shifted Key 5 through 8 row, the rotary encoder at lower right, and five side LEDs shown separately below; every key also supports 1U",
+      "Finished layout with optional 1.25U Key 1 in the top Key 1 through 4 row, optional 1.5U Key 5 in the right-shifted Key 5 through 8 row, the rotary encoder at lower right, and four side LEDs shown separately below; every key also supports 1U",
     keyLabel: (index) => `Key ${index}`,
     optionalKeycapSize: (size) => `${size} opt.`,
     encoderLabel: "Rotary",
@@ -305,18 +305,18 @@ export const en: typeof ja = {
         },
       },
       {
-        title: "Prepare and wire a five-pixel LED strip",
+        title: "Prepare and wire a four-pixel LED strip",
         description:
-          "Cut the WS2812B strip at a cut mark after five pixels and connect GPIO 14 to DIN on the first pixel. Verify 5 V, GND, and data direction, then insulate exposed joints.",
+          "Cut the WS2812B strip at a cut mark after four pixels and connect GPIO 14 to DIN on the first pixel. Verify 5 V, GND, and data direction, then insulate exposed joints.",
         checks: [
-          "The arrows run from the first pixel toward the fifth",
+          "The arrows run from the first pixel toward the fourth",
           "5 V and GND are not reversed",
           "Wires reach the case edge without crossing moving parts or screw holes",
         ],
         photo: {
           file: "",
           title: "LED cut mark, DIN, and three wires",
-          alt: "Five-pixel WS2812B strip showing its cut mark and DIN, 5 V, and GND wires",
+          alt: "Four-pixel WS2812B strip showing its cut mark and DIN, 5 V, and GND wires",
         },
       },
       {
@@ -370,7 +370,7 @@ export const en: typeof ja = {
           "Confirm the Bottom, light-transmitting Middle, and Top order. Position the LED strip slightly away from the body along the side, and keep wires clear of the edge, screw holes, and switches.",
         checks: [
           "Case Middle uses a transparent or translucent material",
-          "LED 1–5 follow the intended left-to-right order",
+          "LED 1–4 follow the intended left-to-right order",
           "The case does not pinch the PCB or wiring",
         ],
         photo: {

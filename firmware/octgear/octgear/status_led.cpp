@@ -150,14 +150,16 @@ uint8_t physicalPixelIndex(uint8_t logicalPixel) {
 }
 
 uint8_t animationCenterForKey(uint8_t keyIndex) {
-  if (keyIndex < Config::PHYSICAL_KEY_COUNT) {
-    const uint8_t column = Config::KEY_MATRIX_COLUMNS[keyIndex];
-    return column < Config::EXTERNAL_RGB_LED_COUNT
-      ? column
-      : static_cast<uint8_t>(Config::EXTERNAL_RGB_LED_COUNT - 1U);
+  const uint8_t lastPixel =
+    static_cast<uint8_t>(Config::EXTERNAL_RGB_LED_COUNT - 1U);
+
+  // Encoder CCW / CW / SW share the logical right-end LED.
+  if (keyIndex >= Config::PHYSICAL_KEY_COUNT) {
+    return lastPixel;
   }
 
-  return static_cast<uint8_t>(Config::EXTERNAL_RGB_LED_COUNT - 1U);
+  const uint8_t column = Config::KEY_MATRIX_COLUMNS[keyIndex];
+  return column < Config::EXTERNAL_RGB_LED_COUNT ? column : lastPixel;
 }
 
 void cancelKeyAnimations() {

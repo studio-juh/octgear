@@ -39,7 +39,7 @@ export const HARDWARE_CONFIG = {
     diodeDirection: "none",
   },
   externalRgbLed: true,
-  externalRgbLedCount: 5,
+  externalRgbLedCount: 4,
   externalRgbLedReversed: false,
   oled: false,
   encoder: {

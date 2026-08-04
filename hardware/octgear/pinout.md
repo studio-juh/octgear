@@ -48,11 +48,11 @@ The compiled default direction is standard. Remapper can change and persist the 
 
 ## Status LED
 
-外付けWS2812Bのdata inputをGPIO 14へ接続します。Firmwareは5 pixels分のdataを送り、layer、打鍵アニメーション、Remapper、rescue状態を表示します。実装数が少ないchainでは余分なpixel dataは無視されます。論理上はLED 1を盤面左端として扱い、物理pixel順の既定値は標準です。Remapperから向きと打鍵アニメーション効果を変更して保存できます。Boardに内蔵WS2812がある場合はlayer色をミラーします。Layer表示の輝度上限は0-128で既定値32、打鍵アニメーションの輝度上限は0-128で既定値96です。
+外付けWS2812Bのdata inputをGPIO 14へ接続します。Firmwareは4 pixels分のdataを送り、layer、打鍵アニメーション、Remapper、rescue状態を表示します。論理上はLED 1を盤面左端として扱い、物理pixel順の既定値は標準です。物理キーの打鍵アニメーションはmatrix columnに対応し、EncoderのCCW / CW / SWは論理上の右端LEDへ割り当てます。Remapperから向きと打鍵アニメーション効果を変更して保存できます。Boardに内蔵WS2812がある場合はlayer色をミラーします。Layer表示の輝度上限は0-128で既定値32、打鍵アニメーションの輝度上限は0-128で既定値96です。
 
 | Signal | GPIO | Pixels | Mode |
 | --- | ---: | ---: | --- |
-| WS2812B DIN | 14 | 5 | 800 kHz GRB data |
+| WS2812B DIN | 14 | 4 | 800 kHz GRB data |
 
 ## Removed Parts
 

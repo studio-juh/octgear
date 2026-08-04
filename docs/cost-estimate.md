@@ -94,7 +94,6 @@ MiddleはLEDの光を拡散させるため、NaturalまたはTranslucentのPLA /
 
 ## Items To Confirm
 
-- 原価計算は外付けWS2812Bを4 pixels実装する前提。Hardware profileとFirmwareは5 pixels分を送信し、4 pixels chainでは余分なdataが無視される。公開Build Guideの使用数は現在5灯のため、頒布仕様を確定して表記を揃える
 - `Y809-0114`は`1/4 x 20山`表記だが、camera / tripod mountで使う`1/4-20 UNC`との規格一致を実物で確認する
 - 半組み立て用3cm梱包箱の品番、単価、梱包後の実測厚を確定する
 - 各購入価格が送料・税を含むか、実際のcard請求額で更新する

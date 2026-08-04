@@ -17,7 +17,7 @@ RP2040 Arduino coreとAdafruit TinyUSBを使う、現行8キー + rotary encoder
 - 3-sector Flash journalへのkeymap保存
 - UF2 bootloaderへのreboot
 - Key 5 boot時のread-only README drive / Serial rescue
-- GPIO 14の外付けWS2812Bへ、USB未mount時は5 pixelsを流れるカラーホイール、PCのUSBサスペンド中は消灯、Remapper接続時は1秒間のカラーホイール、その後は5 pixels同色のlayer状態、rescue時は緑を表示。Layer色は200 msで滑らかに遷移し、打鍵時は選択した白色アニメーションをLayer色へ重ねる。対応boardでは内蔵WS2812にもlayer色をミラーする。Layer表示と打鍵アニメーションの輝度上限を個別に`0-128`で保存
+- GPIO 14の外付けWS2812Bへ、USB未mount時は4 pixelsを流れるカラーホイール、PCのUSBサスペンド中は消灯、Remapper接続時は1秒間のカラーホイール、その後は4 pixels同色のlayer状態、rescue時は緑を表示。Layer色は200 msで滑らかに遷移し、打鍵時は選択した白色アニメーションをLayer色へ重ねる。対応boardでは内蔵WS2812にもlayer色をミラーする。Layer表示と打鍵アニメーションの輝度上限を個別に`0-128`で保存
 
 通常時は低遅延scanを行い、Remapper / Diagnostics heartbeat中は通常HID出力を抑止します。Rescue boot中も通常HID出力は行いません。
 
@@ -25,15 +25,14 @@ Key matrixにはダイオードがありません。複数Row間で2列以上が
 
 ### Key Animation Mapping
 
-打鍵アニメーションは物理controlの横位置を5個の側面LEDへ投影します。上下段の同じ列は同じLEDを中心にし、Encoderの回転とswitchは右端を中心にします。
+打鍵アニメーションは物理controlの横位置を4個の側面LEDへ投影します。上下段の同じ列は同じLEDを中心にし、Encoderの回転とswitchは右端のLED 4をK4 / K8と共有します。
 
 | Controls | Animation center |
 | --- | --- |
 | K1 / K5 | LED 1（pixel 0） |
 | K2 / K6 | LED 2（pixel 1） |
 | K3 / K7 | LED 3（pixel 2） |
-| K4 / K8 | LED 4（pixel 3） |
-| Encoder CCW / CW / SW | LED 5（pixel 4） |
+| K4 / K8 / Encoder CCW / CW / SW | LED 4（pixel 3、右端） |
 
 選べる効果は次の4種類です。白色を現在のLayer色へ合成し、同時打鍵は最大8個まで重ねます。内蔵LEDは打鍵アニメーションを表示せずLayer色を維持します。
 
@@ -43,7 +42,7 @@ Layer色はLED輝度上限（既定`32`）、白色ハイライトはアニメ�
 | --- | --- |
 | 無効 | 打鍵時もLayer色を維持 |
 | 波紋 | 白い波頭が中心から45 msずつ左右へ進み、各LEDで160 msかけてLayer色へ戻る |
-| フラッシュ | 5灯すべてが同時に白く光り、180 msでLayer色へ戻る |
+| フラッシュ | 4灯すべてが同時に白く光り、180 msでLayer色へ戻る |
 | スパーク | 押した位置を最も強く、周囲を弱く白く光らせ、240 msでLayer色へ戻る |
 
 ## Build

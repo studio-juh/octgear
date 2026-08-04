@@ -23,7 +23,7 @@
   "statusLedKeyAnimation": "ripple",
   "externalRgbLed": true,
   "externalRgbLedPin": 14,
-  "externalRgbLedCount": 5,
+  "externalRgbLedCount": 4,
   "externalRgbLedReversed": false,
   "oled": false,
   "matrix": {
