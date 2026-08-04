@@ -698,6 +698,7 @@ export const ja = {
     updater: "Updater",
     title: "Firmware",
     initialStatus: "UF2 ready",
+    builtAt: (value: string) => `UF2更新: ${value}`,
     close: "Close",
     closeLabel: "ファームウェア更新を閉じる",
     bootsel: "BOOTSEL",

@@ -60,6 +60,7 @@ pnpm firmware:web
 ```text
 apps/web/public/firmware/octgear.uf2
 apps/web/public/firmware/RESCUE.CMD
+apps/web/src/products/octgear/generatedFirmwareMetadata.ts
 ```
 
 Build scriptsはhardware configとrescue command assetをcompile前に再生成します。環境構築、identity override、検証手順は[`docs/development.md`](../../docs/development.md)を参照してください。

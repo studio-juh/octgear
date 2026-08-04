@@ -755,6 +755,12 @@ button.danger-action {
   overflow-wrap: anywhere;
 }
 
+.firmware-built-at {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .firmware-help {
   display: grid;
   gap: 12px;

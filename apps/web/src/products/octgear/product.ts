@@ -1,4 +1,5 @@
 import { HARDWARE_CONFIG } from "./generatedHardwareConfig";
+import { FIRMWARE_METADATA } from "./generatedFirmwareMetadata";
 import type { ProductDefinition } from "../productTypes";
 
 export const octgearProduct = {
@@ -14,6 +15,7 @@ export const octgearProduct = {
   firmware: {
     fileName: "octgear.uf2",
     publicPath: "firmware/octgear.uf2",
+    builtAt: FIRMWARE_METADATA.builtAt,
   },
   routes: {
     home: "",

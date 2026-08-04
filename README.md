@@ -49,7 +49,7 @@ pnpm dev
 pnpm typecheck          # Web TypeScript
 pnpm build              # Web production build
 pnpm firmware:build     # Firmware compile
-pnpm firmware:web       # Firmware compile + 配信用UF2/RESCUE.CMD更新
+pnpm firmware:web       # Firmware compile + 配信用UF2/RESCUE.CMD/生成日時更新
 pnpm hardware:generate  # Hardware profileから3つの生成物を更新
 ```
 

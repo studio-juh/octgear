@@ -1,9 +1,10 @@
-import { t } from "../../shared/i18n";
+import { useI18n, type Locale } from "../../shared/i18n";
 
 type FirmwarePanelProps = {
   connected: boolean;
   firmwareInstallSupported: boolean;
   firmwareStatus: string;
+  firmwareBuiltAt: string;
   onEnterBootloader: () => void;
   onInstallFirmware: () => void;
   onDownloadFirmware: () => void;
@@ -13,15 +14,22 @@ export function FirmwarePanel({
   connected,
   firmwareInstallSupported,
   firmwareStatus,
+  firmwareBuiltAt,
   onEnterBootloader,
   onInstallFirmware,
   onDownloadFirmware,
 }: FirmwarePanelProps) {
+  const { locale, t } = useI18n();
+  const formattedBuiltAt = formatFirmwareBuiltAt(firmwareBuiltAt, locale);
+
   return (
     <div className="firmware-panel">
       <div className="firmware-summary">
         <h2>{t.firmware.title}</h2>
         <span>{firmwareStatus}</span>
+        <time className="firmware-built-at" dateTime={firmwareBuiltAt}>
+          {t.firmware.builtAt(formattedBuiltAt)}
+        </time>
       </div>
       <div className="firmware-help">
         <section>
@@ -54,4 +62,16 @@ export function FirmwarePanel({
       </div>
     </div>
   );
+}
+
+function formatFirmwareBuiltAt(value: string, locale: Locale) {
+  return new Intl.DateTimeFormat(locale === "ja" ? "ja-JP" : "en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
+  }).format(new Date(value));
 }

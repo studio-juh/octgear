@@ -700,6 +700,7 @@ export const en: typeof ja = {
     updater: "Updater",
     title: "Firmware",
     initialStatus: "UF2 ready",
+    builtAt: (value) => `UF2 built: ${value}`,
     close: "Close",
     closeLabel: "Close firmware updater",
     bootsel: "BOOTSEL",

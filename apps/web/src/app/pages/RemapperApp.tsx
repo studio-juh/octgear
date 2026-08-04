@@ -922,6 +922,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
               connected={connected}
               firmwareInstallSupported={firmwareInstallSupported}
               firmwareStatus={firmwareStatus}
+              firmwareBuiltAt={product.firmware.builtAt}
               onEnterBootloader={() => void enterBootloaderMode()}
               onInstallFirmware={() => void installBundledFirmware()}
               onDownloadFirmware={() => void downloadBundledFirmware()}

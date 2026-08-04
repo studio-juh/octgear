@@ -3,6 +3,7 @@ import { t } from "../../shared/i18n";
 export type FirmwareArtifact = {
   readonly fileName: string;
   readonly publicPath: string;
+  readonly builtAt: string;
 };
 
 type Uf2WriteData = Blob | BufferSource | string;
