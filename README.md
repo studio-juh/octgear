@@ -16,6 +16,7 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 - Layer表示と独立した打鍵アニメーション輝度上限でコントラストを調整
 - Encoder回転方向の反転設定とFlash保存
 - Keyboard、Consumer Control、次／前レイヤー、Momentary Layer割り当て
+- Next Layerの1回押しで次へ進み、同じcontrolの250 ms以内の2回目でPrevious Layerを実行するTap Dance
 - WebHID Remapperによる読込、編集、差分保存
 - 物理入力、設定report、Flash保存領域のDiagnostics
 - 頒布キット向けの組み立て・Firmware導入・動作確認ガイドと製造データ配布

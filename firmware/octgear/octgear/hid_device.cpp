@@ -41,6 +41,14 @@ uint32_t momentaryLayerOrder[Config::KEY_COUNT] = { 0 };
 uint32_t nextMomentaryLayerOrder = 1;
 uint8_t momentaryBaseLayer = 0;
 
+struct LayerTapDanceState {
+  bool waitingForSecondTap;
+  uint8_t keyIndex;
+  uint32_t firstTapMs;
+};
+
+LayerTapDanceState layerTapDance = { false, 0, 0 };
+
 struct KeymapSnapshot {
   KeyAssignment assignments[Config::LAYER_COUNT][Config::KEY_COUNT];
   LayerColor colors[Config::LAYER_COUNT];
@@ -721,6 +729,33 @@ void cyclePersistentLayerBackward() {
   setActiveLayer(previousEnabledLayer(activeLayer()));
 }
 
+void resetLayerTapDance() {
+  layerTapDance = { false, 0, 0 };
+}
+
+void armLayerTapDance(uint8_t keyIndex) {
+  layerTapDance = { true, keyIndex, millis() };
+}
+
+bool consumeLayerTapDanceSecondTap(uint8_t keyIndex) {
+  if (!layerTapDance.waitingForSecondTap) {
+    return false;
+  }
+
+  const uint32_t elapsedMs = millis() - layerTapDance.firstTapMs;
+  const bool matches =
+    keyIndex == layerTapDance.keyIndex &&
+    elapsedMs <= Config::LAYER_TAP_DANCE_TERM_MS;
+  resetLayerTapDance();
+
+  if (!matches) {
+    return false;
+  }
+
+  cyclePersistentLayerBackward();
+  return true;
+}
+
 bool wakeKeyChangePending() {
   return wakeKeyChangeQueueCount != 0 || wakeKeyChangeQueueOverflowed;
 }
@@ -859,8 +894,15 @@ void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t la
     }
 
     if (remapperActive) {
+      resetLayerTapDance();
       queueKeyboardRelease(keyIndex);
       queueConsumerRelease(keyIndex);
+      continue;
+    }
+
+    if (replayingWakeKeyChange) {
+      resetLayerTapDance();
+    } else if (consumeLayerTapDanceSecondTap(keyIndex)) {
       continue;
     }
 
@@ -877,6 +919,9 @@ void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t la
         break;
       case AssignmentKind::LayerCycle:
         cyclePersistentLayer();
+        if (!replayingWakeKeyChange) {
+          armLayerTapDance(keyIndex);
+        }
         break;
       case AssignmentKind::LayerPrevious:
         cyclePersistentLayerBackward();

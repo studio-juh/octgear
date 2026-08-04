@@ -13,6 +13,7 @@ RP2040 Arduino coreとAdafruit TinyUSBを使う、現行8キー + rotary encoder
 - 打鍵アニメーションを無効／波紋／フラッシュ／スパークから選択して保存
 - Layer表示と独立した打鍵アニメーション輝度上限を保存
 - Keyboard / Consumer Control HID output
+- Next Layerの1回押しで次へ進み、同じcontrolの250 ms以内の2回目でPrevious Layerを実行するTap Dance
 - WebHID vendor reportによる設定とDiagnostics
 - 3-sector Flash journalへのkeymap保存
 - UF2 bootloaderへのreboot

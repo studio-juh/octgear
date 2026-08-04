@@ -14,6 +14,7 @@ constexpr uint8_t STATUS_RESCUE_GREEN = 18;
 constexpr uint16_t DEBOUNCE_US = 5000;
 constexpr uint16_t IDLE_SCAN_SLEEP_US = 100;
 constexpr uint16_t REMAPPER_SCAN_SLEEP_US = 1000;
+constexpr uint16_t LAYER_TAP_DANCE_TERM_MS = 250;
 constexpr uint16_t STATUS_COLOR_WHEEL_MS = 40;
 constexpr uint16_t STATUS_LAYER_TRANSITION_MS = 200;
 constexpr uint16_t STATUS_LED_FRAME_MS = 20;

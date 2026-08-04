@@ -39,6 +39,7 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 | `IDLE_SCAN_SLEEP_US` | `100` | 通常modeのscan間sleep |
 | `REMAPPER_SCAN_SLEEP_US` | `1000` | Config / rescue modeのscan間sleep |
 | `REMAPPER_HEARTBEAT_TIMEOUT_MS` | `3000` | 通常出力抑止を解除する期限 |
+| `LAYER_TAP_DANCE_TERM_MS` | `250` | Next Layer後に同じcontrolをPrevious Layerとして扱う期限 |
 | `ACTIVE_LAYER_SAVE_DELAY_MS` | `10000` | 通常Layer切り替え後の遅延保存時間 |
 | `STATUS_LAYER_TRANSITION_MS` | `200` | Layer色を切り替えるフェード時間 |
 | `STATUS_LED_FRAME_MS` | `20` | Layer色フェードの更新間隔 |
