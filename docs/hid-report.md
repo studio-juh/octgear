@@ -155,7 +155,7 @@ Keyboard assignmentはmodifier bitmapと6-key rollover slotsを使用します�
 | `4` | MomentaryLayer |
 | `5` | LayerPrevious |
 
-`LayerCycle`は有効layerを次方向へ、`LayerPrevious`は前方向へ循環します。どちらもLayer 0からwrapします。`LayerCycle`を実行した物理controlを250 ms以内に再度押すと、Firmwareは移動先layerのassignmentより先に2回目を捕捉し、`LayerPrevious`相当として処理します。assignment kindとwire formatは変わりません。
+`LayerCycle`は有効layerを次方向へ、`LayerPrevious`は前方向へ循環します。どちらもLayer 0からwrapします。`LayerCycle`の最初の押下は250 ms保留され、単押しなら次方向へ進みます。同じ物理controlを期限内に再度押すと保留した遷移を破棄し、開始位置から`LayerPrevious`相当として処理します。assignment kindとwire formatは変わりません。
 
 ## Compatibility Rules
 

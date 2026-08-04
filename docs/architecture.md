@@ -82,7 +82,7 @@ Key matrixはダイオードなしです。複数Rowが2列以上を共有する
 Assignmentは`None`、`Keyboard`、`Consumer`、`LayerCycle`、`MomentaryLayer`、`LayerPrevious`の6種類です。
 
 - Layer 0は常時有効で、Layer 1-7の有効状態はFlashへ保存します。既定有効maskはLayer 0/1です。
-- `LayerCycle`は有効なlayerだけを次方向へ循環します。同じ物理controlを250 ms以内に再度押すと、2回目のassignment解決を行わず`LayerPrevious`相当として前方向へ循環します。
+- `LayerCycle`は最初の押下を250 ms保留し、単押しなら有効なlayerだけを次方向へ循環します。同じ物理controlを期限内に再度押すと保留した次方向への遷移を破棄し、開始位置から`LayerPrevious`相当として前方向へ循環します。別controlの押下で中断された場合は、保留した次方向への遷移を先に確定してから移動先layerのassignmentを解決します。
 - `LayerPrevious`は有効なlayerだけを前方向へ循環します。
 - `MomentaryLayer`はtarget layerが有効な場合だけ押下中に切り替え、releaseで通常layerへ戻ります。
 - 通常のactive layerは最後の切り替えから10秒間変化がなければFlashへ保存し、次回起動時に復元します。連続切り替えでは保存期限を延長し、Momentary Layerは保存しません。

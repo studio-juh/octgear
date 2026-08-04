@@ -35,7 +35,7 @@ PCがスリープしてUSBがサスペンド状態になると、外付けLEDと
 
 初期キーマップはLayer 0/1だけに割り当てがあり、Layer 2〜7は空です。Firmwareを更新しただけでは保存済み設定を上書きしません。初期値へ戻す場合はRemapperのRead左側にあるメニューから初期化します。
 
-Next Layer、Previous Layer、Remapper、Serial rescueで通常Layerを切り替えると、最後の切り替えから10秒後に現在LayerをFlashへ自動保存します。10秒以内の連続切り替えは1回の保存へまとめられ、次回起動時は保存したLayerから始まります。Next Layerは1回目の押下ですぐ次へ進み、同じ物理controlを250 ms以内にもう一度押すと、移動先Layerの割り当てにかかわらず2回目をPrevious Layerとして処理します。Momentary Layerは押している間だけの一時状態なので保存しません。
+Next Layer、Previous Layer、Remapper、Serial rescueで通常Layerを切り替えると、最後の切り替えから10秒後に現在LayerをFlashへ自動保存します。10秒以内の連続切り替えは1回の保存へまとめられ、次回起動時は保存したLayerから始まります。Next Layerは最初の押下を250 ms保留し、単押しなら次へ進みます。同じ物理controlを期限内にもう一度押すとNextを実行せず、開始LayerからPrevious Layerとして一つ前へ進みます。Momentary Layerは押している間だけの一時状態なので保存しません。
 
 物理キーやencoderを操作すると、対応するcontrol tileが選択されます。接続中はheartbeatにより通常のKeyboard / Consumer出力がfirmware側で抑止されるため、設定操作がPC入力として流れません。
 
@@ -46,7 +46,7 @@ Next Layer、Previous Layer、Remapper、Serial rescueで通常Layerを切り替
 | None | 出力しない |
 | Keyboard | 押下中assignmentのmodifierと最大6種類のkeycodeを統合して送る |
 | Consumer | 最後に押された押下中のvolume、media等の16-bit usageを送る |
-| Next Layer | 有効なlayerだけを次方向へ切り替える。同じcontrolの250 ms以内の2回目はPrevious Layerとして動作 |
+| Next Layer | 単押しは250 ms後に次へ、同じcontrolのダブルタップは開始位置から前へ切り替える |
 | Previous Layer | 有効なlayerだけを前方向へ切り替える |
 | Momentary Layer | target layerが有効な場合、押している間だけ切り替える |
 

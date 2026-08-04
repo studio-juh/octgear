@@ -49,6 +49,12 @@ struct LayerTapDanceState {
 
 LayerTapDanceState layerTapDance = { false, 0, 0 };
 
+enum class LayerTapDancePressResult : uint8_t {
+  Continue,
+  ConsumedDoubleTap,
+  ResolvedSingleTap,
+};
+
 struct KeymapSnapshot {
   KeyAssignment assignments[Config::LAYER_COUNT][Config::KEY_COUNT];
   LayerColor colors[Config::LAYER_COUNT];
@@ -737,23 +743,48 @@ void armLayerTapDance(uint8_t keyIndex) {
   layerTapDance = { true, keyIndex, millis() };
 }
 
-bool consumeLayerTapDanceSecondTap(uint8_t keyIndex) {
+void resolveLayerTapDanceSingleTap() {
   if (!layerTapDance.waitingForSecondTap) {
-    return false;
+    return;
+  }
+
+  resetLayerTapDance();
+  cyclePersistentLayer();
+}
+
+LayerTapDancePressResult handleLayerTapDancePress(uint8_t keyIndex) {
+  if (!layerTapDance.waitingForSecondTap) {
+    return LayerTapDancePressResult::Continue;
   }
 
   const uint32_t elapsedMs = millis() - layerTapDance.firstTapMs;
-  const bool matches =
+  const bool isDoubleTap =
     keyIndex == layerTapDance.keyIndex &&
     elapsedMs <= Config::LAYER_TAP_DANCE_TERM_MS;
-  resetLayerTapDance();
 
-  if (!matches) {
-    return false;
+  if (isDoubleTap) {
+    resetLayerTapDance();
+    cyclePersistentLayerBackward();
+    return LayerTapDancePressResult::ConsumedDoubleTap;
   }
 
-  cyclePersistentLayerBackward();
-  return true;
+  resolveLayerTapDanceSingleTap();
+  return LayerTapDancePressResult::ResolvedSingleTap;
+}
+
+void updateLayerTapDance() {
+  if (!layerTapDance.waitingForSecondTap) {
+    return;
+  }
+
+  if (remapperConnected()) {
+    resetLayerTapDance();
+    return;
+  }
+
+  if (millis() - layerTapDance.firstTapMs > Config::LAYER_TAP_DANCE_TERM_MS) {
+    resolveLayerTapDanceSingleTap();
+  }
 }
 
 bool wakeKeyChangePending() {
@@ -835,6 +866,7 @@ bool hidDeviceSuspended() {
 }
 
 void updateHidDevice() {
+  updateLayerTapDance();
   flushWakeKeyChange();
   serviceConsumerReports();
 
@@ -878,7 +910,6 @@ void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t la
     }
 
     const bool pressed = (newMask & bit) != 0;
-    const KeyAssignment& assignment = assignmentFor(layer, keyIndex);
 
     if (pressed && remapperActive) {
       sendKeyEvent(layer, keyIndex, pressed);
@@ -900,11 +931,21 @@ void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t la
       continue;
     }
 
+    uint8_t assignmentLayer = layer;
     if (replayingWakeKeyChange) {
       resetLayerTapDance();
-    } else if (consumeLayerTapDanceSecondTap(keyIndex)) {
-      continue;
+    } else {
+      const LayerTapDancePressResult tapDanceResult =
+        handleLayerTapDancePress(keyIndex);
+      if (tapDanceResult == LayerTapDancePressResult::ConsumedDoubleTap) {
+        continue;
+      }
+      if (tapDanceResult == LayerTapDancePressResult::ResolvedSingleTap) {
+        assignmentLayer = activeLayer();
+      }
     }
+
+    const KeyAssignment& assignment = assignmentFor(assignmentLayer, keyIndex);
 
     switch (assignment.kind) {
       case AssignmentKind::Keyboard:
@@ -918,8 +959,9 @@ void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t la
         }
         break;
       case AssignmentKind::LayerCycle:
-        cyclePersistentLayer();
-        if (!replayingWakeKeyChange) {
+        if (replayingWakeKeyChange) {
+          cyclePersistentLayer();
+        } else {
           armLayerTapDance(keyIndex);
         }
         break;
@@ -927,7 +969,7 @@ void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t la
         cyclePersistentLayerBackward();
         break;
       case AssignmentKind::MomentaryLayer:
-        pressMomentaryLayer(keyIndex, layer, assignment.targetLayer);
+        pressMomentaryLayer(keyIndex, assignmentLayer, assignment.targetLayer);
         break;
       case AssignmentKind::None:
       default:
