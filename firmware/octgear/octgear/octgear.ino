@@ -44,12 +44,6 @@ void loop() {
   if (updateKeyScanner(!configActive) && !rescueIndicatorActive) {
     const Config::KeyMask previousMask = previousKeyMask();
     const Config::KeyMask currentMask = currentKeyMask();
-    const Config::KeyMask pressedMask = currentMask & ~previousMask;
-    for (uint8_t key = 0; key < Config::KEY_COUNT; ++key) {
-      if ((pressedMask & static_cast<Config::KeyMask>(1U << key)) != 0) {
-        triggerStatusLedKeyAnimation(key);
-      }
-    }
     sendKeyChanges(previousMask, currentMask, activeLayer());
   }
 

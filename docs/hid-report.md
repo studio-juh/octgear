@@ -100,7 +100,7 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 旧firmwareの`GetState` responseに9 byte目がない場合、Webは打鍵アニメーション設定を未対応として扱います。
 
-`statusKeyAnimationBrightness`と`SetStatusKeyAnimationBrightness`の`brightness`は`0-128`です。既定値は`96`で、アニメーションの白色ハイライトだけに適用します。Layer側の`statusLedBrightness`より高く設定すると、光っていないpixelの明るさを変えずにコントラストを強められます。`0`ではアニメーション効果を選択したままハイライトだけを消せます。変更はFlashへ即座に保存します。
+`statusKeyAnimationBrightness`と`SetStatusKeyAnimationBrightness`の`brightness`は`0-128`です。既定値は`96`で、通常打鍵の白色ハイライトとLayer変更時の切り替え後Layer色ハイライトに適用します。Layer側の`statusLedBrightness`より高く設定すると、光っていないpixelの明るさを変えずにコントラストを強められます。`0`ではアニメーション効果を選択したままハイライトだけを消せます。変更はFlashへ即座に保存します。
 
 旧firmwareの`GetState` responseに10 byte目がない場合、Webはアニメーション輝度設定を未対応として扱います。
 

@@ -735,6 +735,18 @@ void cyclePersistentLayerBackward() {
   setActiveLayer(previousEnabledLayer(activeLayer()));
 }
 
+void triggerResolvedLayerAnimation(
+  uint8_t keyIndex,
+  uint8_t previousLayer
+) {
+  if (activeLayer() == previousLayer) {
+    triggerStatusLedKeyAnimation(keyIndex);
+    return;
+  }
+
+  triggerStatusLedLayerAnimation(keyIndex, activeLayer());
+}
+
 void resetLayerTapDance() {
   layerTapDance = { false, 0, 0 };
 }
@@ -748,8 +760,11 @@ void resolveLayerTapDanceSingleTap() {
     return;
   }
 
+  const uint8_t keyIndex = layerTapDance.keyIndex;
+  const uint8_t previousLayer = activeLayer();
   resetLayerTapDance();
   cyclePersistentLayer();
+  triggerResolvedLayerAnimation(keyIndex, previousLayer);
 }
 
 LayerTapDancePressResult handleLayerTapDancePress(uint8_t keyIndex) {
@@ -763,8 +778,10 @@ LayerTapDancePressResult handleLayerTapDancePress(uint8_t keyIndex) {
     elapsedMs <= Config::LAYER_TAP_DANCE_TERM_MS;
 
   if (isDoubleTap) {
+    const uint8_t previousLayer = activeLayer();
     resetLayerTapDance();
     cyclePersistentLayerBackward();
+    triggerResolvedLayerAnimation(keyIndex, previousLayer);
     return LayerTapDancePressResult::ConsumedDoubleTap;
   }
 
@@ -926,6 +943,7 @@ void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t la
 
     if (remapperActive) {
       resetLayerTapDance();
+      triggerStatusLedKeyAnimation(keyIndex);
       queueKeyboardRelease(keyIndex);
       queueConsumerRelease(keyIndex);
       continue;
@@ -949,9 +967,11 @@ void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t la
 
     switch (assignment.kind) {
       case AssignmentKind::Keyboard:
+        triggerStatusLedKeyAnimation(keyIndex);
         queueKeyboardAssignment(keyIndex, assignment);
         break;
       case AssignmentKind::Consumer:
+        triggerStatusLedKeyAnimation(keyIndex);
         if (keyIndex == Config::ENCODER_CCW_KEY_INDEX || keyIndex == Config::ENCODER_CW_KEY_INDEX) {
           queueConsumerTap(assignment.consumerUsage);
         } else {
@@ -960,19 +980,28 @@ void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t la
         break;
       case AssignmentKind::LayerCycle:
         if (replayingWakeKeyChange) {
+          const uint8_t previousLayer = activeLayer();
           cyclePersistentLayer();
+          triggerResolvedLayerAnimation(keyIndex, previousLayer);
         } else {
           armLayerTapDance(keyIndex);
         }
         break;
-      case AssignmentKind::LayerPrevious:
+      case AssignmentKind::LayerPrevious: {
+        const uint8_t previousLayer = activeLayer();
         cyclePersistentLayerBackward();
+        triggerResolvedLayerAnimation(keyIndex, previousLayer);
         break;
-      case AssignmentKind::MomentaryLayer:
+      }
+      case AssignmentKind::MomentaryLayer: {
+        const uint8_t previousLayer = activeLayer();
         pressMomentaryLayer(keyIndex, assignmentLayer, assignment.targetLayer);
+        triggerResolvedLayerAnimation(keyIndex, previousLayer);
         break;
+      }
       case AssignmentKind::None:
       default:
+        triggerStatusLedKeyAnimation(keyIndex);
         queueKeyboardRelease(keyIndex);
         queueConsumerRelease(keyIndex);
         break;

@@ -26,6 +26,8 @@ struct KeyAnimationEvent {
   bool active;
   uint8_t center;
   uint32_t startMs;
+  uint32_t targetColor;
+  bool preserveBaseChannels;
 };
 
 static_assert(Config::EXTERNAL_RGB_LED_COUNT > 0);
@@ -58,6 +60,33 @@ uint32_t scalePixelColor(uint32_t color, uint8_t brightness) {
     scaleChannelForBrightness(colorChannel(color, 16), brightness),
     scaleChannelForBrightness(colorChannel(color, 8), brightness),
     scaleChannelForBrightness(colorChannel(color, 0), brightness)
+  );
+}
+
+uint32_t whiteAnimationTargetColor() {
+  const uint8_t brightness = statusKeyAnimationBrightness();
+  return statusPixel.Color(brightness, brightness, brightness);
+}
+
+uint32_t layerAnimationTargetColor(const LayerColor& color) {
+  const uint8_t peak = color.red > color.green
+    ? (color.red > color.blue ? color.red : color.blue)
+    : (color.green > color.blue ? color.green : color.blue);
+  const uint8_t brightness = statusKeyAnimationBrightness();
+  if (peak == 0 || brightness == 0) {
+    return 0;
+  }
+
+  return statusPixel.Color(
+    static_cast<uint8_t>(
+      (static_cast<uint32_t>(color.red) * brightness + peak / 2U) / peak
+    ),
+    static_cast<uint8_t>(
+      (static_cast<uint32_t>(color.green) * brightness + peak / 2U) / peak
+    ),
+    static_cast<uint8_t>(
+      (static_cast<uint32_t>(color.blue) * brightness + peak / 2U) / peak
+    )
   );
 }
 
@@ -124,22 +153,52 @@ uint32_t interpolatePixelColor(uint32_t start, uint32_t target, uint32_t elapsed
   );
 }
 
-uint8_t blendChannelToAnimation(uint8_t channel, uint16_t strength) {
-  const uint8_t base =
-    scaleChannelForBrightness(channel, statusLedBrightness());
-  const uint8_t animationLimit = statusKeyAnimationBrightness();
-  const uint8_t target = base > animationLimit ? base : animationLimit;
+uint8_t blendAnimationChannel(
+  uint8_t base,
+  uint8_t target,
+  uint16_t strength
+) {
   return static_cast<uint8_t>(
-    base +
-    (static_cast<uint16_t>(target - base) * strength + 127U) / 255U
+    (static_cast<uint32_t>(base) * (255U - strength) +
+     static_cast<uint32_t>(target) * strength + 127U) / 255U
   );
 }
 
-uint32_t blendPixelColorToAnimation(uint32_t color, uint16_t strength) {
+uint32_t blendPixelColorToAnimation(
+  uint32_t color,
+  uint32_t targetColor,
+  uint16_t strength,
+  bool preserveBaseChannels
+) {
+  const uint32_t baseColor = scalePixelColor(color, statusLedBrightness());
+  uint8_t targetRed = colorChannel(targetColor, 16);
+  uint8_t targetGreen = colorChannel(targetColor, 8);
+  uint8_t targetBlue = colorChannel(targetColor, 0);
+  if (preserveBaseChannels) {
+    const uint8_t baseRed = colorChannel(baseColor, 16);
+    const uint8_t baseGreen = colorChannel(baseColor, 8);
+    const uint8_t baseBlue = colorChannel(baseColor, 0);
+    targetRed = targetRed > baseRed ? targetRed : baseRed;
+    targetGreen = targetGreen > baseGreen ? targetGreen : baseGreen;
+    targetBlue = targetBlue > baseBlue ? targetBlue : baseBlue;
+  }
+
   return statusPixel.Color(
-    blendChannelToAnimation(colorChannel(color, 16), strength),
-    blendChannelToAnimation(colorChannel(color, 8), strength),
-    blendChannelToAnimation(colorChannel(color, 0), strength)
+    blendAnimationChannel(
+      colorChannel(baseColor, 16),
+      targetRed,
+      strength
+    ),
+    blendAnimationChannel(
+      colorChannel(baseColor, 8),
+      targetGreen,
+      strength
+    ),
+    blendAnimationChannel(
+      colorChannel(baseColor, 0),
+      targetBlue,
+      strength
+    )
   );
 }
 
@@ -170,8 +229,16 @@ void cancelKeyAnimations() {
   keyAnimationShown = false;
 }
 
-void startKeyAnimation(uint8_t keyIndex) {
-  if (statusKeyAnimation() == StatusKeyAnimation::Disabled) {
+void startKeyAnimation(
+  uint8_t keyIndex,
+  uint32_t targetColor,
+  bool preserveBaseChannels
+) {
+  if (
+    statusKeyAnimation() == StatusKeyAnimation::Disabled ||
+    statusKeyAnimationBrightness() == 0 ||
+    targetColor == 0
+  ) {
     return;
   }
 
@@ -190,7 +257,13 @@ void startKeyAnimation(uint8_t keyIndex) {
     );
   }
 
-  keyAnimations[slot] = { true, animationCenterForKey(keyIndex), millis() };
+  keyAnimations[slot] = {
+    true,
+    animationCenterForKey(keyIndex),
+    millis(),
+    targetColor,
+    preserveBaseChannels,
+  };
   keyAnimationLastFrameMs = 0;
 }
 
@@ -268,7 +341,14 @@ void updateKeyAnimations() {
   }
 
   const uint32_t now = millis();
-  uint16_t strengths[Config::EXTERNAL_RGB_LED_COUNT] = {};
+  uint16_t weights[Config::EXTERNAL_RGB_LED_COUNT] = {};
+  uint32_t weightedRed[Config::EXTERNAL_RGB_LED_COUNT] = {};
+  uint32_t weightedGreen[Config::EXTERNAL_RGB_LED_COUNT] = {};
+  uint32_t weightedBlue[Config::EXTERNAL_RGB_LED_COUNT] = {};
+  bool preserveBaseChannels[Config::EXTERNAL_RGB_LED_COUNT];
+  for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
+    preserveBaseChannels[pixel] = true;
+  }
   bool anyActive = false;
 
   for (uint8_t slot = 0; slot < Config::STATUS_KEY_ANIMATION_SLOTS; ++slot) {
@@ -286,8 +366,20 @@ void updateKeyAnimations() {
     anyActive = true;
     for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
       const uint16_t strength = animationStrength(animation, event, pixel, elapsedMs);
-      const uint16_t combinedStrength = strengths[pixel] + strength;
-      strengths[pixel] = combinedStrength > 255U ? 255U : combinedStrength;
+      if (strength == 0) {
+        continue;
+      }
+
+      weights[pixel] = static_cast<uint16_t>(weights[pixel] + strength);
+      weightedRed[pixel] +=
+        static_cast<uint32_t>(colorChannel(event.targetColor, 16)) * strength;
+      weightedGreen[pixel] +=
+        static_cast<uint32_t>(colorChannel(event.targetColor, 8)) * strength;
+      weightedBlue[pixel] +=
+        static_cast<uint32_t>(colorChannel(event.targetColor, 0)) * strength;
+      if (!event.preserveBaseChannels) {
+        preserveBaseChannels[pixel] = false;
+      }
     }
   }
 
@@ -309,9 +401,34 @@ void updateKeyAnimations() {
 
   keyAnimationLastFrameMs = now;
   for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
+    if (weights[pixel] == 0) {
+      statusPixel.setPixelColor(
+        physicalPixelIndex(pixel),
+        scalePixelColor(displayedColor, statusLedBrightness())
+      );
+      continue;
+    }
+
+    const uint16_t strength = weights[pixel] > 255U ? 255U : weights[pixel];
+    const uint32_t targetColor = statusPixel.Color(
+      static_cast<uint8_t>(
+        (weightedRed[pixel] + weights[pixel] / 2U) / weights[pixel]
+      ),
+      static_cast<uint8_t>(
+        (weightedGreen[pixel] + weights[pixel] / 2U) / weights[pixel]
+      ),
+      static_cast<uint8_t>(
+        (weightedBlue[pixel] + weights[pixel] / 2U) / weights[pixel]
+      )
+    );
     statusPixel.setPixelColor(
       physicalPixelIndex(pixel),
-      blendPixelColorToAnimation(displayedColor, strengths[pixel])
+      blendPixelColorToAnimation(
+        displayedColor,
+        targetColor,
+        strength,
+        preserveBaseChannels[pixel]
+      )
     );
   }
   statusPixel.show();
@@ -496,7 +613,19 @@ void triggerStatusLedKeyAnimation(uint8_t keyIndex) {
   if (keyIndex >= Config::KEY_COUNT) {
     return;
   }
-  startKeyAnimation(keyIndex);
+  startKeyAnimation(keyIndex, whiteAnimationTargetColor(), true);
+}
+
+void triggerStatusLedLayerAnimation(uint8_t keyIndex, uint8_t layer) {
+  if (keyIndex >= Config::KEY_COUNT || layer >= Config::LAYER_COUNT) {
+    return;
+  }
+
+  startKeyAnimation(
+    keyIndex,
+    layerAnimationTargetColor(layerColor(layer)),
+    false
+  );
 }
 
 void updateStatusHeartbeat(
