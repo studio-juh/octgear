@@ -55,66 +55,6 @@ enum class LayerTapDancePressResult : uint8_t {
   ResolvedSingleTap,
 };
 
-struct KeymapSnapshot {
-  KeyAssignment assignments[Config::LAYER_COUNT][Config::KEY_COUNT];
-  LayerColor colors[Config::LAYER_COUNT];
-  uint8_t activeLayerIndex;
-  uint8_t persistentLayerIndex;
-  uint8_t enabledMask;
-  bool encoderReversedValue;
-  bool statusLedReversedValue;
-  uint8_t statusLedBrightnessValue;
-  StatusKeyAnimation statusKeyAnimationValue;
-  uint8_t statusKeyAnimationBrightnessValue;
-  StatusLayerDisplayMode statusLayerDisplayModeValue;
-  uint16_t layerTapDanceTermMsValue;
-};
-
-void captureKeymapSnapshot(KeymapSnapshot& snapshot) {
-  snapshot.activeLayerIndex = activeLayer();
-  snapshot.persistentLayerIndex = persistentLayer();
-  snapshot.enabledMask = enabledLayerMask();
-  snapshot.encoderReversedValue = encoderReversed();
-  snapshot.statusLedReversedValue = statusLedReversed();
-  snapshot.statusLedBrightnessValue = statusLedBrightness();
-  snapshot.statusKeyAnimationValue = statusKeyAnimation();
-  snapshot.statusKeyAnimationBrightnessValue =
-    statusKeyAnimationBrightness();
-  snapshot.statusLayerDisplayModeValue = statusLayerDisplayMode();
-  snapshot.layerTapDanceTermMsValue = layerTapDanceTermMs();
-
-  for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
-    snapshot.colors[layer] = layerColor(layer);
-    for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
-      snapshot.assignments[layer][keyIndex] = assignmentFor(layer, keyIndex);
-    }
-  }
-}
-
-void restoreKeymapSnapshot(const KeymapSnapshot& snapshot) {
-  for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
-    setLayerColor(layer, snapshot.colors[layer]);
-    for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
-      setAssignment(layer, keyIndex, snapshot.assignments[layer][keyIndex]);
-    }
-  }
-
-  setEnabledLayerMask(snapshot.enabledMask);
-  setEncoderReversed(snapshot.encoderReversedValue);
-  setStatusLedReversed(snapshot.statusLedReversedValue);
-  setStatusLedBrightness(snapshot.statusLedBrightnessValue);
-  setStatusKeyAnimation(snapshot.statusKeyAnimationValue);
-  setStatusKeyAnimationBrightness(
-    snapshot.statusKeyAnimationBrightnessValue
-  );
-  setStatusLayerDisplayMode(snapshot.statusLayerDisplayModeValue);
-  setLayerTapDanceTermMs(snapshot.layerTapDanceTermMsValue);
-  restoreActiveLayers(
-    snapshot.persistentLayerIndex,
-    snapshot.activeLayerIndex
-  );
-}
-
 bool sendConfigReportWhenReady(const uint8_t* report, uint8_t length) {
   for (uint8_t attempt = 0; attempt < Config::CONFIG_RESPONSE_READY_RETRIES; attempt++) {
     if (usbHid.ready()) {

@@ -36,7 +36,8 @@ constexpr uint16_t CONFIG_RESPONSE_RETRY_DELAY_US = 100;
 
 constexpr bool README_DRIVE_ENABLED = false;
 constexpr uint8_t README_DRIVE_ENABLE_KEY_INDEX = 3;
-constexpr const char* REMAPPER_URL = "https://studio-juh.github.io/octgear/";
+constexpr const char* REMAPPER_URL =
+  "https://studio-juh.github.io/octgear/octgear-remapper.html";
 constexpr uint8_t WEBUSB_LANDING_KEY_1_INDEX = 0;
 constexpr uint8_t WEBUSB_LANDING_KEY_2_INDEX = 4;
 

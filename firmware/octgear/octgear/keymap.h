@@ -22,8 +22,25 @@ enum class StatusLayerDisplayMode : uint8_t {
   Pattern = 1,
 };
 
+struct KeymapSnapshot {
+  KeyAssignment assignments[Config::LAYER_COUNT][Config::KEY_COUNT];
+  LayerColor colors[Config::LAYER_COUNT];
+  uint8_t activeLayerIndex;
+  uint8_t persistentLayerIndex;
+  uint8_t enabledMask;
+  bool encoderReversedValue;
+  bool statusLedReversedValue;
+  uint8_t statusLedBrightnessValue;
+  StatusKeyAnimation statusKeyAnimationValue;
+  uint8_t statusKeyAnimationBrightnessValue;
+  StatusLayerDisplayMode statusLayerDisplayModeValue;
+  uint16_t layerTapDanceTermMsValue;
+};
+
 void beginKeymap();
 void resetKeymapToDefaults();
+void captureKeymapSnapshot(KeymapSnapshot& snapshot);
+void restoreKeymapSnapshot(const KeymapSnapshot& snapshot);
 uint8_t activeLayer();
 uint8_t persistentLayer();
 void setActiveLayer(uint8_t layer);

@@ -89,6 +89,51 @@ void resetKeymapToDefaults() {
   setDefaultKeymap();
 }
 
+void captureKeymapSnapshot(KeymapSnapshot& snapshot) {
+  snapshot.activeLayerIndex = activeLayer();
+  snapshot.persistentLayerIndex = persistentLayer();
+  snapshot.enabledMask = enabledLayerMask();
+  snapshot.encoderReversedValue = encoderReversed();
+  snapshot.statusLedReversedValue = statusLedReversed();
+  snapshot.statusLedBrightnessValue = statusLedBrightness();
+  snapshot.statusKeyAnimationValue = statusKeyAnimation();
+  snapshot.statusKeyAnimationBrightnessValue =
+    statusKeyAnimationBrightness();
+  snapshot.statusLayerDisplayModeValue = statusLayerDisplayMode();
+  snapshot.layerTapDanceTermMsValue = layerTapDanceTermMs();
+
+  for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
+    snapshot.colors[layer] = layerColor(layer);
+    for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
+      snapshot.assignments[layer][keyIndex] = assignmentFor(layer, keyIndex);
+    }
+  }
+}
+
+void restoreKeymapSnapshot(const KeymapSnapshot& snapshot) {
+  for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
+    setLayerColor(layer, snapshot.colors[layer]);
+    for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
+      setAssignment(layer, keyIndex, snapshot.assignments[layer][keyIndex]);
+    }
+  }
+
+  setEnabledLayerMask(snapshot.enabledMask);
+  setEncoderReversed(snapshot.encoderReversedValue);
+  setStatusLedReversed(snapshot.statusLedReversedValue);
+  setStatusLedBrightness(snapshot.statusLedBrightnessValue);
+  setStatusKeyAnimation(snapshot.statusKeyAnimationValue);
+  setStatusKeyAnimationBrightness(
+    snapshot.statusKeyAnimationBrightnessValue
+  );
+  setStatusLayerDisplayMode(snapshot.statusLayerDisplayModeValue);
+  setLayerTapDanceTermMs(snapshot.layerTapDanceTermMsValue);
+  restoreActiveLayers(
+    snapshot.persistentLayerIndex,
+    snapshot.activeLayerIndex
+  );
+}
+
 LayerColor layerColor(uint8_t layer) {
   if (layer >= Config::LAYER_COUNT) {
     layer = 0;

@@ -24,7 +24,7 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 - 頒布キット向けの組み立て・Firmware導入・動作確認ガイドと製造データ配布
 - WebHIDからのBOOTSEL移行と、同梱UF2の更新
 - K1 + K5 + Encoder SWの1秒長押しによる、一時的なWebUSB Remapper案内
-- Key 4起動によるREADME drive / Serial rescue
+- Key 4起動によるREADME drive / Serial rescue。キーマップとdevice設定の確認・変更・初期化に対応
 
 ## Web Pages
 

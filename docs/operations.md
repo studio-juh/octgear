@@ -123,7 +123,7 @@ WebHIDを利用できない場合、Key 4 bootでoffline rescueを起動でき�
 5. `help`でcommand一覧を確認します。
 6. 終了後はUSBを抜き、キーを押さずに再接続します。
 
-Driveには`README.TXT`、`READMEEN.TXT`、`REMAPPER.URL`、`RESCUE.CMD`が含まれます。Serialは115200 baud、8-N-1、LF終端です。`RESCUE.CMD`は`OCTGEAR ACK`を返すportを自動検出し、見つからない場合は手動選択へ移ります。
+Driveには`README.TXT`、`READMEEN.TXT`、Remapperへ直接開く`REMAPPER.URL`、`RESCUE.CMD`が含まれます。Serialは115200 baud、8-N-1、LF終端です。`RESCUE.CMD`は現行USB identityの`0x2E8A:0x1133`または`OCTGEAR ACK`を返すportを自動検出し、見つからない場合は手動選択へ移ります。
 
 ## Serial Rescue Commands
 
@@ -133,8 +133,8 @@ Layerは`0-7`、key番号は`1-11`です。数値はdecimalまたは`0x`付きhe
 | --- | --- | --- |
 | `probe` | OctGear rescue identityとcountを返す | No |
 | `help` / `?` | command一覧 | No |
-| `state` | active layerとcountを表示 | No |
-| `dump` | 全assignmentを表示 | No |
+| `state` | Layer状態、全device設定、全Layer色を表示 | No |
+| `dump` | `state`の内容と全assignmentを表示 | No |
 | `layer <layer>` | active layerを変更 | 10秒後 |
 | `get <layer> <key>` | assignmentを表示 | No |
 | `none <layer> <key>` | assignmentを消去 | Yes |
@@ -144,6 +144,15 @@ Layerは`0-7`、key番号は`1-11`です。数値はdecimalまたは`0x`付きhe
 | `back <layer> <key>` | Previous Layerを設定 | Yes |
 | `hold <layer> <key> <target>` | Momentary Layerを設定 | Yes |
 | `color <layer> <red> <green> <blue>` | Layer LED色を設定。`0 0 0`で消灯 | Yes |
+| `enabled <layer> <0\|1>` | Layerを無効／有効にする。Layer 0は無効化不可 | Yes |
+| `encoder-reversed <0\|1>` | Encoder回転方向を標準／反転にする | Yes |
+| `led-reversed <0\|1>` | 外付けLEDのphysical pixel順を標準／反転にする | Yes |
+| `led-brightness <0-128>` | Layer表示の輝度上限を設定 | Yes |
+| `animation <0-3>` | 打鍵効果を波紋／無効／フラッシュ／スパークに設定 | Yes |
+| `animation-brightness <0-128>` | 打鍵アニメーションの輝度上限を設定 | Yes |
+| `layer-display <0\|1>` | Layer表示を全灯／4灯パターンに設定 | Yes |
+| `tap-dance <50-1000>` | Layer Tap Dance判定時間をmsで設定 | Yes |
+| `reset confirm` | 全キーマップとdevice設定をcompile済み既定値へ戻す | Yes |
 | `diag` | Storage self-testを実行 | Test writes |
 | `bootloader` | UF2 bootloaderへ再起動 | No |
 
@@ -160,7 +169,17 @@ back 0 7
 hold 0 5 2
 color 0 32 160 255
 color 7 0 0 0
+enabled 2 1
+encoder-reversed 1
+led-reversed 0
+led-brightness 32
+animation 0
+animation-brightness 96
+layer-display 1
+tap-dance 250
 ```
+
+`animation`は`0`が波紋、`1`が無効、`2`がフラッシュ、`3`がスパークです。`layer-display`は`0`が全灯、`1`が4灯パターンです。boolean設定は`0`が標準／無効、`1`が反転／有効です。
 
 Keyboard modifier bitmap:
 
@@ -175,7 +194,7 @@ Keyboard modifier bitmap:
 | `0x40` | Right Alt |
 | `0x80` | Right GUI |
 
-`none`、`key`、`consumer`、`cycle`、`back`、`hold`、`color`は成功時に設定を即座にFlashへ保存します。`diag`はWeb DiagnosticsのStorage testと同じ保存領域を検査します。
+設定変更commandは成功時に設定全体を即座にFlashへ保存します。`reset`は誤操作を避けるため、必ず`reset confirm`と入力します。保存に失敗した場合はRAM上の値も変更前へ戻します。`diag`はWeb DiagnosticsのStorage testと同じ保存領域を検査します。
 
 ## Troubleshooting
 

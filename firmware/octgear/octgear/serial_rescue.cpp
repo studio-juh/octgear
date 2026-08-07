@@ -7,6 +7,7 @@
 #include "key_assignment.h"
 #include "keymap.h"
 #include "keymap_storage.h"
+#include "status_led.h"
 
 namespace {
 
@@ -70,6 +71,24 @@ bool parseWord(char*& cursor, uint16_t& value) {
 
   value = static_cast<uint16_t>(parsed);
   return true;
+}
+
+bool parseBoolean(char*& cursor, bool& value) {
+  uint8_t parsed = 0;
+  if (!parseByte(cursor, parsed) || parsed > 1) {
+    return false;
+  }
+
+  value = parsed != 0;
+  return true;
+}
+
+void printHexByte(uint8_t value) {
+  Serial.print(F("0x"));
+  if (value < 0x10) {
+    Serial.print('0');
+  }
+  Serial.print(value, HEX);
 }
 
 void printAssignment(uint8_t layer, uint8_t keyIndex) {
@@ -159,18 +178,69 @@ void printHelp() {
   Serial.print(F("  color <layer 0-"));
   Serial.print(Config::LAYER_COUNT - 1);
   Serial.println(F("> <red> <green> <blue>"));
+  Serial.print(F("  enabled <layer 0-"));
+  Serial.print(Config::LAYER_COUNT - 1);
+  Serial.println(F("> <0|1>"));
+  Serial.println(F("  encoder-reversed <0|1>"));
+  Serial.println(F("  led-reversed <0|1>"));
+  Serial.print(F("  led-brightness <0-"));
+  Serial.print(Config::MAX_STATUS_LED_BRIGHTNESS);
+  Serial.println(F(">"));
+  Serial.println(F("  animation <0:ripple|1:disabled|2:flash|3:spark>"));
+  Serial.print(F("  animation-brightness <0-"));
+  Serial.print(Config::MAX_STATUS_KEY_ANIMATION_BRIGHTNESS);
+  Serial.println(F(">"));
+  Serial.println(F("  layer-display <0:solid|1:pattern>"));
+  Serial.print(F("  tap-dance <"));
+  Serial.print(Config::MIN_LAYER_TAP_DANCE_TERM_MS);
+  Serial.print('-');
+  Serial.print(Config::MAX_LAYER_TAP_DANCE_TERM_MS);
+  Serial.println(F(">"));
+  Serial.println(F("  reset confirm"));
   Serial.println(F("  diag"));
   Serial.println(F("  bootloader"));
-  Serial.println(F("Numbers accept decimal or 0xHEX. key/none/consumer/cycle/back/hold/color save immediately."));
+  Serial.println(F("Numbers accept decimal or 0xHEX. Setting commands save immediately."));
 }
 
 void handleState() {
   Serial.print(F("activeLayer="));
   Serial.print(activeLayer());
+  Serial.print(F(" persistentLayer="));
+  Serial.print(persistentLayer());
   Serial.print(F(" layers="));
   Serial.print(Config::LAYER_COUNT);
   Serial.print(F(" keys="));
-  Serial.println(Config::KEY_COUNT);
+  Serial.print(Config::KEY_COUNT);
+  Serial.print(F(" enabledMask="));
+  printHexByte(enabledLayerMask());
+  Serial.println();
+
+  Serial.print(F("encoderReversed="));
+  Serial.print(encoderReversed() ? 1 : 0);
+  Serial.print(F(" ledReversed="));
+  Serial.print(statusLedReversed() ? 1 : 0);
+  Serial.print(F(" ledBrightness="));
+  Serial.print(statusLedBrightness());
+  Serial.print(F(" animation="));
+  Serial.print(static_cast<uint8_t>(statusKeyAnimation()));
+  Serial.print(F(" animationBrightness="));
+  Serial.print(statusKeyAnimationBrightness());
+  Serial.print(F(" layerDisplay="));
+  Serial.print(static_cast<uint8_t>(statusLayerDisplayMode()));
+  Serial.print(F(" tapDanceMs="));
+  Serial.println(layerTapDanceTermMs());
+
+  for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
+    const LayerColor color = layerColor(layer);
+    Serial.print(F("color L"));
+    Serial.print(layer);
+    Serial.print('=');
+    Serial.print(color.red);
+    Serial.print(',');
+    Serial.print(color.green);
+    Serial.print(',');
+    Serial.println(color.blue);
+  }
 }
 
 void handleProbe() {
@@ -181,6 +251,7 @@ void handleProbe() {
 }
 
 void handleDump() {
+  handleState();
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
       printAssignment(layer, keyIndex);
@@ -339,6 +410,203 @@ void handleColor(char*& cursor) {
   Serial.println(F("OK"));
 }
 
+void handleLayerEnabled(char*& cursor) {
+  uint8_t layer = 0;
+  bool enabled = false;
+  if (!parseByte(cursor, layer) || !parseBoolean(cursor, enabled)) {
+    Serial.println(F("ERR enabled"));
+    return;
+  }
+
+  const uint8_t previousMask = enabledLayerMask();
+  const uint8_t previousActiveLayer = activeLayer();
+  const uint8_t previousPersistentLayer = persistentLayer();
+  if (!setLayerEnabled(layer, enabled)) {
+    Serial.println(F("ERR enabled"));
+    return;
+  }
+
+  if (!saveEnabledLayerMaskToStorage()) {
+    setEnabledLayerMask(previousMask);
+    restoreActiveLayers(previousPersistentLayer, previousActiveLayer);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  Serial.print(F("OK enabledMask="));
+  printHexByte(enabledLayerMask());
+  Serial.print(F(" activeLayer="));
+  Serial.println(activeLayer());
+}
+
+void handleEncoderReversed(char*& cursor) {
+  bool reversed = false;
+  if (!parseBoolean(cursor, reversed)) {
+    Serial.println(F("ERR encoder-reversed"));
+    return;
+  }
+
+  const bool previous = encoderReversed();
+  setEncoderReversed(reversed);
+  if (!saveEncoderReversedToStorage()) {
+    setEncoderReversed(previous);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  Serial.println(F("OK"));
+}
+
+void handleLedReversed(char*& cursor) {
+  bool reversed = false;
+  if (!parseBoolean(cursor, reversed)) {
+    Serial.println(F("ERR led-reversed"));
+    return;
+  }
+
+  const bool previous = statusLedReversed();
+  setStatusLedReversed(reversed);
+  if (!saveStatusLedReversedToStorage()) {
+    setStatusLedReversed(previous);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  applyStatusLayerDisplayMode();
+  Serial.println(F("OK"));
+}
+
+void handleLedBrightness(char*& cursor) {
+  uint8_t brightness = 0;
+  if (!parseByte(cursor, brightness) ||
+      brightness > Config::MAX_STATUS_LED_BRIGHTNESS) {
+    Serial.println(F("ERR led-brightness"));
+    return;
+  }
+
+  const uint8_t previous = statusLedBrightness();
+  setStatusLedBrightness(brightness);
+  if (!saveStatusLedBrightnessToStorage()) {
+    setStatusLedBrightness(previous);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  applyStatusLedBrightness();
+  Serial.println(F("OK"));
+}
+
+void handleAnimation(char*& cursor) {
+  uint8_t value = 0;
+  if (!parseByte(cursor, value)) {
+    Serial.println(F("ERR animation"));
+    return;
+  }
+
+  const StatusKeyAnimation previous = statusKeyAnimation();
+  if (!setStatusKeyAnimation(static_cast<StatusKeyAnimation>(value))) {
+    Serial.println(F("ERR animation"));
+    return;
+  }
+
+  if (!saveStatusKeyAnimationToStorage()) {
+    setStatusKeyAnimation(previous);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  applyStatusKeyAnimation();
+  Serial.println(F("OK"));
+}
+
+void handleAnimationBrightness(char*& cursor) {
+  uint8_t brightness = 0;
+  if (!parseByte(cursor, brightness) ||
+      brightness > Config::MAX_STATUS_KEY_ANIMATION_BRIGHTNESS) {
+    Serial.println(F("ERR animation-brightness"));
+    return;
+  }
+
+  const uint8_t previous = statusKeyAnimationBrightness();
+  setStatusKeyAnimationBrightness(brightness);
+  if (!saveStatusKeyAnimationBrightnessToStorage()) {
+    setStatusKeyAnimationBrightness(previous);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  applyStatusLedBrightness();
+  Serial.println(F("OK"));
+}
+
+void handleLayerDisplay(char*& cursor) {
+  uint8_t value = 0;
+  if (!parseByte(cursor, value)) {
+    Serial.println(F("ERR layer-display"));
+    return;
+  }
+
+  const StatusLayerDisplayMode previous = statusLayerDisplayMode();
+  if (!setStatusLayerDisplayMode(static_cast<StatusLayerDisplayMode>(value))) {
+    Serial.println(F("ERR layer-display"));
+    return;
+  }
+
+  if (!saveStatusLayerDisplayModeToStorage()) {
+    setStatusLayerDisplayMode(previous);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  applyStatusLayerDisplayMode();
+  Serial.println(F("OK"));
+}
+
+void handleTapDance(char*& cursor) {
+  uint16_t termMs = 0;
+  if (!parseWord(cursor, termMs)) {
+    Serial.println(F("ERR tap-dance"));
+    return;
+  }
+
+  const uint16_t previous = layerTapDanceTermMs();
+  if (!setLayerTapDanceTermMs(termMs)) {
+    Serial.println(F("ERR tap-dance"));
+    return;
+  }
+
+  if (!saveLayerTapDanceTermToStorage()) {
+    setLayerTapDanceTermMs(previous);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  Serial.println(F("OK"));
+}
+
+void handleReset(char*& cursor) {
+  char* confirmation = nextToken(cursor);
+  if (confirmation == nullptr || strcmp(confirmation, "confirm") != 0) {
+    Serial.println(F("ERR reset requires: reset confirm"));
+    return;
+  }
+
+  KeymapSnapshot previous;
+  captureKeymapSnapshot(previous);
+  resetKeymapToDefaults();
+  if (!saveKeymapToStorage()) {
+    restoreKeymapSnapshot(previous);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  applyStatusLedBrightness();
+  applyStatusKeyAnimation();
+  applyStatusLayerDisplayMode();
+  clearStatusLedPreview();
+  Serial.println(F("OK reset"));
+}
+
 void handleDiag() {
   Serial.println(runKeymapStorageSelfTest() ? F("OK storage") : F("ERR storage"));
 }
@@ -387,6 +655,24 @@ void handleCommand(char* line) {
     handleHold(cursor);
   } else if (strcmp(command, "color") == 0) {
     handleColor(cursor);
+  } else if (strcmp(command, "enabled") == 0) {
+    handleLayerEnabled(cursor);
+  } else if (strcmp(command, "encoder-reversed") == 0) {
+    handleEncoderReversed(cursor);
+  } else if (strcmp(command, "led-reversed") == 0) {
+    handleLedReversed(cursor);
+  } else if (strcmp(command, "led-brightness") == 0) {
+    handleLedBrightness(cursor);
+  } else if (strcmp(command, "animation") == 0) {
+    handleAnimation(cursor);
+  } else if (strcmp(command, "animation-brightness") == 0) {
+    handleAnimationBrightness(cursor);
+  } else if (strcmp(command, "layer-display") == 0) {
+    handleLayerDisplay(cursor);
+  } else if (strcmp(command, "tap-dance") == 0) {
+    handleTapDance(cursor);
+  } else if (strcmp(command, "reset") == 0) {
+    handleReset(cursor);
   } else if (strcmp(command, "diag") == 0) {
     handleDiag();
   } else if (strcmp(command, "bootloader") == 0) {

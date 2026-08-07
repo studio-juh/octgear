@@ -80,7 +80,7 @@ PCのresume後は現在Layerの表示へ戻ります。Layer表示は全灯ま�
 
 ### Rescue
 
-Key 4を押しながらUSB接続すると、その起動だけread-onlyの`OCTGEAR` MSCと115200 baudのSerial rescueを有効にします。通常HIDは出力しません。
+Key 4を押しながらUSB接続すると、その起動だけread-onlyの`OCTGEAR` MSCと115200 baudのSerial rescueを有効にします。通常HIDは出力しません。Serial rescueは全キーマップとdevice設定の表示・変更、storage診断、compile済み既定値への初期化を提供します。
 
 ## Cross-System Invariants
 
