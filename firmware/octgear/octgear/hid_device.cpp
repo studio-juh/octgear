@@ -256,7 +256,12 @@ void handleSetLayerColor(const uint8_t* buffer, uint16_t size) {
 }
 
 void handlePreviewLayerColor(const uint8_t* buffer, uint16_t size) {
-  if (size == 1) {
+  if (size < 2) {
+    sendConfigResponse(ConfigCommand::PreviewLayerColor, ConfigStatus::InvalidLength, nullptr, 0);
+    return;
+  }
+
+  if (buffer[1] == 0xFF) {
     clearStatusLedPreview();
     sendConfigResponse(ConfigCommand::PreviewLayerColor, ConfigStatus::Ok, nullptr, 0);
     return;

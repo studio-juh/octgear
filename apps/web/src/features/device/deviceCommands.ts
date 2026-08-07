@@ -250,7 +250,11 @@ export async function previewDeviceLayerColor(
 }
 
 export async function clearDeviceLayerColorPreview(transport: WebHidTransport) {
-  const response = await sendCommand(transport, ConfigCommand.PreviewLayerColor);
+  const response = await sendCommand(
+    transport,
+    ConfigCommand.PreviewLayerColor,
+    [0xff],
+  );
   assertConfigOk(response);
   assertPayloadLength(response, 0);
 }

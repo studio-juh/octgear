@@ -60,7 +60,7 @@ byte 3..31  response payload
 | `0x0a` | `SetLayerEnabled` | `layer, enabled` | `layer, enabled, activeLayer, enabledLayerMask` |
 | `0x0b` | `GetLayerColor` | `layer` | `layer, red, green, blue` |
 | `0x0c` | `SetLayerColor` | `layer, red, green, blue` | `layer, red, green, blue` |
-| `0x0d` | `PreviewLayerColor` | `layer, red, green, blue` or none | previewed values or none |
+| `0x0d` | `PreviewLayerColor` | `layer, red, green, blue` or `0xff` | previewed values or none |
 | `0x0e` | `ResetConfiguration` | none | `activeLayer, enabledLayerMask` |
 | `0x0f` | `SetEncoderReversed` | `reversed` | `reversed` |
 | `0x10` | `SetStatusLedBrightness` | `brightness` | `brightness` |
@@ -86,7 +86,7 @@ byte 3..31  response payload
 
 Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常modeのLayer LEDを消灯します。
 
-`PreviewLayerColor`はFlashやRAM上のlayer設定を変更せず、Remapper接続中のLED表示だけを一時的に上書きします。Payloadなしのrequest、`SetLayer`、または成功した`SetLayerColor`でpreviewを解除します。Heartbeatが途切れた場合も通常のactive layer表示へ戻ります。
+`PreviewLayerColor`はFlashやRAM上のlayer設定を変更せず、Remapper接続中のLED表示だけを一時的に上書きします。`layer = 0xff`のrequest、`SetLayer`、または成功した`SetLayerColor`でpreviewを解除します。WebHID output reportは常に32 bytesのため、payload lengthではなく予約layer値で解除を明示します。Heartbeatが途切れた場合も通常のactive layer表示へ戻ります。
 
 `encoderReversed`と`reversed`は`0`がprofileの配線どおり、`1`がA/Bの回転eventを反転した状態です。`SetEncoderReversed`は変更をFlashへ即座に保存します。
 
