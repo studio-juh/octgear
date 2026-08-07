@@ -59,19 +59,13 @@ export function HardwarePanel({
 }: HardwarePanelProps) {
   const { hardware, usbIdentity } = useProductDefinition();
   const [detailsExpanded, setDetailsExpanded] = useState(false);
-  const brightnessSupported = deviceState?.statusLedBrightnessSupported ?? false;
   const brightnessChanged =
-    brightnessSupported && statusLedBrightness !== deviceState?.statusLedBrightness;
-  const animationBrightnessSupported =
-    deviceState?.statusKeyAnimationBrightnessSupported ?? false;
+    !!deviceState && statusLedBrightness !== deviceState.statusLedBrightness;
   const animationBrightnessChanged =
-    animationBrightnessSupported &&
-    statusKeyAnimationBrightness !== deviceState?.statusKeyAnimationBrightness;
-  const layerTapDanceTermSupported =
-    deviceState?.layerTapDanceTermSupported ?? false;
+    !!deviceState &&
+    statusKeyAnimationBrightness !== deviceState.statusKeyAnimationBrightness;
   const layerTapDanceTermChanged =
-    layerTapDanceTermSupported &&
-    layerTapDanceTermMs !== deviceState?.layerTapDanceTermMs;
+    !!deviceState && layerTapDanceTermMs !== deviceState.layerTapDanceTermMs;
 
   return (
     <aside className="panel hardware-panel">
@@ -112,14 +106,9 @@ export function HardwarePanel({
               <input
                 type="checkbox"
                 checked={
-                  deviceState?.statusLedReversedSupported
-                    ? deviceState.statusLedReversed
-                    : hardware.externalRgbLedReversed
+                  deviceState?.statusLedReversed ?? hardware.externalRgbLedReversed
                 }
-                disabled={
-                  !deviceState?.statusLedReversedSupported ||
-                  statusLedDirectionUpdating
-                }
+                disabled={!deviceState || statusLedDirectionUpdating}
                 onChange={(event) => onStatusLedReversedChange(event.target.checked)}
               />
               <span>{t.hardware.statusLedReversed}</span>
@@ -131,15 +120,11 @@ export function HardwarePanel({
           <dd>
             <select
               value={
-                deviceState?.statusLayerDisplayModeSupported
-                  ? deviceState.statusLayerDisplayMode
-                  : hardware.statusLedLayerDisplayMode
+                deviceState?.statusLayerDisplayMode ??
+                hardware.statusLedLayerDisplayMode
               }
               aria-label={t.hardware.statusLayerDisplayMode}
-              disabled={
-                !deviceState?.statusLayerDisplayModeSupported ||
-                statusLayerDisplayModeUpdating
-              }
+              disabled={!deviceState || statusLayerDisplayModeUpdating}
               onChange={(event) =>
                 onStatusLayerDisplayModeChange(
                   Number(event.target.value) as StatusLayerDisplayMode,
@@ -153,9 +138,7 @@ export function HardwarePanel({
               </option>
             </select>
             <small>
-              {deviceState?.statusLayerDisplayModeSupported
-                ? t.hardware.statusLayerDisplayPatternHint
-                : t.hardware.statusLayerDisplayModeUnsupported}
+              {t.hardware.statusLayerDisplayPatternHint}
             </small>
           </dd>
         </div>
@@ -170,7 +153,7 @@ export function HardwarePanel({
                 step={10}
                 value={layerTapDanceTermMs}
                 aria-label={t.hardware.layerTapDanceTerm}
-                disabled={!layerTapDanceTermSupported || layerTapDanceTermUpdating}
+                disabled={!deviceState || layerTapDanceTermUpdating}
                 onChange={(event) =>
                   onLayerTapDanceTermChange(Number(event.target.value))}
               />
@@ -181,7 +164,7 @@ export function HardwarePanel({
                 step={10}
                 value={layerTapDanceTermMs}
                 aria-label={t.hardware.layerTapDanceTermValue}
-                disabled={!layerTapDanceTermSupported || layerTapDanceTermUpdating}
+                disabled={!deviceState || layerTapDanceTermUpdating}
                 onChange={(event) =>
                   onLayerTapDanceTermChange(Number(event.target.value))}
               />
@@ -194,12 +177,10 @@ export function HardwarePanel({
               </button>
             </div>
             <small>
-              {layerTapDanceTermSupported
-                ? t.hardware.layerTapDanceTermRange(
-                    MIN_LAYER_TAP_DANCE_TERM_MS,
-                    MAX_LAYER_TAP_DANCE_TERM_MS,
-                  )
-                : t.hardware.layerTapDanceTermUnsupported}
+              {t.hardware.layerTapDanceTermRange(
+                MIN_LAYER_TAP_DANCE_TERM_MS,
+                MAX_LAYER_TAP_DANCE_TERM_MS,
+              )}
             </small>
           </dd>
         </div>
@@ -208,15 +189,10 @@ export function HardwarePanel({
           <dd>
             <select
               value={
-                deviceState?.statusKeyAnimationSupported
-                  ? deviceState.statusKeyAnimation
-                  : hardware.statusLedKeyAnimation
+                deviceState?.statusKeyAnimation ?? hardware.statusLedKeyAnimation
               }
               aria-label={t.hardware.statusKeyAnimation}
-              disabled={
-                !deviceState?.statusKeyAnimationSupported ||
-                statusKeyAnimationUpdating
-              }
+              disabled={!deviceState || statusKeyAnimationUpdating}
               onChange={(event) =>
                 onStatusKeyAnimationChange(
                   Number(event.target.value) as StatusKeyAnimation,
@@ -235,9 +211,6 @@ export function HardwarePanel({
                 {t.hardware.statusKeyAnimationSpark}
               </option>
             </select>
-            {!deviceState?.statusKeyAnimationSupported && (
-              <small>{t.hardware.statusKeyAnimationUnsupported}</small>
-            )}
           </dd>
         </div>
         <div className="hardware-brightness-row">
@@ -251,7 +224,7 @@ export function HardwarePanel({
                 value={statusKeyAnimationBrightness}
                 aria-label={t.hardware.statusKeyAnimationBrightness}
                 disabled={
-                  !animationBrightnessSupported ||
+                  !deviceState ||
                   statusKeyAnimationBrightnessUpdating
                 }
                 onChange={(event) =>
@@ -264,7 +237,7 @@ export function HardwarePanel({
                 value={statusKeyAnimationBrightness}
                 aria-label={t.hardware.statusKeyAnimationBrightnessValue}
                 disabled={
-                  !animationBrightnessSupported ||
+                  !deviceState ||
                   statusKeyAnimationBrightnessUpdating
                 }
                 onChange={(event) =>
@@ -284,11 +257,9 @@ export function HardwarePanel({
               </button>
             </div>
             <small>
-              {animationBrightnessSupported
-                ? t.hardware.statusKeyAnimationBrightnessRange(
-                    hardware.statusKeyAnimationBrightness.max,
-                  )
-                : t.hardware.statusKeyAnimationBrightnessUnsupported}
+              {t.hardware.statusKeyAnimationBrightnessRange(
+                hardware.statusKeyAnimationBrightness.max,
+              )}
             </small>
           </dd>
         </div>
@@ -302,7 +273,7 @@ export function HardwarePanel({
                 max={hardware.statusLedBrightness.max}
                 value={statusLedBrightness}
                 aria-label={t.hardware.statusLedBrightness}
-                disabled={!brightnessSupported || statusLedBrightnessUpdating}
+                disabled={!deviceState || statusLedBrightnessUpdating}
                 onChange={(event) => onStatusLedBrightnessChange(Number(event.target.value))}
               />
               <input
@@ -311,7 +282,7 @@ export function HardwarePanel({
                 max={hardware.statusLedBrightness.max}
                 value={statusLedBrightness}
                 aria-label={t.hardware.statusLedBrightnessValue}
-                disabled={!brightnessSupported || statusLedBrightnessUpdating}
+                disabled={!deviceState || statusLedBrightnessUpdating}
                 onChange={(event) => onStatusLedBrightnessChange(Number(event.target.value))}
               />
               <button
@@ -323,9 +294,7 @@ export function HardwarePanel({
               </button>
             </div>
             <small>
-              {brightnessSupported
-                ? t.hardware.statusLedBrightnessRange(hardware.statusLedBrightness.max)
-                : t.hardware.statusLedBrightnessUnsupported}
+              {t.hardware.statusLedBrightnessRange(hardware.statusLedBrightness.max)}
             </small>
           </dd>
         </div>

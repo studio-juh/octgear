@@ -23,7 +23,7 @@ OctGearの文書索引です。目的に合う文書から読み、値を変更�
 | [`architecture.md`](architecture.md) | システム境界、責務、runtime flow | module責務や領域間flowが変わる |
 | [`development.md`](development.md) | Setup、build、生成、検証 | command、toolchain、workflowが変わる |
 | [`operations.md`](operations.md) | Remapper、Firmware更新、Diagnostics、rescue | 利用手順や実機挙動が変わる |
-| [`hid-report.md`](hid-report.md) | WebHID wire protocol | command、payload、compatibilityが変わる |
+| [`hid-report.md`](hid-report.md) | WebHID wire protocol | command、payload、現行contractが変わる |
 | [`cost-estimate.md`](cost-estimate.md) | 少量頒布時の暫定材料原価、梱包、未計上費用 | 部品、仕入価格、構成、梱包条件が変わる |
 | [`ai-context.md`](ai-context.md) | AI向けproject mapと不変条件 | source ownershipや主要runtime behaviorが変わる |
 | [`../AGENTS.md`](../AGENTS.md) | AI agentの作業・検証規約 | repository policyや必須検証が変わる |

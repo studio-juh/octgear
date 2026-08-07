@@ -228,7 +228,6 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       const loadedLayerColors = await readDeviceLayerColors(
         transport,
         state.layerCount,
-        hardware.defaultLayerColors,
       );
       console.info("[hid] connected", {
         productName: device.productName,
@@ -237,16 +236,8 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       });
       const uiKeymap = expandKeymap(loadedKeymap, state.layerCount, hardware.keyCount);
       setDeviceState(state);
-      setStatusLedBrightness(
-        state.statusLedBrightnessSupported
-          ? state.statusLedBrightness
-          : hardware.statusLedBrightness.default,
-      );
-      setStatusKeyAnimationBrightness(
-        state.statusKeyAnimationBrightnessSupported
-          ? state.statusKeyAnimationBrightness
-          : hardware.statusKeyAnimationBrightness.default,
-      );
+      setStatusLedBrightness(state.statusLedBrightness);
+      setStatusKeyAnimationBrightness(state.statusKeyAnimationBrightness);
       setLayerTapDanceTermMs(state.layerTapDanceTermMs);
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
@@ -308,11 +299,6 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       return;
     }
 
-    if (!deviceState.statusLedReversedSupported) {
-      setStatus(t.device.statusLedReverseUnsupported);
-      return;
-    }
-
     try {
       setStatusLedDirectionUpdating(true);
       const saved = await setDeviceStatusLedReversed(transport, reversed);
@@ -333,11 +319,6 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       return;
     }
 
-    if (!deviceState.statusKeyAnimationSupported) {
-      setStatus(t.device.statusKeyAnimationUnsupported);
-      return;
-    }
-
     try {
       setStatusKeyAnimationUpdating(true);
       const saved = await setDeviceStatusKeyAnimation(transport, animation);
@@ -355,11 +336,6 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
   async function updateStatusLayerDisplayMode(mode: StatusLayerDisplayMode) {
     if (!connected || !deviceState) {
       setStatus(t.connection.deviceNotConnected);
-      return;
-    }
-
-    if (!deviceState.statusLayerDisplayModeSupported) {
-      setStatus(t.device.statusLayerDisplayModeUnsupported);
       return;
     }
 
@@ -395,11 +371,6 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
   async function applyLayerTapDanceTerm() {
     if (!connected || !deviceState) {
       setStatus(t.connection.deviceNotConnected);
-      return;
-    }
-
-    if (!deviceState.layerTapDanceTermSupported) {
-      setStatus(t.device.layerTapDanceTermUnsupported);
       return;
     }
 
@@ -442,11 +413,6 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       return;
     }
 
-    if (!deviceState.statusKeyAnimationBrightnessSupported) {
-      setStatus(t.device.statusKeyAnimationBrightnessUnsupported);
-      return;
-    }
-
     try {
       setStatusKeyAnimationBrightnessUpdating(true);
       const saved = await setDeviceStatusKeyAnimationBrightness(
@@ -485,11 +451,6 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       return;
     }
 
-    if (!deviceState.statusLedBrightnessSupported) {
-      setStatus(t.device.statusLedBrightnessUnsupported);
-      return;
-    }
-
     try {
       setStatusLedBrightnessUpdating(true);
       const saved = await setDeviceStatusLedBrightness(transport, statusLedBrightness);
@@ -520,20 +481,11 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       const loadedLayerColors = await readDeviceLayerColors(
         transport,
         state.layerCount,
-        hardware.defaultLayerColors,
       );
       const uiKeymap = expandKeymap(loadedKeymap, state.layerCount, hardware.keyCount);
       setDeviceState(state);
-      setStatusLedBrightness(
-        state.statusLedBrightnessSupported
-          ? state.statusLedBrightness
-          : hardware.statusLedBrightness.default,
-      );
-      setStatusKeyAnimationBrightness(
-        state.statusKeyAnimationBrightnessSupported
-          ? state.statusKeyAnimationBrightness
-          : hardware.statusKeyAnimationBrightness.default,
-      );
+      setStatusLedBrightness(state.statusLedBrightness);
+      setStatusKeyAnimationBrightness(state.statusKeyAnimationBrightness);
       setLayerTapDanceTermMs(state.layerTapDanceTermMs);
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
@@ -629,21 +581,12 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       const loadedLayerColors = await readDeviceLayerColors(
         transport,
         state.layerCount,
-        hardware.defaultLayerColors,
       );
       const uiKeymap = expandKeymap(loadedKeymap, state.layerCount, hardware.keyCount);
 
       setDeviceState(state);
-      setStatusLedBrightness(
-        state.statusLedBrightnessSupported
-          ? state.statusLedBrightness
-          : hardware.statusLedBrightness.default,
-      );
-      setStatusKeyAnimationBrightness(
-        state.statusKeyAnimationBrightnessSupported
-          ? state.statusKeyAnimationBrightness
-          : hardware.statusKeyAnimationBrightness.default,
-      );
+      setStatusLedBrightness(state.statusLedBrightness);
+      setStatusKeyAnimationBrightness(state.statusKeyAnimationBrightness);
       setLayerTapDanceTermMs(state.layerTapDanceTermMs);
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));

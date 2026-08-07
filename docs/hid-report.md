@@ -15,7 +15,7 @@ WebHID版Remapper / Diagnosticsで使う固定長の設定用reportです。こ�
 
 WebHIDの `sendReport(reportId, data)` では、`reportId` は引数で渡すため、`data[0]` はcommandです。
 
-Multi-byte integerはlittle-endianです。未使用byteは送信側で`0`にし、受信側はpayload lengthの範囲だけを解釈します。
+Multi-byte integerはlittle-endianです。未使用byteは送信側で`0`にします。Webは現行Firmwareが定義するpayload lengthを厳密に検証し、過去の短いresponseや未知のenum値は受け入れません。
 
 ## Request Layout
 
@@ -84,9 +84,7 @@ byte 3..31  response payload
 
 `SetLayer`、Layer Cycle、Previous Layer、Serial rescueで変更した通常のactive layerは、最後の切り替えから10秒後にFlashへ保存され、次回起動時に復元されます。Momentary Layerは保存対象外です。
 
-旧firmwareの`GetState` responseは4 bytesです。Webはmask byteがない場合に全layer有効として扱います。`SetLayerEnabled`自体は新firmwareが必要です。
-
-Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常modeのLayer LEDを消灯します。Webは`GetLayerColor`未対応firmwareではprofileの既定色を表示し、色の書込時にfirmware更新を要求します。
+Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常modeのLayer LEDを消灯します。
 
 `PreviewLayerColor`はFlashやRAM上のlayer設定を変更せず、Remapper接続中のLED表示だけを一時的に上書きします。Payloadなしのrequest、`SetLayer`、または成功した`SetLayerColor`でpreviewを解除します。Heartbeatが途切れた場合も通常のactive layer表示へ戻ります。
 
@@ -96,23 +94,13 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 `statusLedReversed`と`SetStatusLedReversed`の`reversed`は、`0`がLED 1をphysical pixel 0へ対応させる標準順、`1`がLED 1を最後のphysical pixelへ対応させる反転順です。変更はFlashへ即座に保存し、USB未mount時の流れるカラーホイールと位置依存の打鍵アニメーションへ適用します。
 
-旧firmwareの`GetState` responseに8 byte目がない場合、WebはLEDテープ方向設定を未対応として扱います。
-
-`statusKeyAnimation`と`SetStatusKeyAnimation`の`animation`は、`0`が波紋、`1`が無効、`2`が全灯フラッシュ、`3`が押下位置中心のスパークです。変更はFlashへ即座に保存します。値`0`を波紋とすることで、同じstorage versionの既存slotとも互換性を保ちます。
-
-旧firmwareの`GetState` responseに9 byte目がない場合、Webは打鍵アニメーション設定を未対応として扱います。
+`statusKeyAnimation`と`SetStatusKeyAnimation`の`animation`は、`0`が波紋、`1`が無効、`2`が全灯フラッシュ、`3`が押下位置中心のスパークです。変更はFlashへ即座に保存します。
 
 `statusKeyAnimationBrightness`と`SetStatusKeyAnimationBrightness`の`brightness`は`0-128`です。既定値は`96`で、通常打鍵の白色ハイライトとLayer変更時の切り替え後Layer色ハイライトに適用します。Layer側の`statusLedBrightness`より高く設定すると、光っていないpixelの明るさを変えずにコントラストを強められます。`0`ではアニメーション効果を選択したままハイライトだけを消せます。変更はFlashへ即座に保存します。
 
-旧firmwareの`GetState` responseに10 byte目がない場合、Webはアニメーション輝度設定を未対応として扱います。
-
 `statusLayerDisplayMode`と`SetStatusLayerDisplayMode`の`mode`は、`0`が全灯、`1`が4灯パターンです。4灯パターンはFirmware Layer 0-7をLED 1から4の順に`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。`1`のpixelには現在Layerの色を使います。変更はFlashへ即座に保存します。
 
-旧firmwareの`GetState` responseに11 byte目がない場合、WebはLayer表示モード設定を未対応として扱います。
-
 `layerTapDanceTermMs`と`SetLayerTapDanceTerm`の`termMs`はlittle-endianの16-bit値です。設定範囲は`50-1000 ms`、既定値は`250 ms`です。Next Layerの単押し確定と同じcontrolのダブルタップ判定の両方に使い、変更はFlashへ即座に保存します。Storage version 6でfieldを追加しており、旧storage versionは移行せず既定設定へ初期化します。
-
-旧firmwareの`GetState` responseに13 byte目がない場合、WebはTap Dance判定時間設定を未対応として扱います。
 
 `ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、アニメーション輝度上限、Tap Dance判定時間をcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerと次回起動LayerはLayer 0へ戻ります。
 
@@ -167,13 +155,13 @@ Keyboard assignmentはmodifier bitmapと6-key rollover slotsを使用します�
 
 `LayerCycle`は有効layerを次方向へ、`LayerPrevious`は前方向へ循環します。どちらもLayer 0からwrapします。`LayerCycle`の最初の押下は設定されたTap Dance判定時間だけ保留され、単押しなら次方向へ進みます。同じ物理controlを期限内に再度押すと保留した遷移を破棄し、開始位置から`LayerPrevious`相当として処理します。assignment kindとwire formatは変わりません。
 
-## Compatibility Rules
+## Current Contract
 
+- Webは13-byteの`GetState` responseと、この文書にある全commandを実装した現行Firmwareだけを対象にします。
 - Webは`GetState`が返す`layerCount`、`keyCount`、`enabledLayerMask`をdeviceの書込可能範囲とlayer状態として使います。
-- 未知のassignment kindやstatusを追加する場合は、firmwareとWebのdecode / validationを同時に更新します。
-- Command ID、payload offset、status valueはwire compatibilityです。再利用せず、新しい値を追加します。
+- 未知のassignment kind、LED mode、payload lengthはprotocol errorとして扱います。FirmwareとWebのencode / decode / validationは常に同時に更新します。
 - Report sizeまたはReport IDを変更する場合はTinyUSB descriptor、firmware buffer、Web codecを同時に変更します。
-- Storage formatはこのwire protocolとは別契約です。Protocol互換でもfirmwareのstorage migrationが必要になる場合があります。
+- Storage formatはwire protocolとは別契約ですが、頒布前は現行versionだけを読み、旧version migrationは提供しません。
 
 ## Implementation References
 

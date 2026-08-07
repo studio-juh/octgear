@@ -11,7 +11,6 @@ import {
 import {
   assertConfigOk,
   ConfigCommand,
-  ConfigStatus,
   createConfigReport,
   decodeConfigResponse,
   type ConfigResponse,
@@ -26,17 +25,11 @@ export type DeviceState = {
   matrixRowCount: number;
   encoderReversed: boolean;
   statusLedReversed: boolean;
-  statusLedReversedSupported: boolean;
   statusLedBrightness: number;
-  statusLedBrightnessSupported: boolean;
   statusKeyAnimation: StatusKeyAnimation;
-  statusKeyAnimationSupported: boolean;
   statusKeyAnimationBrightness: number;
-  statusKeyAnimationBrightnessSupported: boolean;
   statusLayerDisplayMode: StatusLayerDisplayMode;
-  statusLayerDisplayModeSupported: boolean;
   layerTapDanceTermMs: number;
-  layerTapDanceTermSupported: boolean;
   enabledLayers: boolean[];
 };
 
@@ -84,35 +77,28 @@ export type DiagnosticStorageResult = {
 };
 
 const DIAGNOSTIC_REPORT_NONCE = [0x43, 0x59, 0x42, 0x38] as const;
+const DEVICE_STATE_PAYLOAD_SIZE = 13;
 
 export async function getDeviceState(transport: WebHidTransport): Promise<DeviceState> {
   const response = await sendCommand(transport, ConfigCommand.GetState);
   assertConfigOk(response);
+  assertPayloadLength(response, DEVICE_STATE_PAYLOAD_SIZE);
 
-  const layerCount = response.payload[1] ?? 0;
-  const enabledLayerMask = response.payload[4] ?? ((1 << layerCount) - 1);
+  const layerCount = response.payload[1];
+  const enabledLayerMask = response.payload[4];
 
   return {
-    activeLayer: response.payload[0] ?? 0,
+    activeLayer: response.payload[0],
     layerCount,
-    keyCount: response.payload[2] ?? 0,
-    matrixRowCount: response.payload[3] ?? 0,
-    encoderReversed: (response.payload[5] ?? 0) !== 0,
-    statusLedBrightness: response.payload[6] ?? 0,
-    statusLedBrightnessSupported: response.payload.length >= 7,
-    statusLedReversed: (response.payload[7] ?? 0) !== 0,
-    statusLedReversedSupported: response.payload.length >= 8,
+    keyCount: response.payload[2],
+    matrixRowCount: response.payload[3],
+    encoderReversed: response.payload[5] !== 0,
+    statusLedBrightness: response.payload[6],
+    statusLedReversed: response.payload[7] !== 0,
     statusKeyAnimation: decodeStatusKeyAnimation(response.payload[8]),
-    statusKeyAnimationSupported: response.payload.length >= 9,
-    statusKeyAnimationBrightness: response.payload[9] ?? 0,
-    statusKeyAnimationBrightnessSupported: response.payload.length >= 10,
+    statusKeyAnimationBrightness: response.payload[9],
     statusLayerDisplayMode: decodeStatusLayerDisplayMode(response.payload[10]),
-    statusLayerDisplayModeSupported: response.payload.length >= 11,
-    layerTapDanceTermMs:
-      response.payload.length >= 13
-        ? (response.payload[11] | (response.payload[12] << 8))
-        : DEFAULT_LAYER_TAP_DANCE_TERM_MS,
-    layerTapDanceTermSupported: response.payload.length >= 13,
+    layerTapDanceTermMs: response.payload[11] | (response.payload[12] << 8),
     enabledLayers: decodeEnabledLayers(enabledLayerMask, layerCount),
   };
 }
@@ -120,42 +106,28 @@ export async function getDeviceState(transport: WebHidTransport): Promise<Device
 export async function setDeviceLayer(transport: WebHidTransport, layer: number) {
   const response = await sendCommand(transport, ConfigCommand.SetLayer, [layer]);
   assertConfigOk(response);
+  assertPayloadLength(response, 1);
 }
 
 export async function setDeviceEncoderReversed(transport: WebHidTransport, reversed: boolean) {
   const response = await sendCommand(transport, ConfigCommand.SetEncoderReversed, [reversed ? 1 : 0]);
-  if (
-    response.status === ConfigStatus.UnknownCommand ||
-    response.status === ConfigStatus.Unsupported
-  ) {
-    throw new Error(t.device.encoderReverseUnsupported);
-  }
   assertConfigOk(response);
-  return (response.payload[0] ?? 0) !== 0;
+  assertPayloadLength(response, 1);
+  return response.payload[0] !== 0;
 }
 
 export async function setDeviceStatusLedBrightness(transport: WebHidTransport, brightness: number) {
   const response = await sendCommand(transport, ConfigCommand.SetStatusLedBrightness, [brightness]);
-  if (
-    response.status === ConfigStatus.UnknownCommand ||
-    response.status === ConfigStatus.Unsupported
-  ) {
-    throw new Error(t.device.statusLedBrightnessUnsupported);
-  }
   assertConfigOk(response);
-  return response.payload[0] ?? brightness;
+  assertPayloadLength(response, 1);
+  return response.payload[0];
 }
 
 export async function setDeviceStatusLedReversed(transport: WebHidTransport, reversed: boolean) {
   const response = await sendCommand(transport, ConfigCommand.SetStatusLedReversed, [reversed ? 1 : 0]);
-  if (
-    response.status === ConfigStatus.UnknownCommand ||
-    response.status === ConfigStatus.Unsupported
-  ) {
-    throw new Error(t.device.statusLedReverseUnsupported);
-  }
   assertConfigOk(response);
-  return (response.payload[0] ?? 0) !== 0;
+  assertPayloadLength(response, 1);
+  return response.payload[0] !== 0;
 }
 
 export async function setDeviceStatusKeyAnimation(
@@ -163,11 +135,9 @@ export async function setDeviceStatusKeyAnimation(
   animation: StatusKeyAnimation,
 ) {
   const response = await sendCommand(transport, ConfigCommand.SetStatusKeyAnimation, [animation]);
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
-    throw new Error(t.device.statusKeyAnimationUnsupported);
-  }
   assertConfigOk(response);
-  return decodeStatusKeyAnimation(response.payload[0] ?? animation);
+  assertPayloadLength(response, 1);
+  return decodeStatusKeyAnimation(response.payload[0]);
 }
 
 export async function setDeviceStatusKeyAnimationBrightness(
@@ -179,11 +149,9 @@ export async function setDeviceStatusKeyAnimationBrightness(
     ConfigCommand.SetStatusKeyAnimationBrightness,
     [brightness],
   );
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
-    throw new Error(t.device.statusKeyAnimationBrightnessUnsupported);
-  }
   assertConfigOk(response);
-  return response.payload[0] ?? brightness;
+  assertPayloadLength(response, 1);
+  return response.payload[0];
 }
 
 export async function setDeviceStatusLayerDisplayMode(
@@ -195,11 +163,9 @@ export async function setDeviceStatusLayerDisplayMode(
     ConfigCommand.SetStatusLayerDisplayMode,
     [mode],
   );
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
-    throw new Error(t.device.statusLayerDisplayModeUnsupported);
-  }
   assertConfigOk(response);
-  return decodeStatusLayerDisplayMode(response.payload[0] ?? mode);
+  assertPayloadLength(response, 1);
+  return decodeStatusLayerDisplayMode(response.payload[0]);
 }
 
 export async function setDeviceLayerTapDanceTerm(
@@ -212,13 +178,9 @@ export async function setDeviceLayerTapDanceTerm(
     ConfigCommand.SetLayerTapDanceTerm,
     [normalized & 0xff, (normalized >> 8) & 0xff],
   );
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
-    throw new Error(t.device.layerTapDanceTermUnsupported);
-  }
   assertConfigOk(response);
-  return response.payload.length >= 2
-    ? response.payload[0] | (response.payload[1] << 8)
-    : normalized;
+  assertPayloadLength(response, 2);
+  return response.payload[0] | (response.payload[1] << 8);
 }
 
 export async function setDeviceLayerEnabled(
@@ -228,34 +190,29 @@ export async function setDeviceLayerEnabled(
   layerCount: number,
 ): Promise<LayerEnabledResult> {
   const response = await sendCommand(transport, ConfigCommand.SetLayerEnabled, [layer, enabled ? 1 : 0]);
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
-    throw new Error(t.device.layerEnabledUnsupported);
-  }
   assertConfigOk(response);
+  assertPayloadLength(response, 4);
 
   return {
-    activeLayer: response.payload[2] ?? 0,
-    enabledLayers: decodeEnabledLayers(response.payload[3] ?? 1, layerCount),
+    activeLayer: response.payload[2],
+    enabledLayers: decodeEnabledLayers(response.payload[3], layerCount),
   };
 }
 
 export async function readDeviceLayerColors(
   transport: WebHidTransport,
   layerCount: number,
-  fallbackColors: readonly (readonly [number, number, number])[],
 ): Promise<LayerColor[]> {
   const colors: LayerColor[] = [];
 
   for (let layer = 0; layer < layerCount; layer++) {
     const response = await sendCommand(transport, ConfigCommand.GetLayerColor, [layer]);
-    if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
-      return Array.from({ length: layerCount }, (_, index) => colorFromTuple(fallbackColors[index]));
-    }
     assertConfigOk(response);
+    assertPayloadLength(response, 4);
     colors.push({
-      red: response.payload[1] ?? 0,
-      green: response.payload[2] ?? 0,
-      blue: response.payload[3] ?? 0,
+      red: response.payload[1],
+      green: response.payload[2],
+      blue: response.payload[3],
     });
   }
 
@@ -273,10 +230,8 @@ export async function setDeviceLayerColor(
     clampColorChannel(color.green),
     clampColorChannel(color.blue),
   ]);
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
-    throw new Error(t.device.layerColorUnsupported);
-  }
   assertConfigOk(response);
+  assertPayloadLength(response, 4);
 }
 
 export async function previewDeviceLayerColor(
@@ -291,16 +246,19 @@ export async function previewDeviceLayerColor(
     clampColorChannel(color.blue),
   ]);
   assertConfigOk(response);
+  assertPayloadLength(response, 4);
 }
 
 export async function clearDeviceLayerColorPreview(transport: WebHidTransport) {
   const response = await sendCommand(transport, ConfigCommand.PreviewLayerColor);
   assertConfigOk(response);
+  assertPayloadLength(response, 0);
 }
 
 export async function resetDeviceConfiguration(transport: WebHidTransport) {
   const response = await sendCommand(transport, ConfigCommand.ResetConfiguration);
   assertConfigOk(response);
+  assertPayloadLength(response, 2);
 }
 
 export async function getDeviceKey(transport: WebHidTransport, layer: number, keyIndex: number) {
@@ -359,6 +317,7 @@ export async function setDeviceKey(
 
   const response = await sendCommand(transport, ConfigCommand.SetKey, payload);
   assertConfigOk(response);
+  assertPayloadLength(response, 2);
 }
 
 export async function enterDeviceBootloader(transport: WebHidTransport) {
@@ -371,11 +330,8 @@ export async function sendRemapperHeartbeat(transport: WebHidTransport) {
 
 export async function runDiagnosticReportTest(transport: WebHidTransport): Promise<DiagnosticReportResult> {
   const response = await sendCommand(transport, ConfigCommand.DiagnosticReport, DIAGNOSTIC_REPORT_NONCE);
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
-    throw new Error(t.device.diagnosticReportUnsupported);
-  }
-
   assertConfigOk(response);
+  assertPayloadLength(response, 8);
 
   const expected = [0x52, 0x50, 0x54, 0x01, ...DIAGNOSTIC_REPORT_NONCE];
   for (let i = 0; i < expected.length; i++) {
@@ -386,21 +342,18 @@ export async function runDiagnosticReportTest(transport: WebHidTransport): Promi
 
   return {
     signature: "RPT",
-    version: response.payload[3] ?? 0,
+    version: response.payload[3],
   };
 }
 
 export async function runDiagnosticStorageTest(transport: WebHidTransport): Promise<DiagnosticStorageResult> {
   const response = await sendCommand(transport, ConfigCommand.DiagnosticStorage);
-  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
-    throw new Error(t.device.diagnosticStorageUnsupported);
-  }
-
   assertConfigOk(response);
+  assertPayloadLength(response, 3);
 
   return {
-    layerCount: response.payload[1] ?? 0,
-    keyCount: response.payload[2] ?? 0,
+    layerCount: response.payload[1],
+    keyCount: response.payload[2],
   };
 }
 
@@ -415,10 +368,11 @@ export function subscribeDeviceKeyEvents(
     }
 
     assertConfigOk(response);
+    assertPayloadLength(response, 3);
     handler({
-      layer: response.payload[0] ?? 0,
-      keyIndex: response.payload[1] ?? 0,
-      pressed: (response.payload[2] ?? 0) !== 0,
+      layer: response.payload[0],
+      keyIndex: response.payload[1],
+      pressed: response.payload[2] !== 0,
     });
   });
 }
@@ -457,66 +411,67 @@ function encodeAssignmentKind(kind: KeyAssignment["kind"]) {
 }
 
 function decodeAssignmentPayload(payload: Uint8Array): KeyAssignment {
-  const kind = payload[2] ?? 0;
-  const modifier = payload[3] ?? 0;
+  if (payload.length !== 13) {
+    throw new Error(t.device.invalidPayloadLength(payload.length, 13));
+  }
+
+  const kind = payload[2];
+  const modifier = payload[3];
   const keycodes = Array.from(payload.slice(4, 10));
-  const consumerUsage = (payload[10] ?? 0) | ((payload[11] ?? 0) << 8);
-  const targetLayer = payload[12] ?? 0;
+  const consumerUsage = payload[10] | (payload[11] << 8);
+  const targetLayer = payload[12];
 
-  if (kind === 1) {
-    return createKeyboardAssignment(keycodes[0] ?? 0, modifier, keycodes);
+  switch (kind) {
+    case 0:
+      return createBlankAssignment();
+    case 1:
+      return createKeyboardAssignment(keycodes[0] ?? 0, modifier, keycodes);
+    case 2:
+      return createConsumerAssignment(consumerUsage);
+    case 3:
+      return createLayerCycleAssignment();
+    case 4:
+      return createMomentaryLayerAssignment(targetLayer);
+    case 5:
+      return createLayerPreviousAssignment();
+    default:
+      throw new Error(t.device.invalidAssignmentKind(kind));
   }
-
-  if (kind === 2) {
-    return createConsumerAssignment(consumerUsage);
-  }
-
-  if (kind === 3) {
-    return createLayerCycleAssignment();
-  }
-
-  if (kind === 4) {
-    return createMomentaryLayerAssignment(targetLayer);
-  }
-
-  if (kind === 5) {
-    return createLayerPreviousAssignment();
-  }
-
-  return createBlankAssignment();
 }
 
 function decodeEnabledLayers(mask: number, layerCount: number) {
   return Array.from({ length: layerCount }, (_, layer) => (mask & (1 << layer)) !== 0);
 }
 
-function colorFromTuple(color: readonly [number, number, number] | undefined): LayerColor {
-  return {
-    red: color?.[0] ?? 0,
-    green: color?.[1] ?? 0,
-    blue: color?.[2] ?? 0,
-  };
-}
-
 function clampColorChannel(value: number) {
   return Math.max(0, Math.min(255, Math.trunc(value)));
 }
 
-function decodeStatusKeyAnimation(value: number | undefined): StatusKeyAnimation {
+function decodeStatusKeyAnimation(value: number): StatusKeyAnimation {
   switch (value) {
+    case StatusKeyAnimation.Ripple:
     case StatusKeyAnimation.Disabled:
     case StatusKeyAnimation.Flash:
     case StatusKeyAnimation.Spark:
       return value;
     default:
-      return StatusKeyAnimation.Ripple;
+      throw new Error(t.device.invalidStatusKeyAnimation(value));
   }
 }
 
-function decodeStatusLayerDisplayMode(
-  value: number | undefined,
-): StatusLayerDisplayMode {
-  return value === StatusLayerDisplayMode.Pattern
-    ? StatusLayerDisplayMode.Pattern
-    : StatusLayerDisplayMode.Solid;
+function decodeStatusLayerDisplayMode(value: number): StatusLayerDisplayMode {
+  if (
+    value !== StatusLayerDisplayMode.Solid &&
+    value !== StatusLayerDisplayMode.Pattern
+  ) {
+    throw new Error(t.device.invalidStatusLayerDisplayMode(value));
+  }
+
+  return value;
+}
+
+function assertPayloadLength(response: ConfigResponse, expected: number) {
+  if (response.payload.length !== expected) {
+    throw new Error(t.device.invalidPayloadLength(response.payload.length, expected));
+  }
 }

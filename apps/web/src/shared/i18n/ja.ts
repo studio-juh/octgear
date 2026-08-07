@@ -612,7 +612,6 @@ export const ja = {
     statusLayerDisplayModeUpdated: (mode: number) =>
       `レイヤー表示: ${mode === 1 ? "4灯パターン" : "全灯"}`,
     statusLayerDisplayModeFailed: "レイヤー表示の変更に失敗しました",
-    statusLayerDisplayModeUnsupported: "最新Firmwareが必要です",
     layerTapDanceTerm: "タップダンス判定時間",
     layerTapDanceTermValue: "タップダンス判定時間の数値",
     layerTapDanceTermRange: (min: number, max: number) =>
@@ -620,7 +619,6 @@ export const ja = {
     layerTapDanceTermUpdated: (termMs: number) =>
       `タップダンス判定時間: ${termMs} ms`,
     layerTapDanceTermFailed: "タップダンス判定時間の変更に失敗しました",
-    layerTapDanceTermUnsupported: "最新Firmwareが必要です",
     statusKeyAnimation: "アニメーション効果",
     statusKeyAnimationDisabled: "無効",
     statusKeyAnimationRipple: "波紋",
@@ -629,7 +627,6 @@ export const ja = {
     statusKeyAnimationUpdated: (animation: number) =>
       `アニメーション効果: ${["波紋", "無効", "フラッシュ", "スパーク"][animation] ?? animation}`,
     statusKeyAnimationFailed: "アニメーション効果の変更に失敗しました",
-    statusKeyAnimationUnsupported: "最新Firmwareが必要です",
     statusKeyAnimationBrightness: "アニメーション輝度上限",
     statusKeyAnimationBrightnessValue: "アニメーション輝度上限の数値",
     statusKeyAnimationBrightnessRange: (max: number) =>
@@ -637,13 +634,11 @@ export const ja = {
     statusKeyAnimationBrightnessUpdated: (brightness: number) =>
       `アニメーション輝度上限: ${brightness}`,
     statusKeyAnimationBrightnessFailed: "アニメーション輝度上限の変更に失敗しました",
-    statusKeyAnimationBrightnessUnsupported: "最新Firmwareが必要です",
     statusLedBrightness: "LED輝度上限",
     statusLedBrightnessValue: "LED輝度上限の数値",
     statusLedBrightnessRange: (max: number) => `0-${max} / 0は消灯`,
     statusLedBrightnessUpdated: (brightness: number) => `LED輝度上限: ${brightness}`,
     statusLedBrightnessFailed: "LED輝度上限の変更に失敗しました",
-    statusLedBrightnessUnsupported: "最新Firmwareが必要です",
     apply: "適用",
     applying: "保存中",
     matrix: "Matrix",
@@ -760,18 +755,14 @@ export const ja = {
     timeout: "HIDデバイスからの応答がタイムアウトしました",
     unsupportedWebHid: "このブラウザはWebHIDに対応していません",
     disconnected: "HIDデバイスが接続されていません",
-    diagnosticReportUnsupported: "診断レポート未対応のファームウェアです。最新UF2を書き込んでください",
-    diagnosticStorageUnsupported: "ストレージ診断未対応のファームウェアです。最新UF2を書き込んでください",
-    layerEnabledUnsupported: "レイヤー有効設定に未対応のファームウェアです。最新UF2を書き込んでください",
-    layerColorUnsupported: "レイヤー色設定に未対応のファームウェアです。最新UF2を書き込んでください",
-    encoderReverseUnsupported: "Encoder方向設定に未対応のファームウェアです。最新UF2を書き込んでください",
-    statusLedReverseUnsupported: "LEDテープ方向設定に未対応のファームウェアです。最新UF2を書き込んでください",
-    statusLedBrightnessUnsupported: "LED輝度設定に未対応のファームウェアです。最新UF2を書き込んでください",
-    statusKeyAnimationUnsupported: "アニメーション効果設定に未対応のファームウェアです。最新UF2を書き込んでください",
-    statusKeyAnimationBrightnessUnsupported: "アニメーション輝度設定に未対応のファームウェアです。最新UF2を書き込んでください",
-    statusLayerDisplayModeUnsupported: "レイヤー表示設定に未対応のファームウェアです。最新UF2を書き込んでください",
-    layerTapDanceTermUnsupported: "タップダンス判定時間設定に未対応のファームウェアです。最新UF2を書き込んでください",
     invalidDiagnosticReport: "診断レポートの内容が一致しません",
+    invalidPayloadLength: (actual: number, expected: number) =>
+      `HID応答の長さが不正です: ${actual} bytes（期待値 ${expected}）`,
+    invalidAssignmentKind: (kind: number) => `未定義の割り当て種別です: ${kind}`,
+    invalidStatusKeyAnimation: (animation: number) =>
+      `未定義のLEDアニメーションです: ${animation}`,
+    invalidStatusLayerDisplayMode: (mode: number) =>
+      `未定義のレイヤー表示モードです: ${mode}`,
     unexpectedResponse: (actual: number, expected: number) =>
       `Unexpected HID response command ${actual}; expected ${expected}`,
   },

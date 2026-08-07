@@ -614,14 +614,12 @@ export const en: typeof ja = {
     statusLayerDisplayModeUpdated: (mode) =>
       `Layer display: ${mode === 1 ? "4-LED pattern" : "solid"}`,
     statusLayerDisplayModeFailed: "Failed to change layer display",
-    statusLayerDisplayModeUnsupported: "Latest firmware required",
     layerTapDanceTerm: "Tap Dance term",
     layerTapDanceTermValue: "Tap Dance term value",
     layerTapDanceTermRange: (min, max) =>
       `${min}-${max} ms / shorter values make single taps respond faster`,
     layerTapDanceTermUpdated: (termMs) => `Tap Dance term: ${termMs} ms`,
     layerTapDanceTermFailed: "Failed to change Tap Dance term",
-    layerTapDanceTermUnsupported: "Latest firmware required",
     statusKeyAnimation: "Animation effect",
     statusKeyAnimationDisabled: "Off",
     statusKeyAnimationRipple: "Ripple",
@@ -630,7 +628,6 @@ export const en: typeof ja = {
     statusKeyAnimationUpdated: (animation) =>
       `Animation effect: ${["Ripple", "Off", "Flash", "Spark"][animation] ?? animation}`,
     statusKeyAnimationFailed: "Failed to change animation effect",
-    statusKeyAnimationUnsupported: "Latest firmware required",
     statusKeyAnimationBrightness: "Animation brightness limit",
     statusKeyAnimationBrightnessValue: "Animation brightness limit value",
     statusKeyAnimationBrightnessRange: (max) =>
@@ -638,13 +635,11 @@ export const en: typeof ja = {
     statusKeyAnimationBrightnessUpdated: (brightness) =>
       `Animation brightness limit: ${brightness}`,
     statusKeyAnimationBrightnessFailed: "Failed to change animation brightness limit",
-    statusKeyAnimationBrightnessUnsupported: "Latest firmware required",
     statusLedBrightness: "LED brightness limit",
     statusLedBrightnessValue: "LED brightness limit value",
     statusLedBrightnessRange: (max) => `0-${max} / 0 turns LEDs off`,
     statusLedBrightnessUpdated: (brightness) => `LED brightness limit: ${brightness}`,
     statusLedBrightnessFailed: "Failed to change LED brightness limit",
-    statusLedBrightnessUnsupported: "Latest firmware required",
     apply: "Apply",
     applying: "Saving",
     matrix: "Matrix",
@@ -761,18 +756,14 @@ export const en: typeof ja = {
     timeout: "Timed out waiting for a HID response",
     unsupportedWebHid: "This browser does not support WebHID",
     disconnected: "No HID device is connected",
-    diagnosticReportUnsupported: "This firmware does not support the diagnostic report. Flash the latest UF2.",
-    diagnosticStorageUnsupported: "This firmware does not support storage diagnostics. Flash the latest UF2.",
-    layerEnabledUnsupported: "This firmware does not support layer settings. Flash the latest UF2.",
-    layerColorUnsupported: "This firmware does not support layer colors. Flash the latest UF2.",
-    encoderReverseUnsupported: "This firmware does not support encoder direction. Flash the latest UF2.",
-    statusLedReverseUnsupported: "This firmware does not support LED strip direction. Flash the latest UF2.",
-    statusLedBrightnessUnsupported: "This firmware does not support LED brightness. Flash the latest UF2.",
-    statusKeyAnimationUnsupported: "This firmware does not support animation effects. Flash the latest UF2.",
-    statusKeyAnimationBrightnessUnsupported: "This firmware does not support animation brightness. Flash the latest UF2.",
-    statusLayerDisplayModeUnsupported: "This firmware does not support layer display modes. Flash the latest UF2.",
-    layerTapDanceTermUnsupported: "This firmware does not support Tap Dance timing. Flash the latest UF2.",
     invalidDiagnosticReport: "Diagnostic report payload did not match",
+    invalidPayloadLength: (actual, expected) =>
+      `Invalid HID response length: ${actual} bytes (expected ${expected})`,
+    invalidAssignmentKind: (kind) => `Unknown assignment kind: ${kind}`,
+    invalidStatusKeyAnimation: (animation) =>
+      `Unknown LED animation: ${animation}`,
+    invalidStatusLayerDisplayMode: (mode) =>
+      `Unknown layer display mode: ${mode}`,
     unexpectedResponse: (actual, expected) => `Unexpected HID response command ${actual}; expected ${expected}`,
   },
 };

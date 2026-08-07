@@ -87,7 +87,7 @@ Key 5を押しながらUSB接続すると、その起動だけread-onlyの`OCTGE
 - Layer color `0,0,0`は消灯です。
 - Matrixにダイオードがないため、矩形同時押しの曖昧さが解消するまで直前の安定状態を保持します。
 - Firmware更新だけでは保存済みkeymapや設定を上書きしません。
-- Storage record変更では既存versionの移行、または旧設定を初期化する方針を明示します。
+- 頒布前のStorageは現行versionだけを読みます。record変更ではversionを更新し、旧設定は初期化します。
 - 配布Firmwareのsource変更はWeb同梱UF2と同期します。
 
 ## Where To Make Changes

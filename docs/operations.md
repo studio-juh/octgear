@@ -79,8 +79,6 @@ Folder pickerによる直接書込はFile System Access APIが必要です。未
 
 WebHIDからBOOTSELへ移行できない場合は、boardのBOOTSEL操作を使って手動でbootloader driveを表示します。
 
-正式USB identityへ切り替えたFirmwareは`0x2E8A:0x1133`で認識されます。開発用identityを使用した旧Firmwareから更新した場合、OSとbrowserでは別deviceとして扱われるため、更新後にRemapperまたはDiagnosticsのConnectからOctGearを選び直してWebHID接続を許可してください。現在のWeb toolは正式identityだけを接続対象にするため、旧Firmwareのdeviceを更新版siteから移行するときは、boardのBOOTSEL操作でbootloader driveを表示し、UF2を手動でcopyします。
-
 ## Diagnostics
 
 `/octgear-diagnostics.html`は出荷前・販売前の個体検査用です。

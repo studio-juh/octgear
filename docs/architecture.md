@@ -141,6 +141,6 @@ Webは最後に読んだkeymap / layer mask / RGB colorsと、編集中の値を
 | --- | --- |
 | GPIO / control数 / encoder | profile更新、generate、Web build、firmware build |
 | HID command / payload | firmware `hid_reports.h`とhandler、Web protocol、`docs/hid-report.md` |
-| Assignment kind | firmware model、Web model / UI、storage compatibility、protocol docs |
+| Assignment kind | firmware model、Web model / UI、storage format、protocol docs |
 | USB VID/PID | firmware build env、Web filter、READMEのidentity |
 | Rescue script | `rescue.cmd`更新、asset生成、firmware / Web bundle更新 |

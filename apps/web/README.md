@@ -65,6 +65,8 @@ HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を�
 5. `GetKey`で全keymapを読込
 6. 300 ms間隔のheartbeatとphysical disconnect listenerを開始
 
+Webは現行Firmwareの13-byte `GetState`と全設定commandを必須契約として扱います。過去Firmware向けの短いresponse、未対応command、Layer色fallbackは受け入れません。
+
 Heartbeat sendが失敗するか700 msでtimeoutするとsessionを閉じます。Firmware側のheartbeat有効期限は3000 msです。
 
 WebHID commandは固定32-byte reportです。同期requestは同じcommand byteのresponseを1つ待つ設計なので、同じtransport上でcommandを並列送信しないでください。詳細は[`docs/hid-report.md`](../../docs/hid-report.md)にあります。
