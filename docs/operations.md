@@ -10,7 +10,7 @@ PCとタブレットでは、画面上部の「表示倍率」でWorkspaceを`80
 
 ### Open From Device
 
-通常起動中にK1、K5、Encoder SWを同時に1秒間押し続けると、LEDが水色に200 ms点灯してOctGearが再起動します。再起動後の1回だけWebUSB landing pageが有効になり、対応するdesktop ChromiumではUSB deviceの接続通知から`https://studio-juh.github.io/octgear/octgear-remapper.html`を開けます。案内modeでも通常HIDとWebHIDは利用できます。
+通常起動中にK1、K5、Encoder SWを同時に1秒間押し続けると、LEDが水色に200 ms点灯してOctGearが再起動します。再起動後の1回だけWebUSB landing pageが有効になり、対応するdesktop ChromiumではUSB deviceの接続通知から`https://studio-juh.github.io/octgear/octgear-remapper.html`を開けます。案内modeでも通常HIDとWebHIDは利用できます。Windowsが通常起動時のdescriptor不在を再利用しないよう、この起動だけUSB device revisionを`0x0101`へ変更し、通常起動では`0x0100`へ戻します。
 
 これは毎回のUSB接続で表示される機能ではありません。案内modeの起動時だけ有効で、通知を自動的に操作したりbrowserを強制的に開いたりはしません。OSやbrowserが通知に対応していない場合はURLを直接開いてください。USBを抜き差しするか再起動すると、次回は通常のUSB構成へ戻ります。
 

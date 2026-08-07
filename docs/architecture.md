@@ -136,7 +136,7 @@ Webは最後に読んだkeymap / layer mask / RGB colorsと、編集中の値を
 
 ### WebUSB Landing Boot
 
-通常起動中にK1、K5、Encoder SWを1秒間保持すると、通常入力をreleaseして水色のLED acknowledgementを表示し、watchdog scratch 0/1へmagicと反転値を書いてwarm rebootします。`setup()`はflagを消去してからWebUSB interfaceとRemapper landing URLを追加します。この起動では通常HID / WebHIDを維持し、Rescue boot判定を抑止します。Rescue triggerはshortcutに含まれないK4です。flagはFlashへ保存しないため、次の再起動は通常のUSB構成です。
+通常起動中にK1、K5、Encoder SWを1秒間保持すると、通常入力をreleaseして水色のLED acknowledgementを表示し、watchdog scratch 0/1へmagicと反転値を書いてwarm rebootします。`setup()`はflagを消去し、USB device revisionを通常の`0x0100`から案内用`0x0101`へ変更してから、WebUSB interfaceとRemapper landing URLを追加します。revisionを分けることで、Windowsが通常構成のdescriptor cacheを案内起動へ流用することを避けます。この起動では通常HID / WebHIDを維持し、Rescue boot判定を抑止します。Rescue triggerはshortcutに含まれないK4です。flagはFlashへ保存しないため、次の再起動は通常のUSB構成です。
 
 ## Cross-System Contracts
 

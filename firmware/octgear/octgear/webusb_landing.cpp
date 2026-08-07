@@ -72,6 +72,7 @@ bool beginWebUsbLanding() {
   }
 
   landingBoot = true;
+  TinyUSBDevice.setDeviceVersion(Config::WEBUSB_LANDING_DEVICE_VERSION);
   webUsbLanding.setLandingPage(&octgearRemapperLandingPage);
   webUsbLanding.begin();
   return true;

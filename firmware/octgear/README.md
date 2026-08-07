@@ -87,7 +87,7 @@ Build scriptsはhardware configとrescue command assetをcompile前に再生成�
 | Configuration | Source |
 | --- | --- |
 | Matrix GPIO、control / layer count、encoder tuning、default layer colors、Layer表示モード既定値、Layer / 打鍵アニメーション輝度既定値 / 上限、打鍵アニメーション既定値、外付けWS2812B GPIO / pixel count / 既定方向 | `hardware/octgear/profile.json` |
-| debounce、scan sleep、Tap Dance判定時間の既定値 / 範囲、LED brightness、heartbeat、WebUSB案内shortcut、rescue toggle | `octgear/config.h` |
+| debounce、scan sleep、Tap Dance判定時間の既定値 / 範囲、LED brightness、heartbeat、WebUSB案内shortcut / device revision、rescue toggle | `octgear/config.h` |
 | USB identity defaults | `scripts/compile-firmware.sh`, `scripts/build-web-firmware.sh` |
 | HID command IDs / status | `octgear/hid_reports.h` |
 
