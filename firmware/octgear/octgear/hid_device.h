@@ -8,4 +8,5 @@ void updateHidDevice();
 bool hidDeviceMounted();
 bool hidDeviceSuspended();
 bool remapperConnected();
+void cancelHidInputForSystemShortcut();
 void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t layer);

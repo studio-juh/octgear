@@ -6,6 +6,7 @@
 #include "readme_drive.h"
 #include "serial_rescue.h"
 #include "status_led.h"
+#include "webusb_landing.h"
 
 #if defined(ARDUINO_ARCH_RP2040)
 #include "pico/time.h"
@@ -27,7 +28,8 @@ void setup() {
   beginKeymap();
   beginStatusLed();
   beginKeyScanner();
-  const bool rescueBoot = readmeDriveRequestedAtBoot();
+  const bool landingBoot = beginWebUsbLanding();
+  const bool rescueBoot = !landingBoot && readmeDriveRequestedAtBoot();
   if (rescueBoot) {
     beginSerialRescue();
   }
@@ -41,7 +43,14 @@ void loop() {
   const bool rescueIndicatorActive = readmeActive || rescueActive;
   const bool configActive = remapperActive || rescueIndicatorActive;
 
-  if (updateKeyScanner(!configActive) && !rescueIndicatorActive) {
+  const bool scannerChanged = updateKeyScanner(!configActive);
+  const bool landingShortcutActive =
+    !rescueIndicatorActive &&
+    updateWebUsbLandingShortcut(currentKeyMask());
+
+  if (landingShortcutActive) {
+    cancelHidInputForSystemShortcut();
+  } else if (scannerChanged && !rescueIndicatorActive) {
     const Config::KeyMask previousMask = previousKeyMask();
     const Config::KeyMask currentMask = currentKeyMask();
     sendKeyChanges(previousMask, currentMask, activeLayer());

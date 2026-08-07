@@ -696,6 +696,16 @@ void applyStatusLayerDisplayMode() {
   lastUpdateMs = 0;
 }
 
+void showStatusLedWebUsbLandingAcknowledgement() {
+  cancelKeyAnimations();
+  cancelLayerTransition();
+  showPixelColor(balancedPixelColor(0, 160, 255));
+  previewActive = true;
+  idleShown = true;
+  displayedLayer = 0xFF;
+  lastUpdateMs = 0;
+}
+
 void triggerStatusLedKeyAnimation(uint8_t keyIndex) {
   if (keyIndex >= Config::KEY_COUNT) {
     return;

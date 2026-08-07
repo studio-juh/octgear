@@ -8,6 +8,12 @@ RemapperはWebHIDでOctGearへ接続します。Web Serialは使いません。
 
 PCとタブレットでは、画面上部の「表示倍率」でWorkspaceを`80%`、`90%`、`100%`へ切り替えられます。既定値は`90%`です。選択した倍率はbrowserへ保存され、次回も引き継がれます。表示が収まりきらない場合は`80%`、文字や操作部を大きくしたい場合は`100%`を選択してください。スマートフォン幅では操作部の大きさを保つため、自動的に`100%`表示になります。
 
+### Open From Device
+
+通常起動中にK1、K5、Encoder SWを同時に1秒間押し続けると、LEDが水色に200 ms点灯してOctGearが再起動します。再起動後の1回だけWebUSB landing pageが有効になり、対応するdesktop ChromiumではUSB deviceの接続通知から`https://studio-juh.github.io/octgear/octgear-remapper.html`を開けます。案内modeでも通常HIDとWebHIDは利用できます。
+
+これは毎回のUSB接続で表示される機能ではありません。案内modeの起動時だけ有効で、通知を自動的に操作したりbrowserを強制的に開いたりはしません。OSやbrowserが通知に対応していない場合はURLを直接開いてください。USBを抜き差しするか再起動すると、次回は通常のUSB構成へ戻ります。
+
 ### Connect And Edit
 
 1. OctGearを通常起動でUSB接続します。
@@ -183,4 +189,5 @@ Keyboard modifier bitmap:
 | Encoderのdetent数が違う | profileの`stepsPerDetent`を確認して再build |
 | UF2 driveへ直接書けない | UF2をdownloadしてOSからcopy |
 | `OCTGEAR` driveが出ない | USB接続前からKey 5を保持しているか確認 |
+| WebUSBの接続通知が出ない | desktop Chromiumの通知対応を確認し、出ない場合はRemapper URLを直接開く |
 | Rescue portを自動検出できない | OSのserial port権限とmanual selectionを確認 |

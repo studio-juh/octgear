@@ -1022,6 +1022,16 @@ bool remapperConnected() {
   return true;
 }
 
+void cancelHidInputForSystemShortcut() {
+  resetLayerTapDance();
+  queueAllKeyboardReleases();
+  queueAllConsumerReleases();
+
+  for (uint8_t keyIndex = 0; keyIndex < Config::KEY_COUNT; keyIndex++) {
+    releaseMomentaryLayer(keyIndex);
+  }
+}
+
 void sendKeyChanges(Config::KeyMask oldMask, Config::KeyMask newMask, uint8_t layer) {
   const bool suspended = TinyUSBDevice.suspended();
   if (!replayingWakeKeyChange && (suspended || wakeKeyChangePending())) {

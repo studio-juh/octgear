@@ -28,11 +28,15 @@ constexpr uint8_t STATUS_KEY_ANIMATION_SLOTS = 8;
 constexpr uint16_t STATUS_REMAPPER_ANIMATION_MS = 1000;
 constexpr uint16_t REMAPPER_HEARTBEAT_TIMEOUT_MS = 3000;
 constexpr uint32_t ACTIVE_LAYER_SAVE_DELAY_MS = 10000;
+constexpr uint16_t WEBUSB_LANDING_HOLD_MS = 1000;
+constexpr uint16_t WEBUSB_LANDING_ACK_MS = 200;
 constexpr uint8_t CONFIG_RESPONSE_READY_RETRIES = 20;
 constexpr uint16_t CONFIG_RESPONSE_RETRY_DELAY_US = 100;
 
 constexpr bool README_DRIVE_ENABLED = false;
 constexpr uint8_t README_DRIVE_ENABLE_KEY_INDEX = 4;
 constexpr const char* REMAPPER_URL = "https://studio-juh.github.io/octgear/";
+constexpr uint8_t WEBUSB_LANDING_KEY_1_INDEX = 0;
+constexpr uint8_t WEBUSB_LANDING_KEY_2_INDEX = 4;
 
 }  // namespace Config

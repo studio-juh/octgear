@@ -16,6 +16,7 @@ RP2040 Arduino coreとAdafruit TinyUSBを使う、現行8キー + rotary encoder
 - Keyboard / Consumer Control HID output
 - Next Layerの単押しで次へ進み、同じcontrolのダブルタップで開始位置からPrevious Layerを実行するTap Dance。判定時間は50-1000 msで設定・保存可能（既定250 ms）
 - WebHID vendor reportによる設定とDiagnostics
+- K1 + K5 + Encoder SWの1秒長押しによる、次の1起動だけのWebUSB Remapper案内
 - 3-sector Flash journalへのkeymap保存
 - UF2 bootloaderへのreboot
 - Key 5 boot時のread-only README drive / Serial rescue
@@ -86,7 +87,7 @@ Build scriptsはhardware configとrescue command assetをcompile前に再生成�
 | Configuration | Source |
 | --- | --- |
 | Matrix GPIO、control / layer count、encoder tuning、default layer colors、Layer表示モード既定値、Layer / 打鍵アニメーション輝度既定値 / 上限、打鍵アニメーション既定値、外付けWS2812B GPIO / pixel count / 既定方向 | `hardware/octgear/profile.json` |
-| debounce、scan sleep、Tap Dance判定時間の既定値 / 範囲、LED brightness、heartbeat、rescue toggle | `octgear/config.h` |
+| debounce、scan sleep、Tap Dance判定時間の既定値 / 範囲、LED brightness、heartbeat、WebUSB案内shortcut、rescue toggle | `octgear/config.h` |
 | USB identity defaults | `scripts/compile-firmware.sh`, `scripts/build-web-firmware.sh` |
 | HID command IDs / status | `octgear/hid_reports.h` |
 

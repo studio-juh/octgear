@@ -52,7 +52,7 @@ Firmware entry pointは`firmware/octgear/octgear/octgear.ino`です。
 
 | Module | Responsibility |
 | --- | --- |
-| `config.h` | timing、LED、heartbeat、rescue等の手動設定 |
+| `config.h` | timing、LED、heartbeat、WebUSB案内、rescue等の手動設定 |
 | `generated_hardware_config.h` | profile由来のpin / count定数 |
 | `key_scanner.*` | Matrix scan / debounce、quadrature decode、control mask生成 |
 | `keymap.*` | RAM上のassignment、active layer、layer RGB color、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションと輝度上限 |
@@ -64,11 +64,12 @@ Firmware entry pointは`firmware/octgear/octgear/octgear.ino`です。
 | `readme_drive.*` | rescue boot時のread-only FAT12 MSC |
 | `serial_rescue.*` | rescue boot時の115200 baud command interface |
 | `status_led.*` | USB未mount時に流れるカラーホイール、USBサスペンド中の消灯、Remapper接続直後1秒のカラーホイール、layer、選択式打鍵アニメーション、rescue状態の表示 |
+| `webusb_landing.*` | 物理shortcut、watchdog scratchによる1回限りのboot flag、WebUSB landing descriptor |
 
 ### Main Loop
 
 1. Scannerが8物理キーとencoder SWを読み、encoder A/Bの有効なGray-code遷移を回転eventへ変換します。不正遷移や不完全なcycleは次のdetent境界で再同期し、途中のcountを後続の回転へ持ち越しません。
-2. 通常時はcontrol mask差分を`sendKeyChanges()`へ渡します。
+2. K1 + K5 + Encoder SWの同時押しをsystem shortcutとして先に判定し、それ以外の通常control mask差分を`sendKeyChanges()`へ渡します。
 3. `hid_device`がassignmentを解決し、Keyboard / Consumer reportまたはlayer変更を処理します。
 4. Config report受信、queued HID report、USB suspend / remote wakeupを更新します。
 5. 状態LEDを更新し、通常時100 us、config mode時1000 us sleepします。
@@ -132,6 +133,10 @@ Webは最後に読んだkeymap / layer mask / RGB colorsと、編集中の値を
 ### Rescue Boot
 
 起動時にKey 5がLOWならread-onlyの`OCTGEAR` MSCとSerial rescueを有効にします。このmodeでは通常HID出力を行わず、LEDを弱い緑で表示します。USBを抜いて通常接続すると終了します。
+
+### WebUSB Landing Boot
+
+通常起動中にK1、K5、Encoder SWを1秒間保持すると、通常入力をreleaseして水色のLED acknowledgementを表示し、watchdog scratch 0/1へmagicと反転値を書いてwarm rebootします。`setup()`はflagを消去してからWebUSB interfaceとRemapper landing URLを追加します。この起動では通常HID / WebHIDを維持し、押し続けられたKey 5によるRescue bootは抑止します。flagはFlashへ保存しないため、次の再起動は通常のUSB構成です。
 
 ## Cross-System Contracts
 

@@ -7,7 +7,7 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 | File | Role |
 | --- | --- |
 | `octgear.ino` | `setup()` / `loop()`とmode調停 |
-| `config.h` | timing、LED、heartbeat、rescue設定 |
+| `config.h` | timing、LED、heartbeat、WebUSB案内、rescue設定 |
 | `generated_hardware_config.h` | profileから生成したpin / count定数 |
 | `key_scanner.*` | 2 x 4 matrix scan、debounce、encoder decode |
 | `keymap.*` | default keymap、RAM assignment、active layer |
@@ -20,12 +20,13 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 | `readme_drive.*` | Rescue boot用read-only FAT12 drive |
 | `serial_rescue.*` | Rescue boot用command parser |
 | `status_led.*` | Device state表示 |
+| `webusb_landing.*` | 1回限りのWebUSB landing bootと物理shortcut |
 | `rescue.cmd` | Windows offline rescue client source |
 | `rescue_cmd_asset.h` | `rescue.cmd`から生成するembedded asset |
 
 ## Setup And Loop
 
-`setup()`はLED、keymap、scannerを初期化し、Key 5のboot状態を判定してからUSB deviceを開始します。
+`setup()`はLED、keymap、scannerを初期化し、watchdog scratchのWebUSB landing flag、Key 5のRescue boot状態の順に判定してからUSB deviceを開始します。Landing flagがある起動ではRescue判定を抑止します。
 
 `loop()`はscanner、通常HID送信、config report、Serial rescue、status LEDを順に更新します。Remapperまたはrescueがactiveな間は通常HID出力を止め、長いscan sleepへ切り替えます。PCがUSBをサスペンドしている間は外付け・内蔵status LEDを消灯し、resume後は現在Layerの表示へ戻します。
 
@@ -41,6 +42,8 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 | `REMAPPER_HEARTBEAT_TIMEOUT_MS` | `3000` | 通常出力抑止を解除する期限 |
 | `DEFAULT_LAYER_TAP_DANCE_TERM_MS` | `250` | Next Layerの単押し確定とダブルタップ判定の既定時間。Remapperから50-1000 msで設定・保存可能 |
 | `ACTIVE_LAYER_SAVE_DELAY_MS` | `10000` | 通常Layer切り替え後の遅延保存時間 |
+| `WEBUSB_LANDING_HOLD_MS` | `1000` | K1 + K5 + Encoder SWで案内modeへ入る長押し時間 |
+| `WEBUSB_LANDING_ACK_MS` | `200` | 再起動前の水色LED acknowledgement時間 |
 | `STATUS_LAYER_TRANSITION_MS` | `200` | Layer色を切り替えるフェード時間 |
 | `STATUS_LED_FRAME_MS` | `20` | Layer色フェードの更新間隔 |
 | `STATUS_KEY_RIPPLE_STEP_MS` | `45` | 打鍵波紋が隣のLEDへ進む間隔 |

@@ -11,7 +11,7 @@ OctGearはRP2040 Zero互換boardで動く、8キー + ロータリーエンコ�
 | Physical input | ダイオードなし2 x 4 matrix、Encoder A / Common / B / SW |
 | Logical controls | 8 keys + Encoder CCW / CW / SW = 11 |
 | Layers | 8。Layer 0は常時有効、既定有効はLayer 0/1 |
-| USB | Keyboard HID、Consumer HID、WebHID vendor report |
+| USB | Keyboard HID、Consumer HID、WebHID vendor report。一時起動時のみWebUSB landing page |
 | Default identity | `0x2E8A:0x1133`、Manufacturer / Productは`OctGear` |
 | Web | React 19 + TypeScript + Vite multi-page app |
 | Firmware | RP2040 Arduino core + Adafruit TinyUSB |
@@ -61,6 +61,10 @@ Scannerがmatrixとencoderを読み、active layerのassignmentをKeyboard / Con
 ### Remapper / Diagnostics
 
 Webが300 ms間隔でheartbeatを送ります。Firmwareは最後のheartbeatから3000 ms以内を接続中とみなし、通常HID出力を抑止します。Web側はheartbeat送信失敗または700 ms timeoutでsessionを閉じます。
+
+### WebUSB Landing Boot
+
+通常起動中にK1、K5、Encoder SWを1秒間同時押しすると、watchdog scratchへ1回限りのboot flagを書いてwarm rebootします。次の起動はAdafruit TinyUSBのWebUSB landing descriptorでRemapper URLを公開し、flagを即座に消去します。通常HIDとWebHIDは維持し、このbootでは押し続けられたKey 5によるRescue判定を抑止します。次回の再起動では通常のUSB構成へ戻ります。
 
 ### USB And LED States
 
