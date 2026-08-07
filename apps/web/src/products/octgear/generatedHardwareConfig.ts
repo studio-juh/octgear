@@ -33,6 +33,7 @@ export const HARDWARE_CONFIG = {
     max: 128,
   },
   statusLedKeyAnimation: 0,
+  statusLedLayerDisplayMode: 0,
   matrix: {
     rowCount: 2,
     columnCount: 4,

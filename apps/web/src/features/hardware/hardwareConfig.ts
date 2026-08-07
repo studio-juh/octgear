@@ -21,6 +21,7 @@ export type HardwareConfig = {
     readonly max: number;
   };
   readonly statusLedKeyAnimation: number;
+  readonly statusLedLayerDisplayMode: number;
   readonly matrix: {
     readonly rowCount: number;
     readonly columnCount: number;

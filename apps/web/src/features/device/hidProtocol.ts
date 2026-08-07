@@ -22,6 +22,7 @@ export enum ConfigCommand {
   SetStatusLedReversed = 0x11,
   SetStatusKeyAnimation = 0x12,
   SetStatusKeyAnimationBrightness = 0x13,
+  SetStatusLayerDisplayMode = 0x14,
 }
 
 export enum ConfigStatus {

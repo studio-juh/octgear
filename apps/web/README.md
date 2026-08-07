@@ -61,7 +61,7 @@ HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を�
 1. 対象entry pointへ渡された製品定義のVID/PID filterでdeviceを選択
 2. HID deviceをopen
 3. heartbeatを送信
-4. `GetState`でdevice dimensions、layer状態、Encoder方向、LEDテープ方向、打鍵アニメーションと輝度上限を取得
+4. `GetState`でdevice dimensions、layer状態、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションと輝度上限を取得
 5. `GetKey`で全keymapを読込
 6. 300 ms間隔のheartbeatとphysical disconnect listenerを開始
 
@@ -80,11 +80,13 @@ Layerの有効状態とRGB LED色も読込済みと編集中で分けて保持�
 
 Save時はdeviceが返したlayer / key countへnormalizeし、assignment、layer有効状態、RGB色の差分だけを逐次保存します。Readは全keymapとlayer設定を再取得し、編集中内容を置き換えます。Physical `KeyEvent`のpressは現在の表示layerを維持したまま、対応するcontrolだけを選択します。
 
-Read左のoverflow menuから初期化を選ぶと、確認dialogを経て全assignment、layer有効状態、RGB色、Encoder方向、LEDテープ方向、打鍵アニメーション、各輝度上限をfirmwareの既定値へ戻し、実機へ保存してからUIを再読込します。
+Read左のoverflow menuから初期化を選ぶと、確認dialogを経て全assignment、layer有効状態、RGB色、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、各輝度上限をfirmwareの既定値へ戻し、実機へ保存してからUIを再読込します。
 
 Hardware panelのEncoder方向checkboxは変更時に即座に実機へ保存します。既定値はhardware profileの`encoder.reversed`です。LED輝度上限は`0-128`で編集し、「適用」で実機へ保存します。`0`は消灯、既定値は`32`です。
 
 LEDテープ方向checkboxも変更時に即座に実機へ保存します。標準順は盤面左端のLED 1をphysical pixel 0へ対応させ、反転時は最後のphysical pixelへ対応させます。既定値はhardware profileの`externalRgbLedReversed`です。
+
+Layer表示のプルダウンは、Layer色の全灯と4灯パターンを切り替え、変更時に即座に実機へ保存します。4灯パターンはFirmware Layer 0-7を`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。既定値はhardware profileの`statusLedLayerDisplayMode`です。
 
 アニメーション効果のプルダウンは、打鍵時の表示を無効／波紋／フラッシュ／スパークから選び、変更時に即座に実機へ保存します。既定値はhardware profileの`statusLedKeyAnimation`です。
 

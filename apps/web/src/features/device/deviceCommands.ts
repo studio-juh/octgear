@@ -33,6 +33,8 @@ export type DeviceState = {
   statusKeyAnimationSupported: boolean;
   statusKeyAnimationBrightness: number;
   statusKeyAnimationBrightnessSupported: boolean;
+  statusLayerDisplayMode: StatusLayerDisplayMode;
+  statusLayerDisplayModeSupported: boolean;
   enabledLayers: boolean[];
 };
 
@@ -41,6 +43,11 @@ export enum StatusKeyAnimation {
   Disabled = 1,
   Flash = 2,
   Spark = 3,
+}
+
+export enum StatusLayerDisplayMode {
+  Solid = 0,
+  Pattern = 1,
 }
 
 export type LayerEnabledResult = {
@@ -93,6 +100,8 @@ export async function getDeviceState(transport: WebHidTransport): Promise<Device
     statusKeyAnimationSupported: response.payload.length >= 9,
     statusKeyAnimationBrightness: response.payload[9] ?? 0,
     statusKeyAnimationBrightnessSupported: response.payload.length >= 10,
+    statusLayerDisplayMode: decodeStatusLayerDisplayMode(response.payload[10]),
+    statusLayerDisplayModeSupported: response.payload.length >= 11,
     enabledLayers: decodeEnabledLayers(enabledLayerMask, layerCount),
   };
 }
@@ -164,6 +173,22 @@ export async function setDeviceStatusKeyAnimationBrightness(
   }
   assertConfigOk(response);
   return response.payload[0] ?? brightness;
+}
+
+export async function setDeviceStatusLayerDisplayMode(
+  transport: WebHidTransport,
+  mode: StatusLayerDisplayMode,
+) {
+  const response = await sendCommand(
+    transport,
+    ConfigCommand.SetStatusLayerDisplayMode,
+    [mode],
+  );
+  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
+    throw new Error(t.device.statusLayerDisplayModeUnsupported);
+  }
+  assertConfigOk(response);
+  return decodeStatusLayerDisplayMode(response.payload[0] ?? mode);
 }
 
 export async function setDeviceLayerEnabled(
@@ -456,4 +481,12 @@ function decodeStatusKeyAnimation(value: number | undefined): StatusKeyAnimation
     default:
       return StatusKeyAnimation.Ripple;
   }
+}
+
+function decodeStatusLayerDisplayMode(
+  value: number | undefined,
+): StatusLayerDisplayMode {
+  return value === StatusLayerDisplayMode.Pattern
+    ? StatusLayerDisplayMode.Pattern
+    : StatusLayerDisplayMode.Solid;
 }

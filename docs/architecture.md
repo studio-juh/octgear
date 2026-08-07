@@ -55,7 +55,7 @@ Firmware entry pointは`firmware/octgear/octgear/octgear.ino`です。
 | `config.h` | timing、LED、heartbeat、rescue等の手動設定 |
 | `generated_hardware_config.h` | profile由来のpin / count定数 |
 | `key_scanner.*` | Matrix scan / debounce、quadrature decode、control mask生成 |
-| `keymap.*` | RAM上のassignment、active layer、layer RGB color、Encoder方向、LEDテープ方向、打鍵アニメーションと輝度上限 |
+| `keymap.*` | RAM上のassignment、active layer、layer RGB color、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションと輝度上限 |
 | `keymap_storage.*` | 3-sector Flash journalのload / save / CRC / self-test |
 | `key_assignment.*` | assignmentの型とconstructor |
 | `hid_device.*` | USB lifecycle、config command、通常HID出力の調停 |
@@ -90,11 +90,11 @@ Assignmentは`None`、`Keyboard`、`Consumer`、`LayerCycle`、`MomentaryLayer`�
 - Consumer assignmentは16-bit usageを1つ持ちます。
 - 押下中のKeyboard assignmentは単一の6KRO reportへ統合し、modifierはOR、keycodeは重複を除いて送ります。6種類を超える場合はErrorRollOverを送ります。
 - Consumer assignmentは最後に押された押下中キーを優先し、そのキーを離すと一つ前の押下中usageへ戻ります。Encoder CCW / CWだけはdetentごとのtapとして送ります。
-- Layer colorはRGB各8-bitで、`0,0,0`を消灯としてFlashへ保存します。
+- Layer colorはRGB各8-bitで、`0,0,0`を消灯としてFlashへ保存します。外付け4灯はLayer色の全灯表示と、8 Layerを識別する点灯パターンを切り替えられます。
 
 Compile済みdefault keymapはLayer 0/1だけにassignmentを持ち、Layer 2-7は全controlが`None`です。具体的な割り当ては[Firmware Default Keymap](../firmware/octgear/README.md#default-keymap)を参照してください。
 
-起動時はcompile済みdefault keymap、layer設定、Encoder方向、LEDテープ方向、打鍵アニメーション、各輝度上限をRAMへ作成してから保存領域を読みます。保存済みの通常Layerが有効なら、そのLayerをactiveにして開始します。保存領域のmagic、version、layer数、key数、record sizeのいずれかが一致しない場合は、現在のdefault設定を保存して初期化します。
+起動時はcompile済みdefault keymap、layer設定、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、各輝度上限をRAMへ作成してから保存領域を読みます。保存済みの通常Layerが有効なら、そのLayerをactiveにして開始します。保存領域のmagic、version、layer数、key数、record sizeのいずれかが一致しない場合は、現在のdefault設定を保存して初期化します。
 
 ## Web Modules
 

@@ -43,6 +43,7 @@ PCB preview、Gerber、STLはgenerator対象ではありません。製造デー
 - Encoder A/B/SWは`INPUT_PULLUP`、専用Common GPIOは常時`OUTPUT LOW`
 - External WS2812Bのdata inputはGPIO 14へ接続し、4 pixels分のdataを送る
 - 打鍵アニメーションはmatrixの各columnをLED 1〜4へ対応させ、EncoderのCCW / CW / SWは右端のLED 4をK4 / K8と共有する
+- Layer表示は全灯と、4灯の点灯パターンによる8状態をRemapperから切り替えられる
 - Status表示は外付けWS2812Bへ出力し、対応boardではonboard WS2812にもミラーする
 - Case Middleは側面LEDの光を外周へ通す構造のため、透明または半透明の造形素材を推奨する
 - OLEDは使用しない

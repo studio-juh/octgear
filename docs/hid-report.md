@@ -48,7 +48,7 @@ byte 3..31  response payload
 
 | Value | Name | Request payload | Response payload |
 | ---: | --- | --- | --- |
-| `0x01` | `GetState` | none | `activeLayer, layerCount, keyCount, matrixRowCount, enabledLayerMask, encoderReversed, statusLedBrightness, statusLedReversed, statusKeyAnimation, statusKeyAnimationBrightness` |
+| `0x01` | `GetState` | none | `activeLayer, layerCount, keyCount, matrixRowCount, enabledLayerMask, encoderReversed, statusLedBrightness, statusLedReversed, statusKeyAnimation, statusKeyAnimationBrightness, statusLayerDisplayMode` |
 | `0x02` | `SetLayer` | `layer` | `layer` |
 | `0x03` | `GetKey` | `layer, keyIndex` | key assignment payload |
 | `0x04` | `SetKey` | key assignment payload | `layer, keyIndex` |
@@ -67,6 +67,7 @@ byte 3..31  response payload
 | `0x11` | `SetStatusLedReversed` | `reversed` | `reversed` |
 | `0x12` | `SetStatusKeyAnimation` | `animation` | `animation` |
 | `0x13` | `SetStatusKeyAnimationBrightness` | `brightness` | `brightness` |
+| `0x14` | `SetStatusLayerDisplayMode` | `mode` | `mode` |
 
 通常の同期commandは、requestと同じcommandをbyte 0に持つresponseを1つ返します。`RemapperHeartbeat`と`EnterBootloader`は例外です。Heartbeatは応答を返さず、bootloader commandはdeviceが再起動するためresponseを待ちません。
 
@@ -104,7 +105,11 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 旧firmwareの`GetState` responseに10 byte目がない場合、Webはアニメーション輝度設定を未対応として扱います。
 
-`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、打鍵アニメーション、アニメーション輝度上限をcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerと次回起動LayerはLayer 0へ戻ります。
+`statusLayerDisplayMode`と`SetStatusLayerDisplayMode`の`mode`は、`0`が全灯、`1`が4灯パターンです。4灯パターンはFirmware Layer 0-7をLED 1から4の順に`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。`1`のpixelには現在Layerの色を使います。変更はFlashへ即座に保存します。Storage version 5の予約flag bitを使用するためpayload長は変わらず、既存slotでは`0`として全灯表示になります。
+
+旧firmwareの`GetState` responseに11 byte目がない場合、WebはLayer表示モード設定を未対応として扱います。
+
+`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、アニメーション輝度上限をcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerと次回起動LayerはLayer 0へ戻ります。
 
 ## Session Lifecycle
 

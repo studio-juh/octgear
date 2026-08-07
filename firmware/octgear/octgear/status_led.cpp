@@ -13,11 +13,14 @@ bool idleShown = false;
 bool previewActive = false;
 uint8_t displayedLayer = 0xFF;
 uint32_t displayedColor = 0;
+uint32_t displayedPixelColors[Config::EXTERNAL_RGB_LED_COUNT] = {};
 bool layerTransitionActive = false;
 uint32_t layerTransitionStartMs = 0;
 uint32_t layerTransitionLastFrameMs = 0;
 uint32_t layerTransitionStartColor = 0;
 uint32_t layerTransitionTargetColor = 0;
+uint32_t layerTransitionStartPixelColors[Config::EXTERNAL_RGB_LED_COUNT] = {};
+uint32_t layerTransitionTargetPixelColors[Config::EXTERNAL_RGB_LED_COUNT] = {};
 bool remapperSessionActive = false;
 uint32_t remapperAnimationStartMs = 0;
 bool suspendOffShown = false;
@@ -31,6 +34,8 @@ struct KeyAnimationEvent {
 };
 
 static_assert(Config::EXTERNAL_RGB_LED_COUNT > 0);
+static_assert(Config::EXTERNAL_RGB_LED_COUNT == 4, "Layer patterns require four status LEDs");
+static_assert(Config::LAYER_COUNT <= 8, "Layer pattern table supports up to eight layers");
 static_assert(Config::STATUS_KEY_ANIMATION_SLOTS > 0);
 KeyAnimationEvent keyAnimations[Config::STATUS_KEY_ANIMATION_SLOTS] = {};
 uint8_t nextKeyAnimationSlot = 0;
@@ -63,6 +68,12 @@ uint32_t scalePixelColor(uint32_t color, uint8_t brightness) {
   );
 }
 
+uint8_t physicalPixelIndex(uint8_t logicalPixel) {
+  return statusLedReversed()
+    ? static_cast<uint8_t>(Config::EXTERNAL_RGB_LED_COUNT - 1U - logicalPixel)
+    : logicalPixel;
+}
+
 uint32_t whiteAnimationTargetColor() {
   const uint8_t brightness = statusKeyAnimationBrightness();
   return statusPixel.Color(brightness, brightness, brightness);
@@ -90,20 +101,43 @@ uint32_t layerAnimationTargetColor(const LayerColor& color) {
   );
 }
 
-void showPixelColor(uint32_t color) {
-  displayedColor = color;
-  const uint32_t scaledColor = scalePixelColor(color, statusLedBrightness());
+void writeDisplayedPixelColors() {
   for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
-    statusPixel.setPixelColor(pixel, scaledColor);
+    statusPixel.setPixelColor(
+      physicalPixelIndex(pixel),
+      scalePixelColor(displayedPixelColors[pixel], statusLedBrightness())
+    );
   }
   statusPixel.show();
 
 #if defined(PIN_NEOPIXEL)
   if (PIN_NEOPIXEL != Config::STATUS_LED_PIN) {
-    builtInStatusPixel.setPixelColor(0, scaledColor);
+    builtInStatusPixel.setPixelColor(
+      0,
+      scalePixelColor(displayedColor, statusLedBrightness())
+    );
     builtInStatusPixel.show();
   }
 #endif
+}
+
+void showPixelColors(
+  const uint32_t colors[Config::EXTERNAL_RGB_LED_COUNT],
+  uint32_t mirrorColor
+) {
+  displayedColor = mirrorColor;
+  for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
+    displayedPixelColors[pixel] = colors[pixel];
+  }
+  writeDisplayedPixelColors();
+}
+
+void showPixelColor(uint32_t color) {
+  uint32_t colors[Config::EXTERNAL_RGB_LED_COUNT];
+  for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
+    colors[pixel] = color;
+  }
+  showPixelColors(colors, color);
 }
 
 uint32_t balancedPixelColor(uint8_t red, uint8_t green, uint8_t blue) {
@@ -133,8 +167,47 @@ uint32_t colorWheel(uint8_t position) {
   return balancedPixelColor(position * 3, 255 - position * 3, 0);
 }
 
-void setLayerColorLed(const LayerColor& color) {
-  showPixelColor(balancedPixelColor(color.red, color.green, color.blue));
+uint8_t layerDisplayPattern(uint8_t layer) {
+  // Bit 0 is logical LED 1 at the left edge. Comments show LED 1 -> LED 4.
+  static constexpr uint8_t patterns[8] = {
+    0b0001,  // 1000
+    0b0010,  // 0100
+    0b0100,  // 0010
+    0b1000,  // 0001
+    0b1110,  // 0111
+    0b1101,  // 1011
+    0b1011,  // 1101
+    0b0111,  // 1110
+  };
+  return patterns[layer < 8 ? layer : 0];
+}
+
+void buildLayerPixelColors(
+  uint8_t layer,
+  const LayerColor& color,
+  uint32_t colors[Config::EXTERNAL_RGB_LED_COUNT]
+) {
+  const uint32_t pixelColor = balancedPixelColor(color.red, color.green, color.blue);
+  const uint8_t pattern = statusLayerDisplayMode() == StatusLayerDisplayMode::Pattern
+    ? layerDisplayPattern(layer)
+    : 0x0FU;
+  for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
+    colors[pixel] = (pattern & static_cast<uint8_t>(1U << pixel)) != 0
+      ? pixelColor
+      : 0;
+  }
+}
+
+bool pixelColorsEqual(
+  const uint32_t first[Config::EXTERNAL_RGB_LED_COUNT],
+  const uint32_t second[Config::EXTERNAL_RGB_LED_COUNT]
+) {
+  for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
+    if (first[pixel] != second[pixel]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 uint8_t interpolateChannel(uint8_t start, uint8_t target, uint32_t elapsedMs) {
@@ -200,12 +273,6 @@ uint32_t blendPixelColorToAnimation(
       strength
     )
   );
-}
-
-uint8_t physicalPixelIndex(uint8_t logicalPixel) {
-  return statusLedReversed()
-    ? static_cast<uint8_t>(Config::EXTERNAL_RGB_LED_COUNT - 1U - logicalPixel)
-    : logicalPixel;
 }
 
 uint8_t animationCenterForKey(uint8_t keyIndex) {
@@ -334,7 +401,7 @@ void updateKeyAnimations() {
   const StatusKeyAnimation animation = statusKeyAnimation();
   if (animation == StatusKeyAnimation::Disabled) {
     if (keyAnimationShown) {
-      showPixelColor(displayedColor);
+      writeDisplayedPixelColors();
     }
     cancelKeyAnimations();
     return;
@@ -385,7 +452,7 @@ void updateKeyAnimations() {
 
   if (!anyActive) {
     if (keyAnimationShown) {
-      showPixelColor(displayedColor);
+      writeDisplayedPixelColors();
     }
     keyAnimationLastFrameMs = 0;
     keyAnimationShown = false;
@@ -404,7 +471,7 @@ void updateKeyAnimations() {
     if (weights[pixel] == 0) {
       statusPixel.setPixelColor(
         physicalPixelIndex(pixel),
-        scalePixelColor(displayedColor, statusLedBrightness())
+        scalePixelColor(displayedPixelColors[pixel], statusLedBrightness())
       );
       continue;
     }
@@ -424,7 +491,7 @@ void updateKeyAnimations() {
     statusPixel.setPixelColor(
       physicalPixelIndex(pixel),
       blendPixelColorToAnimation(
-        displayedColor,
+        displayedPixelColors[pixel],
         targetColor,
         strength,
         preserveBaseChannels[pixel]
@@ -453,16 +520,23 @@ void cancelLayerTransition() {
 void startLayerTransition(uint8_t layer) {
   const LayerColor color = layerColor(layer);
   const uint32_t targetColor = balancedPixelColor(color.red, color.green, color.blue);
+  buildLayerPixelColors(layer, color, layerTransitionTargetPixelColors);
   displayedLayer = layer;
 
-  if (displayedColor == targetColor) {
+  if (
+    displayedColor == targetColor &&
+    pixelColorsEqual(displayedPixelColors, layerTransitionTargetPixelColors)
+  ) {
     cancelLayerTransition();
-    showPixelColor(targetColor);
+    showPixelColors(layerTransitionTargetPixelColors, targetColor);
     return;
   }
 
   layerTransitionStartColor = displayedColor;
   layerTransitionTargetColor = targetColor;
+  for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
+    layerTransitionStartPixelColors[pixel] = displayedPixelColors[pixel];
+  }
   layerTransitionStartMs = millis();
   layerTransitionLastFrameMs = 0;
   layerTransitionActive = true;
@@ -476,7 +550,7 @@ void updateLayerTransition() {
   const uint32_t now = millis();
   const uint32_t elapsedMs = now - layerTransitionStartMs;
   if (elapsedMs >= Config::STATUS_LAYER_TRANSITION_MS) {
-    showPixelColor(layerTransitionTargetColor);
+    showPixelColors(layerTransitionTargetPixelColors, layerTransitionTargetColor);
     cancelLayerTransition();
     return;
   }
@@ -489,8 +563,21 @@ void updateLayerTransition() {
   }
 
   layerTransitionLastFrameMs = now;
-  showPixelColor(
-    interpolatePixelColor(layerTransitionStartColor, layerTransitionTargetColor, elapsedMs)
+  uint32_t frameColors[Config::EXTERNAL_RGB_LED_COUNT];
+  for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
+    frameColors[pixel] = interpolatePixelColor(
+      layerTransitionStartPixelColors[pixel],
+      layerTransitionTargetPixelColors[pixel],
+      elapsedMs
+    );
+  }
+  showPixelColors(
+    frameColors,
+    interpolatePixelColor(
+      layerTransitionStartColor,
+      layerTransitionTargetColor,
+      elapsedMs
+    )
   );
 }
 
@@ -500,28 +587,11 @@ void setRescueLed() {
 
 void showFlowingColorWheel(uint8_t position) {
   const uint8_t pixelSpacing = static_cast<uint8_t>(256U / Config::EXTERNAL_RGB_LED_COUNT);
-  displayedColor = colorWheel(position);
-
+  uint32_t colors[Config::EXTERNAL_RGB_LED_COUNT];
   for (uint8_t pixel = 0; pixel < Config::EXTERNAL_RGB_LED_COUNT; ++pixel) {
-    statusPixel.setPixelColor(
-      physicalPixelIndex(pixel),
-      scalePixelColor(
-        colorWheel(static_cast<uint8_t>(position + pixel * pixelSpacing)),
-        statusLedBrightness()
-      )
-    );
+    colors[pixel] = colorWheel(static_cast<uint8_t>(position + pixel * pixelSpacing));
   }
-  statusPixel.show();
-
-#if defined(PIN_NEOPIXEL)
-  if (PIN_NEOPIXEL != Config::STATUS_LED_PIN) {
-    builtInStatusPixel.setPixelColor(
-      0,
-      scalePixelColor(displayedColor, statusLedBrightness())
-    );
-    builtInStatusPixel.show();
-  }
-#endif
+  showPixelColors(colors, colorWheel(position));
 }
 
 void updateColorWheelLed(bool flowing) {
@@ -569,7 +639,7 @@ void beginStatusLed() {
 }
 
 void applyStatusLedBrightness() {
-  showPixelColor(displayedColor);
+  writeDisplayedPixelColors();
   keyAnimationLastFrameMs = 0;
 }
 
@@ -583,10 +653,18 @@ void setStatusLed(bool on) {
   }
 }
 
-void previewStatusLedColor(uint8_t red, uint8_t green, uint8_t blue) {
+void previewStatusLedColor(
+  uint8_t layer,
+  uint8_t red,
+  uint8_t green,
+  uint8_t blue
+) {
   cancelKeyAnimations();
   cancelLayerTransition();
-  setLayerColorLed({ red, green, blue });
+  const LayerColor color = { red, green, blue };
+  uint32_t colors[Config::EXTERNAL_RGB_LED_COUNT];
+  buildLayerPixelColors(layer, color, colors);
+  showPixelColors(colors, balancedPixelColor(red, green, blue));
   previewActive = true;
   idleShown = true;
   displayedLayer = 0xFF;
@@ -605,8 +683,17 @@ void applyStatusKeyAnimation() {
   const bool restoreBaseColor = keyAnimationShown;
   cancelKeyAnimations();
   if (restoreBaseColor) {
-    showPixelColor(displayedColor);
+    writeDisplayedPixelColors();
   }
+}
+
+void applyStatusLayerDisplayMode() {
+  cancelKeyAnimations();
+  cancelLayerTransition();
+  previewActive = false;
+  idleShown = false;
+  displayedLayer = 0xFF;
+  lastUpdateMs = 0;
 }
 
 void triggerStatusLedKeyAnimation(uint8_t keyIndex) {

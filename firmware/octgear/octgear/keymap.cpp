@@ -17,6 +17,8 @@ uint8_t currentStatusKeyAnimationBrightness =
   Config::DEFAULT_STATUS_KEY_ANIMATION_BRIGHTNESS;
 StatusKeyAnimation currentStatusKeyAnimation =
   static_cast<StatusKeyAnimation>(Config::DEFAULT_STATUS_KEY_ANIMATION);
+StatusLayerDisplayMode currentStatusLayerDisplayMode =
+  static_cast<StatusLayerDisplayMode>(Config::DEFAULT_STATUS_LAYER_DISPLAY_MODE);
 LayerColor currentLayerColors[Config::LAYER_COUNT];
 KeyAssignment keymap[Config::LAYER_COUNT][Config::KEY_COUNT];
 
@@ -79,6 +81,8 @@ void resetKeymapToDefaults() {
     Config::DEFAULT_STATUS_KEY_ANIMATION_BRIGHTNESS;
   currentStatusKeyAnimation =
     static_cast<StatusKeyAnimation>(Config::DEFAULT_STATUS_KEY_ANIMATION);
+  currentStatusLayerDisplayMode =
+    static_cast<StatusLayerDisplayMode>(Config::DEFAULT_STATUS_LAYER_DISPLAY_MODE);
   resetLayerColors();
   setDefaultKeymap();
 }
@@ -157,6 +161,19 @@ bool setStatusKeyAnimation(StatusKeyAnimation animation) {
   }
 
   currentStatusKeyAnimation = animation;
+  return true;
+}
+
+StatusLayerDisplayMode statusLayerDisplayMode() {
+  return currentStatusLayerDisplayMode;
+}
+
+bool setStatusLayerDisplayMode(StatusLayerDisplayMode mode) {
+  if (mode > StatusLayerDisplayMode::Pattern) {
+    return false;
+  }
+
+  currentStatusLayerDisplayMode = mode;
   return true;
 }
 

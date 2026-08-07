@@ -17,6 +17,11 @@ enum class StatusKeyAnimation : uint8_t {
   Spark = 3,
 };
 
+enum class StatusLayerDisplayMode : uint8_t {
+  Solid = 0,
+  Pattern = 1,
+};
+
 void beginKeymap();
 void resetKeymapToDefaults();
 uint8_t activeLayer();
@@ -41,6 +46,8 @@ uint8_t statusKeyAnimationBrightness();
 void setStatusKeyAnimationBrightness(uint8_t brightness);
 StatusKeyAnimation statusKeyAnimation();
 bool setStatusKeyAnimation(StatusKeyAnimation animation);
+StatusLayerDisplayMode statusLayerDisplayMode();
+bool setStatusLayerDisplayMode(StatusLayerDisplayMode mode);
 const KeyAssignment& assignmentFor(uint8_t layer, uint8_t keyIndex);
 bool setAssignment(uint8_t layer, uint8_t keyIndex, const KeyAssignment& assignment);
 void clearKeymap();

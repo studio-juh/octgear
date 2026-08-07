@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   StatusKeyAnimation,
+  StatusLayerDisplayMode,
   type DeviceState,
 } from "../../features/device/deviceCommands";
 import { formatUsbId } from "../../features/device/usbIdentity";
@@ -16,6 +17,7 @@ type HardwarePanelProps = {
   statusKeyAnimationUpdating: boolean;
   statusKeyAnimationBrightness: number;
   statusKeyAnimationBrightnessUpdating: boolean;
+  statusLayerDisplayModeUpdating: boolean;
   onEncoderReversedChange: (reversed: boolean) => void;
   onStatusLedReversedChange: (reversed: boolean) => void;
   onStatusLedBrightnessChange: (brightness: number) => void;
@@ -23,6 +25,7 @@ type HardwarePanelProps = {
   onStatusKeyAnimationChange: (animation: StatusKeyAnimation) => void;
   onStatusKeyAnimationBrightnessChange: (brightness: number) => void;
   onStatusKeyAnimationBrightnessApply: () => void;
+  onStatusLayerDisplayModeChange: (mode: StatusLayerDisplayMode) => void;
 };
 
 export function HardwarePanel({
@@ -34,6 +37,7 @@ export function HardwarePanel({
   statusKeyAnimationUpdating,
   statusKeyAnimationBrightness,
   statusKeyAnimationBrightnessUpdating,
+  statusLayerDisplayModeUpdating,
   onEncoderReversedChange,
   onStatusLedReversedChange,
   onStatusLedBrightnessChange,
@@ -41,6 +45,7 @@ export function HardwarePanel({
   onStatusKeyAnimationChange,
   onStatusKeyAnimationBrightnessChange,
   onStatusKeyAnimationBrightnessApply,
+  onStatusLayerDisplayModeChange,
 }: HardwarePanelProps) {
   const { hardware, usbIdentity } = useProductDefinition();
   const [detailsExpanded, setDetailsExpanded] = useState(false);
@@ -104,6 +109,39 @@ export function HardwarePanel({
               />
               <span>{t.hardware.statusLedReversed}</span>
             </label>
+          </dd>
+        </div>
+        <div className="hardware-animation-row">
+          <dt>{t.hardware.statusLayerDisplayMode}</dt>
+          <dd>
+            <select
+              value={
+                deviceState?.statusLayerDisplayModeSupported
+                  ? deviceState.statusLayerDisplayMode
+                  : hardware.statusLedLayerDisplayMode
+              }
+              aria-label={t.hardware.statusLayerDisplayMode}
+              disabled={
+                !deviceState?.statusLayerDisplayModeSupported ||
+                statusLayerDisplayModeUpdating
+              }
+              onChange={(event) =>
+                onStatusLayerDisplayModeChange(
+                  Number(event.target.value) as StatusLayerDisplayMode,
+                )}
+            >
+              <option value={StatusLayerDisplayMode.Solid}>
+                {t.hardware.statusLayerDisplaySolid}
+              </option>
+              <option value={StatusLayerDisplayMode.Pattern}>
+                {t.hardware.statusLayerDisplayPattern}
+              </option>
+            </select>
+            <small>
+              {deviceState?.statusLayerDisplayModeSupported
+                ? t.hardware.statusLayerDisplayPatternHint
+                : t.hardware.statusLayerDisplayModeUnsupported}
+            </small>
           </dd>
         </div>
         <div className="hardware-animation-row">

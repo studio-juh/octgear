@@ -35,6 +35,7 @@ import {
   setDeviceStatusLedReversed,
   setDeviceStatusKeyAnimation,
   setDeviceStatusKeyAnimationBrightness,
+  setDeviceStatusLayerDisplayMode,
   setDeviceLayerEnabled,
   setDeviceLayerColor,
   setDeviceKey,
@@ -42,6 +43,7 @@ import {
   type DeviceState,
   type LayerColor,
   type StatusKeyAnimation,
+  type StatusLayerDisplayMode,
 } from "../../features/device/deviceCommands";
 import { WebHidTransport } from "../../features/device/webHidTransport";
 import {
@@ -104,6 +106,8 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
   );
   const [statusLedBrightnessUpdating, setStatusLedBrightnessUpdating] = useState(false);
   const [statusKeyAnimationUpdating, setStatusKeyAnimationUpdating] = useState(false);
+  const [statusLayerDisplayModeUpdating, setStatusLayerDisplayModeUpdating] =
+    useState(false);
   const [statusKeyAnimationBrightness, setStatusKeyAnimationBrightness] =
     useState<number>(hardware.statusKeyAnimationBrightness.default);
   const [
@@ -336,6 +340,35 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       setStatus(error instanceof Error ? error.message : t.hardware.statusKeyAnimationFailed);
     } finally {
       setStatusKeyAnimationUpdating(false);
+    }
+  }
+
+  async function updateStatusLayerDisplayMode(mode: StatusLayerDisplayMode) {
+    if (!connected || !deviceState) {
+      setStatus(t.connection.deviceNotConnected);
+      return;
+    }
+
+    if (!deviceState.statusLayerDisplayModeSupported) {
+      setStatus(t.device.statusLayerDisplayModeUnsupported);
+      return;
+    }
+
+    try {
+      setStatusLayerDisplayModeUpdating(true);
+      const saved = await setDeviceStatusLayerDisplayMode(transport, mode);
+      setDeviceState((current) =>
+        current ? { ...current, statusLayerDisplayMode: saved } : current,
+      );
+      setStatus(t.hardware.statusLayerDisplayModeUpdated(saved));
+    } catch (error) {
+      setStatus(
+        error instanceof Error
+          ? error.message
+          : t.hardware.statusLayerDisplayModeFailed,
+      );
+    } finally {
+      setStatusLayerDisplayModeUpdating(false);
     }
   }
 
@@ -837,6 +870,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
             statusKeyAnimationUpdating={statusKeyAnimationUpdating}
             statusKeyAnimationBrightness={statusKeyAnimationBrightness}
             statusKeyAnimationBrightnessUpdating={statusKeyAnimationBrightnessUpdating}
+            statusLayerDisplayModeUpdating={statusLayerDisplayModeUpdating}
             onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
             onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
             onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
@@ -846,6 +880,8 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
             onStatusKeyAnimationBrightnessChange={updateStatusKeyAnimationBrightnessDraft}
             onStatusKeyAnimationBrightnessApply={() =>
               void applyStatusKeyAnimationBrightness()}
+            onStatusLayerDisplayModeChange={(mode) =>
+              void updateStatusLayerDisplayMode(mode)}
           />
           <RemapPanel
             activeLayer={activeLayer}

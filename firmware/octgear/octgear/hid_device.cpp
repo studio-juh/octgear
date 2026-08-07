@@ -66,6 +66,7 @@ struct KeymapSnapshot {
   uint8_t statusLedBrightnessValue;
   StatusKeyAnimation statusKeyAnimationValue;
   uint8_t statusKeyAnimationBrightnessValue;
+  StatusLayerDisplayMode statusLayerDisplayModeValue;
 };
 
 void captureKeymapSnapshot(KeymapSnapshot& snapshot) {
@@ -78,6 +79,7 @@ void captureKeymapSnapshot(KeymapSnapshot& snapshot) {
   snapshot.statusKeyAnimationValue = statusKeyAnimation();
   snapshot.statusKeyAnimationBrightnessValue =
     statusKeyAnimationBrightness();
+  snapshot.statusLayerDisplayModeValue = statusLayerDisplayMode();
 
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     snapshot.colors[layer] = layerColor(layer);
@@ -103,6 +105,7 @@ void restoreKeymapSnapshot(const KeymapSnapshot& snapshot) {
   setStatusKeyAnimationBrightness(
     snapshot.statusKeyAnimationBrightnessValue
   );
+  setStatusLayerDisplayMode(snapshot.statusLayerDisplayModeValue);
   restoreActiveLayers(
     snapshot.persistentLayerIndex,
     snapshot.activeLayerIndex
@@ -150,6 +153,7 @@ void handleGetState() {
     static_cast<uint8_t>(statusLedReversed() ? 1 : 0),
     static_cast<uint8_t>(statusKeyAnimation()),
     statusKeyAnimationBrightness(),
+    static_cast<uint8_t>(statusLayerDisplayMode()),
   };
 
   sendConfigResponse(ConfigCommand::GetState, ConfigStatus::Ok, payload, sizeof(payload));
@@ -264,7 +268,7 @@ void handlePreviewLayerColor(const uint8_t* buffer, uint16_t size) {
     return;
   }
 
-  previewStatusLedColor(buffer[2], buffer[3], buffer[4]);
+  previewStatusLedColor(layer, buffer[2], buffer[3], buffer[4]);
   const uint8_t payload[] = { layer, buffer[2], buffer[3], buffer[4] };
   sendConfigResponse(ConfigCommand::PreviewLayerColor, ConfigStatus::Ok, payload, sizeof(payload));
 }
@@ -346,6 +350,7 @@ void handleSetStatusLedReversed(const uint8_t* buffer, uint16_t size) {
     return;
   }
 
+  applyStatusLayerDisplayMode();
   const uint8_t payload[] = { static_cast<uint8_t>(reversed ? 1 : 0) };
   sendConfigResponse(ConfigCommand::SetStatusLedReversed, ConfigStatus::Ok, payload, sizeof(payload));
 }
@@ -416,6 +421,53 @@ void handleSetStatusKeyAnimationBrightness(
   const uint8_t payload[] = { statusKeyAnimationBrightness() };
   sendConfigResponse(
     ConfigCommand::SetStatusKeyAnimationBrightness,
+    ConfigStatus::Ok,
+    payload,
+    sizeof(payload)
+  );
+}
+
+void handleSetStatusLayerDisplayMode(const uint8_t* buffer, uint16_t size) {
+  if (size < 2) {
+    sendConfigResponse(
+      ConfigCommand::SetStatusLayerDisplayMode,
+      ConfigStatus::InvalidLength,
+      nullptr,
+      0
+    );
+    return;
+  }
+
+  const StatusLayerDisplayMode previous = statusLayerDisplayMode();
+  const StatusLayerDisplayMode mode =
+    static_cast<StatusLayerDisplayMode>(buffer[1]);
+  if (!setStatusLayerDisplayMode(mode)) {
+    sendConfigResponse(
+      ConfigCommand::SetStatusLayerDisplayMode,
+      ConfigStatus::OutOfRange,
+      nullptr,
+      0
+    );
+    return;
+  }
+
+  if (!saveStatusLayerDisplayModeToStorage()) {
+    setStatusLayerDisplayMode(previous);
+    sendConfigResponse(
+      ConfigCommand::SetStatusLayerDisplayMode,
+      ConfigStatus::StorageError,
+      nullptr,
+      0
+    );
+    return;
+  }
+
+  applyStatusLayerDisplayMode();
+  const uint8_t payload[] = {
+    static_cast<uint8_t>(statusLayerDisplayMode()),
+  };
+  sendConfigResponse(
+    ConfigCommand::SetStatusLayerDisplayMode,
     ConfigStatus::Ok,
     payload,
     sizeof(payload)
@@ -634,6 +686,9 @@ void setReportCallback(uint8_t reportId, hid_report_type_t reportType, uint8_t c
       break;
     case ConfigCommand::SetStatusKeyAnimationBrightness:
       handleSetStatusKeyAnimationBrightness(buffer, size);
+      break;
+    case ConfigCommand::SetStatusLayerDisplayMode:
+      handleSetStatusLayerDisplayMode(buffer, size);
       break;
     default:
       sendConfigResponse(command, ConfigStatus::UnknownCommand, nullptr, 0);

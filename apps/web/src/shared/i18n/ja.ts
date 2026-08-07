@@ -604,6 +604,15 @@ export const ja = {
     statusLedReversed: "反転",
     statusLedDirectionUpdated: (reversed: boolean) => `LEDテープ方向: ${reversed ? "反転" : "標準"}`,
     statusLedDirectionFailed: "LEDテープ方向の変更に失敗しました",
+    statusLayerDisplayMode: "レイヤー表示",
+    statusLayerDisplaySolid: "全灯（レイヤー色）",
+    statusLayerDisplayPattern: "4灯パターン",
+    statusLayerDisplayPatternHint:
+      "Layer 0–7: 1000 / 0100 / 0010 / 0001 / 0111 / 1011 / 1101 / 1110",
+    statusLayerDisplayModeUpdated: (mode: number) =>
+      `レイヤー表示: ${mode === 1 ? "4灯パターン" : "全灯"}`,
+    statusLayerDisplayModeFailed: "レイヤー表示の変更に失敗しました",
+    statusLayerDisplayModeUnsupported: "最新Firmwareが必要です",
     statusKeyAnimation: "アニメーション効果",
     statusKeyAnimationDisabled: "無効",
     statusKeyAnimationRipple: "波紋",
@@ -656,7 +665,7 @@ export const ja = {
     moreActions: "その他の操作",
     reset: "初期化",
     resetTitle: "キーマップを初期化しますか？",
-    resetDescription: "全キーの割り当て、レイヤーの有効状態、LED色、LED輝度上限、Encoder方向、LEDテープ方向を既定値へ戻します。この操作は実機へすぐ保存されます。",
+    resetDescription: "全キーの割り当て、レイヤーの有効状態、LED色、各輝度上限、Encoder方向、LEDテープ方向、レイヤー表示、アニメーション効果を既定値へ戻します。この操作は実機へすぐ保存されます。",
     resetCancel: "キャンセル",
     resetConfirm: "初期化する",
     resetting: "キーマップを初期化中",
@@ -752,6 +761,7 @@ export const ja = {
     statusLedBrightnessUnsupported: "LED輝度設定に未対応のファームウェアです。最新UF2を書き込んでください",
     statusKeyAnimationUnsupported: "アニメーション効果設定に未対応のファームウェアです。最新UF2を書き込んでください",
     statusKeyAnimationBrightnessUnsupported: "アニメーション輝度設定に未対応のファームウェアです。最新UF2を書き込んでください",
+    statusLayerDisplayModeUnsupported: "レイヤー表示設定に未対応のファームウェアです。最新UF2を書き込んでください",
     invalidDiagnosticReport: "診断レポートの内容が一致しません",
     unexpectedResponse: (actual: number, expected: number) =>
       `Unexpected HID response command ${actual}; expected ${expected}`,
