@@ -39,7 +39,7 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 | `IDLE_SCAN_SLEEP_US` | `100` | 通常modeのscan間sleep |
 | `REMAPPER_SCAN_SLEEP_US` | `1000` | Config / rescue modeのscan間sleep |
 | `REMAPPER_HEARTBEAT_TIMEOUT_MS` | `3000` | 通常出力抑止を解除する期限 |
-| `LAYER_TAP_DANCE_TERM_MS` | `250` | Next Layerの単押し確定とダブルタップ判定の期限 |
+| `DEFAULT_LAYER_TAP_DANCE_TERM_MS` | `250` | Next Layerの単押し確定とダブルタップ判定の既定時間。Remapperから50-1000 msで設定・保存可能 |
 | `ACTIVE_LAYER_SAVE_DELAY_MS` | `10000` | 通常Layer切り替え後の遅延保存時間 |
 | `STATUS_LAYER_TRANSITION_MS` | `200` | Layer色を切り替えるフェード時間 |
 | `STATUS_LED_FRAME_MS` | `20` | Layer色フェードの更新間隔 |
@@ -62,6 +62,6 @@ Input latencyを調整する場合はdebounceとidle sleepの両方を考慮し�
 - HID protocolを変更する場合はWeb implementationと[`docs/hid-report.md`](../../../docs/hid-report.md)を同時に更新します。
 - Storage layoutを変える場合は既存deviceのmigrationまたは明示的な初期化方針が必要です。
 
-Storageは3つの4KB sectorを循環し、各slotへheader、generation、全layerのassignment records、1-byteのlayer有効mask、3 bytes x layerのRGB色、Encoder方向・LEDテープ方向・Layer表示モード・打鍵アニメーションを持つ1-byteのdevice flags、Layer / アニメーション輝度上限、通常のactive layer、CRC32を固定順で保存します。Layer 0は常時有効です。Layer表示モードはVersion 5の予約flag bitを使うため、既存slotは全灯として互換読込します。Version 4 / 3 / 2のslotは旧payload長でCRCを検証してからVersion 5へ移行し、旧versionの起動LayerはLayer 0とします。起動時はCRCが正常な最新generationを選び、有効なslotがない場合はhardware profileとcompile済みkeymapの既定値から最初のslotを作成します。
+Storageは3つの4KB sectorを循環し、各slotへheader、generation、全layerのassignment records、1-byteのlayer有効mask、3 bytes x layerのRGB色、Encoder方向・LEDテープ方向・Layer表示モード・打鍵アニメーションを持つ1-byteのdevice flags、Layer / アニメーション輝度上限、通常のactive layer、16-bitのTap Dance判定時間、CRC32を固定順で保存します。Layer 0は常時有効です。現行Version 6は旧versionを移行せず、起動時にVersion 6としてCRCが正常な最新generationを選びます。有効なslotがない場合はhardware profileとcompile済みkeymapの既定値から最初のslotを作成します。
 
 Repository rootからの標準buildは`pnpm firmware:build`です。直接Arduino CLIを呼ぶ場合も、先に必要な生成処理を実行してください。

@@ -35,8 +35,14 @@ export type DeviceState = {
   statusKeyAnimationBrightnessSupported: boolean;
   statusLayerDisplayMode: StatusLayerDisplayMode;
   statusLayerDisplayModeSupported: boolean;
+  layerTapDanceTermMs: number;
+  layerTapDanceTermSupported: boolean;
   enabledLayers: boolean[];
 };
+
+export const MIN_LAYER_TAP_DANCE_TERM_MS = 50;
+export const MAX_LAYER_TAP_DANCE_TERM_MS = 1000;
+export const DEFAULT_LAYER_TAP_DANCE_TERM_MS = 250;
 
 export enum StatusKeyAnimation {
   Ripple = 0,
@@ -102,6 +108,11 @@ export async function getDeviceState(transport: WebHidTransport): Promise<Device
     statusKeyAnimationBrightnessSupported: response.payload.length >= 10,
     statusLayerDisplayMode: decodeStatusLayerDisplayMode(response.payload[10]),
     statusLayerDisplayModeSupported: response.payload.length >= 11,
+    layerTapDanceTermMs:
+      response.payload.length >= 13
+        ? (response.payload[11] | (response.payload[12] << 8))
+        : DEFAULT_LAYER_TAP_DANCE_TERM_MS,
+    layerTapDanceTermSupported: response.payload.length >= 13,
     enabledLayers: decodeEnabledLayers(enabledLayerMask, layerCount),
   };
 }
@@ -189,6 +200,25 @@ export async function setDeviceStatusLayerDisplayMode(
   }
   assertConfigOk(response);
   return decodeStatusLayerDisplayMode(response.payload[0] ?? mode);
+}
+
+export async function setDeviceLayerTapDanceTerm(
+  transport: WebHidTransport,
+  termMs: number,
+) {
+  const normalized = Math.trunc(termMs);
+  const response = await sendCommand(
+    transport,
+    ConfigCommand.SetLayerTapDanceTerm,
+    [normalized & 0xff, (normalized >> 8) & 0xff],
+  );
+  if (response.status === ConfigStatus.UnknownCommand || response.status === ConfigStatus.Unsupported) {
+    throw new Error(t.device.layerTapDanceTermUnsupported);
+  }
+  assertConfigOk(response);
+  return response.payload.length >= 2
+    ? response.payload[0] | (response.payload[1] << 8)
+    : normalized;
 }
 
 export async function setDeviceLayerEnabled(

@@ -48,7 +48,7 @@ byte 3..31  response payload
 
 | Value | Name | Request payload | Response payload |
 | ---: | --- | --- | --- |
-| `0x01` | `GetState` | none | `activeLayer, layerCount, keyCount, matrixRowCount, enabledLayerMask, encoderReversed, statusLedBrightness, statusLedReversed, statusKeyAnimation, statusKeyAnimationBrightness, statusLayerDisplayMode` |
+| `0x01` | `GetState` | none | `activeLayer, layerCount, keyCount, matrixRowCount, enabledLayerMask, encoderReversed, statusLedBrightness, statusLedReversed, statusKeyAnimation, statusKeyAnimationBrightness, statusLayerDisplayMode, layerTapDanceTermMs[2]` |
 | `0x02` | `SetLayer` | `layer` | `layer` |
 | `0x03` | `GetKey` | `layer, keyIndex` | key assignment payload |
 | `0x04` | `SetKey` | key assignment payload | `layer, keyIndex` |
@@ -68,6 +68,7 @@ byte 3..31  response payload
 | `0x12` | `SetStatusKeyAnimation` | `animation` | `animation` |
 | `0x13` | `SetStatusKeyAnimationBrightness` | `brightness` | `brightness` |
 | `0x14` | `SetStatusLayerDisplayMode` | `mode` | `mode` |
+| `0x15` | `SetLayerTapDanceTerm` | `termMs[2]` | `termMs[2]` |
 
 通常の同期commandは、requestと同じcommandをbyte 0に持つresponseを1つ返します。`RemapperHeartbeat`と`EnterBootloader`は例外です。Heartbeatは応答を返さず、bootloader commandはdeviceが再起動するためresponseを待ちません。
 
@@ -105,11 +106,15 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 旧firmwareの`GetState` responseに10 byte目がない場合、Webはアニメーション輝度設定を未対応として扱います。
 
-`statusLayerDisplayMode`と`SetStatusLayerDisplayMode`の`mode`は、`0`が全灯、`1`が4灯パターンです。4灯パターンはFirmware Layer 0-7をLED 1から4の順に`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。`1`のpixelには現在Layerの色を使います。変更はFlashへ即座に保存します。Storage version 5の予約flag bitを使用するためpayload長は変わらず、既存slotでは`0`として全灯表示になります。
+`statusLayerDisplayMode`と`SetStatusLayerDisplayMode`の`mode`は、`0`が全灯、`1`が4灯パターンです。4灯パターンはFirmware Layer 0-7をLED 1から4の順に`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。`1`のpixelには現在Layerの色を使います。変更はFlashへ即座に保存します。
 
 旧firmwareの`GetState` responseに11 byte目がない場合、WebはLayer表示モード設定を未対応として扱います。
 
-`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、アニメーション輝度上限をcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerと次回起動LayerはLayer 0へ戻ります。
+`layerTapDanceTermMs`と`SetLayerTapDanceTerm`の`termMs`はlittle-endianの16-bit値です。設定範囲は`50-1000 ms`、既定値は`250 ms`です。Next Layerの単押し確定と同じcontrolのダブルタップ判定の両方に使い、変更はFlashへ即座に保存します。Storage version 6でfieldを追加しており、旧storage versionは移行せず既定設定へ初期化します。
+
+旧firmwareの`GetState` responseに13 byte目がない場合、WebはTap Dance判定時間設定を未対応として扱います。
+
+`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、アニメーション輝度上限、Tap Dance判定時間をcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerと次回起動LayerはLayer 0へ戻ります。
 
 ## Session Lifecycle
 
@@ -160,7 +165,7 @@ Keyboard assignmentはmodifier bitmapと6-key rollover slotsを使用します�
 | `4` | MomentaryLayer |
 | `5` | LayerPrevious |
 
-`LayerCycle`は有効layerを次方向へ、`LayerPrevious`は前方向へ循環します。どちらもLayer 0からwrapします。`LayerCycle`の最初の押下は250 ms保留され、単押しなら次方向へ進みます。同じ物理controlを期限内に再度押すと保留した遷移を破棄し、開始位置から`LayerPrevious`相当として処理します。assignment kindとwire formatは変わりません。
+`LayerCycle`は有効layerを次方向へ、`LayerPrevious`は前方向へ循環します。どちらもLayer 0からwrapします。`LayerCycle`の最初の押下は設定されたTap Dance判定時間だけ保留され、単押しなら次方向へ進みます。同じ物理controlを期限内に再度押すと保留した遷移を破棄し、開始位置から`LayerPrevious`相当として処理します。assignment kindとwire formatは変わりません。
 
 ## Compatibility Rules
 

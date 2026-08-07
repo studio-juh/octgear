@@ -14,6 +14,7 @@ bool saveStatusLedBrightnessToStorage();
 bool saveStatusKeyAnimationToStorage();
 bool saveStatusKeyAnimationBrightnessToStorage();
 bool saveStatusLayerDisplayModeToStorage();
+bool saveLayerTapDanceTermToStorage();
 void scheduleActiveLayerSave();
 void updateKeymapStorage();
 bool runKeymapStorageSelfTest();

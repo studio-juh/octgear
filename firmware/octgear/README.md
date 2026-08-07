@@ -14,7 +14,7 @@ RP2040 Arduino coreとAdafruit TinyUSBを使う、現行8キー + rotary encoder
 - 打鍵アニメーションを無効／波紋／フラッシュ／スパークから選択して保存
 - Layer表示と独立した打鍵アニメーション輝度上限を保存
 - Keyboard / Consumer Control HID output
-- Next Layerの単押しで次へ進み、同じcontrolの250 ms以内のダブルタップで開始位置からPrevious Layerを実行するTap Dance
+- Next Layerの単押しで次へ進み、同じcontrolのダブルタップで開始位置からPrevious Layerを実行するTap Dance。判定時間は50-1000 msで設定・保存可能（既定250 ms）
 - WebHID vendor reportによる設定とDiagnostics
 - 3-sector Flash journalへのkeymap保存
 - UF2 bootloaderへのreboot
@@ -86,7 +86,7 @@ Build scriptsはhardware configとrescue command assetをcompile前に再生成�
 | Configuration | Source |
 | --- | --- |
 | Matrix GPIO、control / layer count、encoder tuning、default layer colors、Layer表示モード既定値、Layer / 打鍵アニメーション輝度既定値 / 上限、打鍵アニメーション既定値、外付けWS2812B GPIO / pixel count / 既定方向 | `hardware/octgear/profile.json` |
-| debounce、scan sleep、LED brightness、heartbeat、rescue toggle | `octgear/config.h` |
+| debounce、scan sleep、Tap Dance判定時間の既定値 / 範囲、LED brightness、heartbeat、rescue toggle | `octgear/config.h` |
 | USB identity defaults | `scripts/compile-firmware.sh`, `scripts/build-web-firmware.sh` |
 | HID command IDs / status | `octgear/hid_reports.h` |
 
@@ -110,13 +110,13 @@ Generated headerは直接編集しません。Hardware profile変更後は`pnpm 
 | Encoder CW | Volume Up | None |
 | Encoder SW | None | None |
 
-Layer 2〜7は全controlが`None`です。既定で有効なのはLayer 0/1だけで、Layer 0は無効化できません。Encoder方向の既定値はhardware profileの`encoder.reversed`、LEDテープ方向の既定値は`externalRgbLedReversed`で、現行構成はいずれも標準です。Layer表示の既定値は`statusLedLayerDisplayMode`の全灯、打鍵アニメーションの既定値は`statusLedKeyAnimation`の波紋、アニメーション輝度上限は`statusKeyAnimationBrightness.default`の`96`です。既に保存済みの設定はFirmware更新だけでは変更されず、初期化したときにこの既定値が適用されます。
+Layer 2〜7は全controlが`None`です。既定で有効なのはLayer 0/1だけで、Layer 0は無効化できません。Encoder方向の既定値はhardware profileの`encoder.reversed`、LEDテープ方向の既定値は`externalRgbLedReversed`で、現行構成はいずれも標準です。Layer表示の既定値は`statusLedLayerDisplayMode`の全灯、打鍵アニメーションの既定値は`statusLedKeyAnimation`の波紋、アニメーション輝度上限は`statusKeyAnimationBrightness.default`の`96`、Tap Dance判定時間は`250 ms`です。Version 6で保存した設定はFirmware更新だけでは変更されず、初期化したときにこれらの既定値が適用されます。
 
 ## Storage
 
-Keymap、通常のactive layer、layer enable mask、layer RGB colors、各LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションはexternal SPI Flash上の独立した3つの4KB sectorへ循環保存します。各slotはgenerationとCRCを持ち、起動時はCRCが正常な最新generationを読み込みます。保存中に電源が切れて新slotが不完全になっても、直前の正常slotへfallbackします。
+Keymap、通常のactive layer、layer enable mask、layer RGB colors、各LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、Tap Dance判定時間はexternal SPI Flash上の独立した3つの4KB sectorへ循環保存します。各slotはgenerationとCRCを持ち、起動時はCRCが正常な最新generationを読み込みます。保存中に電源が切れて新slotが不完全になっても、直前の正常slotへfallbackします。
 
-現行storage versionは`5`です。Layer表示モードはVersion 5のdevice flagsにある予約bitを使い、既存slotでは`0`の全灯として互換読込するためversionは変更しません。Version 4の保存設定は内容を保持したまま自動移行し、保存LayerだけLayer 0で初期化します。Version 3はさらにアニメーション輝度上限をhardware profileの既定値`96`で補い、Version 2はLEDテープ方向と打鍵アニメーションも既定値で補います。Version 1以前の保存設定は移行せず、Firmware更新後の初回起動でcompile済み既定値へ初期化します。
+現行storage versionは`6`です。Tap Dance判定時間を16-bit値として追加しています。旧versionのslotは移行せず、Version 6 Firmwareでの初回起動時にcompile済み既定値へ初期化します。
 
 標準buildはArduino coreがfilesystem用として扱う64KBをFirmware領域から分離して予約します。Filesystemはmountせず、その先頭12KBをjournalに直接使用します。設定変更時はRAM上の設定全体を次slotへ書き、1回の保存で消去するsectorを1つに限定します。通常Layerの切り替えは10秒間変化がなければ保存し、連続操作を1回の書き込みへまとめます。この間に別の設定を保存した場合は、その書き込みへ現在Layerも含めます。保存形式が無効または未初期化ならcompile済みdefaultで初期化します。
 

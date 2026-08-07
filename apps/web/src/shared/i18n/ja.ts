@@ -613,6 +613,14 @@ export const ja = {
       `レイヤー表示: ${mode === 1 ? "4灯パターン" : "全灯"}`,
     statusLayerDisplayModeFailed: "レイヤー表示の変更に失敗しました",
     statusLayerDisplayModeUnsupported: "最新Firmwareが必要です",
+    layerTapDanceTerm: "タップダンス判定時間",
+    layerTapDanceTermValue: "タップダンス判定時間の数値",
+    layerTapDanceTermRange: (min: number, max: number) =>
+      `${min}-${max} ms / 短いほど単押しの反応が速くなります`,
+    layerTapDanceTermUpdated: (termMs: number) =>
+      `タップダンス判定時間: ${termMs} ms`,
+    layerTapDanceTermFailed: "タップダンス判定時間の変更に失敗しました",
+    layerTapDanceTermUnsupported: "最新Firmwareが必要です",
     statusKeyAnimation: "アニメーション効果",
     statusKeyAnimationDisabled: "無効",
     statusKeyAnimationRipple: "波紋",
@@ -762,6 +770,7 @@ export const ja = {
     statusKeyAnimationUnsupported: "アニメーション効果設定に未対応のファームウェアです。最新UF2を書き込んでください",
     statusKeyAnimationBrightnessUnsupported: "アニメーション輝度設定に未対応のファームウェアです。最新UF2を書き込んでください",
     statusLayerDisplayModeUnsupported: "レイヤー表示設定に未対応のファームウェアです。最新UF2を書き込んでください",
+    layerTapDanceTermUnsupported: "タップダンス判定時間設定に未対応のファームウェアです。最新UF2を書き込んでください",
     invalidDiagnosticReport: "診断レポートの内容が一致しません",
     unexpectedResponse: (actual: number, expected: number) =>
       `Unexpected HID response command ${actual}; expected ${expected}`,

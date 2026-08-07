@@ -61,7 +61,7 @@ HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を�
 1. 対象entry pointへ渡された製品定義のVID/PID filterでdeviceを選択
 2. HID deviceをopen
 3. heartbeatを送信
-4. `GetState`でdevice dimensions、layer状態、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションと輝度上限を取得
+4. `GetState`でdevice dimensions、layer状態、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションと輝度上限、Tap Dance判定時間を取得
 5. `GetKey`で全keymapを読込
 6. 300 ms間隔のheartbeatとphysical disconnect listenerを開始
 

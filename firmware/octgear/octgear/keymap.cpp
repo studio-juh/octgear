@@ -19,6 +19,7 @@ StatusKeyAnimation currentStatusKeyAnimation =
   static_cast<StatusKeyAnimation>(Config::DEFAULT_STATUS_KEY_ANIMATION);
 StatusLayerDisplayMode currentStatusLayerDisplayMode =
   static_cast<StatusLayerDisplayMode>(Config::DEFAULT_STATUS_LAYER_DISPLAY_MODE);
+uint16_t currentLayerTapDanceTermMs = Config::DEFAULT_LAYER_TAP_DANCE_TERM_MS;
 LayerColor currentLayerColors[Config::LAYER_COUNT];
 KeyAssignment keymap[Config::LAYER_COUNT][Config::KEY_COUNT];
 
@@ -83,6 +84,7 @@ void resetKeymapToDefaults() {
     static_cast<StatusKeyAnimation>(Config::DEFAULT_STATUS_KEY_ANIMATION);
   currentStatusLayerDisplayMode =
     static_cast<StatusLayerDisplayMode>(Config::DEFAULT_STATUS_LAYER_DISPLAY_MODE);
+  currentLayerTapDanceTermMs = Config::DEFAULT_LAYER_TAP_DANCE_TERM_MS;
   resetLayerColors();
   setDefaultKeymap();
 }
@@ -174,6 +176,22 @@ bool setStatusLayerDisplayMode(StatusLayerDisplayMode mode) {
   }
 
   currentStatusLayerDisplayMode = mode;
+  return true;
+}
+
+uint16_t layerTapDanceTermMs() {
+  return currentLayerTapDanceTermMs;
+}
+
+bool setLayerTapDanceTermMs(uint16_t termMs) {
+  if (
+    termMs < Config::MIN_LAYER_TAP_DANCE_TERM_MS ||
+    termMs > Config::MAX_LAYER_TAP_DANCE_TERM_MS
+  ) {
+    return false;
+  }
+
+  currentLayerTapDanceTermMs = termMs;
   return true;
 }
 

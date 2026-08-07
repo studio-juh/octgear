@@ -15,7 +15,7 @@ OctGearはRP2040 Zero互換boardで動く、8キー + ロータリーエンコ�
 | Default identity | `0x2E8A:0x1133`、Manufacturer / Productは`OctGear` |
 | Web | React 19 + TypeScript + Vite multi-page app |
 | Firmware | RP2040 Arduino core + Adafruit TinyUSB |
-| Persistence | External SPI Flashの3-slot journal + CRC。通常Layerは切り替え後10秒で保存 |
+| Persistence | External SPI Flashの3-slot journal + CRC。通常Layerは切り替え後10秒、Tap Dance判定時間などの設定は変更時に保存 |
 | Status LED | GPIO 14のWS2812B 4 pixels、Encoderは右端LED、対応boardでは内蔵LEDへmirror |
 
 ## System Map
@@ -87,7 +87,7 @@ Key 5を押しながらUSB接続すると、その起動だけread-onlyの`OCTGE
 - Layer color `0,0,0`は消灯です。
 - Matrixにダイオードがないため、矩形同時押しの曖昧さが解消するまで直前の安定状態を保持します。
 - Firmware更新だけでは保存済みkeymapや設定を上書きしません。
-- Storage record変更では既存versionのCRC検証と移行を維持します。
+- Storage record変更では既存versionの移行、または旧設定を初期化する方針を明示します。
 - 配布Firmwareのsource変更はWeb同梱UF2と同期します。
 
 ## Where To Make Changes

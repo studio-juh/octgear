@@ -22,7 +22,10 @@ import {
 } from "../updateKeymap";
 import {
   clearDeviceLayerColorPreview,
+  DEFAULT_LAYER_TAP_DANCE_TERM_MS,
   enterDeviceBootloader,
+  MAX_LAYER_TAP_DANCE_TERM_MS,
+  MIN_LAYER_TAP_DANCE_TERM_MS,
   getDeviceState,
   previewDeviceLayerColor,
   readDeviceKeymap,
@@ -30,6 +33,7 @@ import {
   resetDeviceConfiguration,
   sendRemapperHeartbeat,
   setDeviceLayer,
+  setDeviceLayerTapDanceTerm,
   setDeviceEncoderReversed,
   setDeviceStatusLedBrightness,
   setDeviceStatusLedReversed,
@@ -107,6 +111,10 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
   const [statusLedBrightnessUpdating, setStatusLedBrightnessUpdating] = useState(false);
   const [statusKeyAnimationUpdating, setStatusKeyAnimationUpdating] = useState(false);
   const [statusLayerDisplayModeUpdating, setStatusLayerDisplayModeUpdating] =
+    useState(false);
+  const [layerTapDanceTermMs, setLayerTapDanceTermMs] =
+    useState(DEFAULT_LAYER_TAP_DANCE_TERM_MS);
+  const [layerTapDanceTermUpdating, setLayerTapDanceTermUpdating] =
     useState(false);
   const [statusKeyAnimationBrightness, setStatusKeyAnimationBrightness] =
     useState<number>(hardware.statusKeyAnimationBrightness.default);
@@ -239,6 +247,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
           ? state.statusKeyAnimationBrightness
           : hardware.statusKeyAnimationBrightness.default,
       );
+      setLayerTapDanceTermMs(state.layerTapDanceTermMs);
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
       setReadEnabledLayers(state.enabledLayers);
@@ -372,6 +381,51 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
     }
   }
 
+  function updateLayerTapDanceTermDraft(termMs: number) {
+    if (!Number.isFinite(termMs)) {
+      return;
+    }
+
+    setLayerTapDanceTermMs(Math.max(
+      MIN_LAYER_TAP_DANCE_TERM_MS,
+      Math.min(MAX_LAYER_TAP_DANCE_TERM_MS, Math.trunc(termMs)),
+    ));
+  }
+
+  async function applyLayerTapDanceTerm() {
+    if (!connected || !deviceState) {
+      setStatus(t.connection.deviceNotConnected);
+      return;
+    }
+
+    if (!deviceState.layerTapDanceTermSupported) {
+      setStatus(t.device.layerTapDanceTermUnsupported);
+      return;
+    }
+
+    try {
+      setLayerTapDanceTermUpdating(true);
+      const saved = await setDeviceLayerTapDanceTerm(
+        transport,
+        layerTapDanceTermMs,
+      );
+      setLayerTapDanceTermMs(saved);
+      setDeviceState((current) =>
+        current ? { ...current, layerTapDanceTermMs: saved } : current,
+      );
+      setStatus(t.hardware.layerTapDanceTermUpdated(saved));
+    } catch (error) {
+      setLayerTapDanceTermMs(deviceState.layerTapDanceTermMs);
+      setStatus(
+        error instanceof Error
+          ? error.message
+          : t.hardware.layerTapDanceTermFailed,
+      );
+    } finally {
+      setLayerTapDanceTermUpdating(false);
+    }
+  }
+
   function updateStatusKeyAnimationBrightnessDraft(brightness: number) {
     setStatusKeyAnimationBrightness(Math.max(
       0,
@@ -480,6 +534,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
           ? state.statusKeyAnimationBrightness
           : hardware.statusKeyAnimationBrightness.default,
       );
+      setLayerTapDanceTermMs(state.layerTapDanceTermMs);
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
       setReadEnabledLayers(state.enabledLayers);
@@ -589,6 +644,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
           ? state.statusKeyAnimationBrightness
           : hardware.statusKeyAnimationBrightness.default,
       );
+      setLayerTapDanceTermMs(state.layerTapDanceTermMs);
       setReadKeymap(uiKeymap);
       setWriteKeymap(applyLayerNavigationOverrides(uiKeymap));
       setReadEnabledLayers(state.enabledLayers);
@@ -871,6 +927,8 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
             statusKeyAnimationBrightness={statusKeyAnimationBrightness}
             statusKeyAnimationBrightnessUpdating={statusKeyAnimationBrightnessUpdating}
             statusLayerDisplayModeUpdating={statusLayerDisplayModeUpdating}
+            layerTapDanceTermMs={layerTapDanceTermMs}
+            layerTapDanceTermUpdating={layerTapDanceTermUpdating}
             onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
             onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
             onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
@@ -882,6 +940,8 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
               void applyStatusKeyAnimationBrightness()}
             onStatusLayerDisplayModeChange={(mode) =>
               void updateStatusLayerDisplayMode(mode)}
+            onLayerTapDanceTermChange={updateLayerTapDanceTermDraft}
+            onLayerTapDanceTermApply={() => void applyLayerTapDanceTerm()}
           />
           <RemapPanel
             activeLayer={activeLayer}

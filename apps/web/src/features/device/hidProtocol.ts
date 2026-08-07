@@ -23,6 +23,7 @@ export enum ConfigCommand {
   SetStatusKeyAnimation = 0x12,
   SetStatusKeyAnimationBrightness = 0x13,
   SetStatusLayerDisplayMode = 0x14,
+  SetLayerTapDanceTerm = 0x15,
 }
 
 export enum ConfigStatus {

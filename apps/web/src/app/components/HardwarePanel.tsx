@@ -1,5 +1,7 @@
 import { useState } from "react";
 import {
+  MAX_LAYER_TAP_DANCE_TERM_MS,
+  MIN_LAYER_TAP_DANCE_TERM_MS,
   StatusKeyAnimation,
   StatusLayerDisplayMode,
   type DeviceState,
@@ -18,6 +20,8 @@ type HardwarePanelProps = {
   statusKeyAnimationBrightness: number;
   statusKeyAnimationBrightnessUpdating: boolean;
   statusLayerDisplayModeUpdating: boolean;
+  layerTapDanceTermMs: number;
+  layerTapDanceTermUpdating: boolean;
   onEncoderReversedChange: (reversed: boolean) => void;
   onStatusLedReversedChange: (reversed: boolean) => void;
   onStatusLedBrightnessChange: (brightness: number) => void;
@@ -26,6 +30,8 @@ type HardwarePanelProps = {
   onStatusKeyAnimationBrightnessChange: (brightness: number) => void;
   onStatusKeyAnimationBrightnessApply: () => void;
   onStatusLayerDisplayModeChange: (mode: StatusLayerDisplayMode) => void;
+  onLayerTapDanceTermChange: (termMs: number) => void;
+  onLayerTapDanceTermApply: () => void;
 };
 
 export function HardwarePanel({
@@ -38,6 +44,8 @@ export function HardwarePanel({
   statusKeyAnimationBrightness,
   statusKeyAnimationBrightnessUpdating,
   statusLayerDisplayModeUpdating,
+  layerTapDanceTermMs,
+  layerTapDanceTermUpdating,
   onEncoderReversedChange,
   onStatusLedReversedChange,
   onStatusLedBrightnessChange,
@@ -46,6 +54,8 @@ export function HardwarePanel({
   onStatusKeyAnimationBrightnessChange,
   onStatusKeyAnimationBrightnessApply,
   onStatusLayerDisplayModeChange,
+  onLayerTapDanceTermChange,
+  onLayerTapDanceTermApply,
 }: HardwarePanelProps) {
   const { hardware, usbIdentity } = useProductDefinition();
   const [detailsExpanded, setDetailsExpanded] = useState(false);
@@ -57,6 +67,11 @@ export function HardwarePanel({
   const animationBrightnessChanged =
     animationBrightnessSupported &&
     statusKeyAnimationBrightness !== deviceState?.statusKeyAnimationBrightness;
+  const layerTapDanceTermSupported =
+    deviceState?.layerTapDanceTermSupported ?? false;
+  const layerTapDanceTermChanged =
+    layerTapDanceTermSupported &&
+    layerTapDanceTermMs !== deviceState?.layerTapDanceTermMs;
 
   return (
     <aside className="panel hardware-panel">
@@ -141,6 +156,50 @@ export function HardwarePanel({
               {deviceState?.statusLayerDisplayModeSupported
                 ? t.hardware.statusLayerDisplayPatternHint
                 : t.hardware.statusLayerDisplayModeUnsupported}
+            </small>
+          </dd>
+        </div>
+        <div className="hardware-brightness-row hardware-timing-row">
+          <dt>{t.hardware.layerTapDanceTerm}</dt>
+          <dd>
+            <div className="hardware-brightness-control">
+              <input
+                type="range"
+                min={MIN_LAYER_TAP_DANCE_TERM_MS}
+                max={MAX_LAYER_TAP_DANCE_TERM_MS}
+                step={10}
+                value={layerTapDanceTermMs}
+                aria-label={t.hardware.layerTapDanceTerm}
+                disabled={!layerTapDanceTermSupported || layerTapDanceTermUpdating}
+                onChange={(event) =>
+                  onLayerTapDanceTermChange(Number(event.target.value))}
+              />
+              <input
+                type="number"
+                min={MIN_LAYER_TAP_DANCE_TERM_MS}
+                max={MAX_LAYER_TAP_DANCE_TERM_MS}
+                step={10}
+                value={layerTapDanceTermMs}
+                aria-label={t.hardware.layerTapDanceTermValue}
+                disabled={!layerTapDanceTermSupported || layerTapDanceTermUpdating}
+                onChange={(event) =>
+                  onLayerTapDanceTermChange(Number(event.target.value))}
+              />
+              <button
+                type="button"
+                disabled={!layerTapDanceTermChanged || layerTapDanceTermUpdating}
+                onClick={onLayerTapDanceTermApply}
+              >
+                {layerTapDanceTermUpdating ? t.hardware.applying : t.hardware.apply}
+              </button>
+            </div>
+            <small>
+              {layerTapDanceTermSupported
+                ? t.hardware.layerTapDanceTermRange(
+                    MIN_LAYER_TAP_DANCE_TERM_MS,
+                    MAX_LAYER_TAP_DANCE_TERM_MS,
+                  )
+                : t.hardware.layerTapDanceTermUnsupported}
             </small>
           </dd>
         </div>

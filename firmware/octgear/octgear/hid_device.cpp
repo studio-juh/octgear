@@ -67,6 +67,7 @@ struct KeymapSnapshot {
   StatusKeyAnimation statusKeyAnimationValue;
   uint8_t statusKeyAnimationBrightnessValue;
   StatusLayerDisplayMode statusLayerDisplayModeValue;
+  uint16_t layerTapDanceTermMsValue;
 };
 
 void captureKeymapSnapshot(KeymapSnapshot& snapshot) {
@@ -80,6 +81,7 @@ void captureKeymapSnapshot(KeymapSnapshot& snapshot) {
   snapshot.statusKeyAnimationBrightnessValue =
     statusKeyAnimationBrightness();
   snapshot.statusLayerDisplayModeValue = statusLayerDisplayMode();
+  snapshot.layerTapDanceTermMsValue = layerTapDanceTermMs();
 
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     snapshot.colors[layer] = layerColor(layer);
@@ -106,6 +108,7 @@ void restoreKeymapSnapshot(const KeymapSnapshot& snapshot) {
     snapshot.statusKeyAnimationBrightnessValue
   );
   setStatusLayerDisplayMode(snapshot.statusLayerDisplayModeValue);
+  setLayerTapDanceTermMs(snapshot.layerTapDanceTermMsValue);
   restoreActiveLayers(
     snapshot.persistentLayerIndex,
     snapshot.activeLayerIndex
@@ -154,6 +157,8 @@ void handleGetState() {
     static_cast<uint8_t>(statusKeyAnimation()),
     statusKeyAnimationBrightness(),
     static_cast<uint8_t>(statusLayerDisplayMode()),
+    static_cast<uint8_t>(layerTapDanceTermMs() & 0xFF),
+    static_cast<uint8_t>((layerTapDanceTermMs() >> 8) & 0xFF),
   };
 
   sendConfigResponse(ConfigCommand::GetState, ConfigStatus::Ok, payload, sizeof(payload));
@@ -474,6 +479,53 @@ void handleSetStatusLayerDisplayMode(const uint8_t* buffer, uint16_t size) {
   );
 }
 
+void handleSetLayerTapDanceTerm(const uint8_t* buffer, uint16_t size) {
+  if (size < 3) {
+    sendConfigResponse(
+      ConfigCommand::SetLayerTapDanceTerm,
+      ConfigStatus::InvalidLength,
+      nullptr,
+      0
+    );
+    return;
+  }
+
+  const uint16_t termMs = static_cast<uint16_t>(buffer[1]) |
+                          (static_cast<uint16_t>(buffer[2]) << 8);
+  const uint16_t previous = layerTapDanceTermMs();
+  if (!setLayerTapDanceTermMs(termMs)) {
+    sendConfigResponse(
+      ConfigCommand::SetLayerTapDanceTerm,
+      ConfigStatus::OutOfRange,
+      nullptr,
+      0
+    );
+    return;
+  }
+
+  if (!saveLayerTapDanceTermToStorage()) {
+    setLayerTapDanceTermMs(previous);
+    sendConfigResponse(
+      ConfigCommand::SetLayerTapDanceTerm,
+      ConfigStatus::StorageError,
+      nullptr,
+      0
+    );
+    return;
+  }
+
+  const uint8_t payload[] = {
+    static_cast<uint8_t>(layerTapDanceTermMs() & 0xFF),
+    static_cast<uint8_t>((layerTapDanceTermMs() >> 8) & 0xFF),
+  };
+  sendConfigResponse(
+    ConfigCommand::SetLayerTapDanceTerm,
+    ConfigStatus::Ok,
+    payload,
+    sizeof(payload)
+  );
+}
+
 void handleGetKey(const uint8_t* buffer, uint16_t size) {
   if (size < 3) {
     sendConfigResponse(ConfigCommand::GetKey, ConfigStatus::InvalidLength, nullptr, 0);
@@ -690,6 +742,9 @@ void setReportCallback(uint8_t reportId, hid_report_type_t reportType, uint8_t c
     case ConfigCommand::SetStatusLayerDisplayMode:
       handleSetStatusLayerDisplayMode(buffer, size);
       break;
+    case ConfigCommand::SetLayerTapDanceTerm:
+      handleSetLayerTapDanceTerm(buffer, size);
+      break;
     default:
       sendConfigResponse(command, ConfigStatus::UnknownCommand, nullptr, 0);
       break;
@@ -830,7 +885,7 @@ LayerTapDancePressResult handleLayerTapDancePress(uint8_t keyIndex) {
   const uint32_t elapsedMs = millis() - layerTapDance.firstTapMs;
   const bool isDoubleTap =
     keyIndex == layerTapDance.keyIndex &&
-    elapsedMs <= Config::LAYER_TAP_DANCE_TERM_MS;
+    elapsedMs <= layerTapDanceTermMs();
 
   if (isDoubleTap) {
     const uint8_t previousLayer = activeLayer();
@@ -854,7 +909,7 @@ void updateLayerTapDance() {
     return;
   }
 
-  if (millis() - layerTapDance.firstTapMs > Config::LAYER_TAP_DANCE_TERM_MS) {
+  if (millis() - layerTapDance.firstTapMs > layerTapDanceTermMs()) {
     resolveLayerTapDanceSingleTap();
   }
 }
