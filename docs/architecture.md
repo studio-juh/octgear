@@ -67,7 +67,7 @@ Firmware entry pointは`firmware/octgear/octgear/octgear.ino`です。
 
 ### Main Loop
 
-1. Scannerが8物理キーとencoder SWを読み、encoder A/Bの遷移を回転eventへ変換します。
+1. Scannerが8物理キーとencoder SWを読み、encoder A/Bの有効なGray-code遷移を回転eventへ変換します。不正遷移や不完全なcycleは次のdetent境界で再同期し、途中のcountを後続の回転へ持ち越しません。
 2. 通常時はcontrol mask差分を`sendKeyChanges()`へ渡します。
 3. `hid_device`がassignmentを解決し、Keyboard / Consumer reportまたはlayer変更を処理します。
 4. Config report受信、queued HID report、USB suspend / remote wakeupを更新します。

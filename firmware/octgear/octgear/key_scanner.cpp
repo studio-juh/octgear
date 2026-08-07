@@ -16,6 +16,7 @@ Config::KeyMask oldStableMask = 0;
 Config::KeyMask activeEncoderPulseMask = 0;
 uint32_t lastRawChangeUs = 0;
 uint8_t lastEncoderState = 0;
+uint8_t encoderDetentState = 0;
 int8_t encoderStepAccumulator = 0;
 int8_t pendingEncoderClicks = 0;
 
@@ -108,6 +109,18 @@ void enqueueEncoderClick(int8_t direction) {
   }
 }
 
+bool isEncoderDetentState(uint8_t state) {
+  if (Config::ENCODER_STEPS_PER_DETENT == 1) {
+    return true;
+  }
+
+  if (Config::ENCODER_STEPS_PER_DETENT == 2) {
+    return state == encoderDetentState || state == static_cast<uint8_t>(encoderDetentState ^ 0x03U);
+  }
+
+  return state == encoderDetentState;
+}
+
 void updateEncoderState() {
   static constexpr int8_t kTransitionTable[16] = {
     0, -1, 1, 0,
@@ -121,8 +134,20 @@ void updateEncoderState() {
     return;
   }
 
-  const uint8_t transition = static_cast<uint8_t>((lastEncoderState << 2) | state);
+  const uint8_t previousState = lastEncoderState;
   lastEncoderState = state;
+
+  // A valid quadrature transition changes exactly one input. If both inputs
+  // change between samples, the direction is ambiguous, so discard the
+  // partial cycle and re-anchor at the next detent instead of carrying a
+  // fractional count into every following click.
+  const uint8_t changedInputs = static_cast<uint8_t>(previousState ^ state);
+  if (changedInputs == 0x03U) {
+    encoderStepAccumulator = 0;
+    return;
+  }
+
+  const uint8_t transition = static_cast<uint8_t>((previousState << 2) | state);
   encoderStepAccumulator += kTransitionTable[transition];
 
   if (encoderStepAccumulator >= Config::ENCODER_STEPS_PER_DETENT) {
@@ -131,6 +156,11 @@ void updateEncoderState() {
   } else if (encoderStepAccumulator <= -Config::ENCODER_STEPS_PER_DETENT) {
     encoderStepAccumulator = 0;
     enqueueEncoderClick(-1);
+  } else if (isEncoderDetentState(state)) {
+    // Contact bounce or a skipped intermediate state may return to the
+    // mechanical detent before a complete Gray-code cycle was observed.
+    // Treat that detent as a clean boundary so the next click starts at zero.
+    encoderStepAccumulator = 0;
   }
 }
 
@@ -165,7 +195,11 @@ void beginKeyScanner() {
   pinMode(Config::ENCODER_B_PIN, INPUT_PULLUP);
   pinMode(Config::ENCODER_SWITCH_PIN, INPUT_PULLUP);
 
-  lastEncoderState = readEncoderState();
+  encoderDetentState = readEncoderState();
+  lastEncoderState = encoderDetentState;
+  encoderStepAccumulator = 0;
+  pendingEncoderClicks = 0;
+  activeEncoderPulseMask = 0;
   stableInputMask = readRawInputMask();
   stableMask = stableInputMask;
   oldStableMask = stableMask;

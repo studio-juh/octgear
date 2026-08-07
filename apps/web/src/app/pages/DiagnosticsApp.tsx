@@ -32,6 +32,13 @@ export function DiagnosticsApp() {
     Array.from({ length: product.hardware.keyCount }, () => false),
   );
   const [lastKey, setLastKey] = useState<number | null>(null);
+  const [encoderCounts, setEncoderCounts] = useState({ counterclockwise: 0, clockwise: 0 });
+  const encoderCounterclockwiseIndex = product.hardware.encoder.controls.find(
+    (control) => control.id === "enc-ccw",
+  )?.bit;
+  const encoderClockwiseIndex = product.hardware.encoder.controls.find(
+    (control) => control.id === "enc-cw",
+  )?.bit;
   const connected = deviceState !== null && transport.connected;
   const testedCount = testedKeys.filter(Boolean).length;
   const allKeysPassed = testedCount === testedKeys.length;
@@ -65,8 +72,19 @@ export function DiagnosticsApp() {
       setTestedKeys((current) =>
         current.map((tested, index) => (index === event.keyIndex ? true : tested)),
       );
+      if (event.keyIndex === encoderCounterclockwiseIndex) {
+        setEncoderCounts((current) => ({
+          ...current,
+          counterclockwise: current.counterclockwise + 1,
+        }));
+      } else if (event.keyIndex === encoderClockwiseIndex) {
+        setEncoderCounts((current) => ({
+          ...current,
+          clockwise: current.clockwise + 1,
+        }));
+      }
     });
-  }, [connected, deviceState, transport]);
+  }, [connected, deviceState, encoderClockwiseIndex, encoderCounterclockwiseIndex, transport]);
 
   async function connectDevice() {
     try {
@@ -77,6 +95,7 @@ export function DiagnosticsApp() {
       setDeviceState(state);
       setTestedKeys(Array.from({ length: state.keyCount }, () => false));
       setLastKey(null);
+      setEncoderCounts({ counterclockwise: 0, clockwise: 0 });
       await runReportTest();
       await runStorageTest();
       setStatus(null);
@@ -131,6 +150,7 @@ export function DiagnosticsApp() {
       ),
     );
     setLastKey(null);
+    setEncoderCounts({ counterclockwise: 0, clockwise: 0 });
   }
 
   return (
@@ -203,6 +223,23 @@ export function DiagnosticsApp() {
             <span>{lastKey === null ? t.diagnostics.noLastKey : t.diagnostics.lastKey(lastKey + 1)}</span>
           </div>
 
+          <div className="diagnostics-encoder-counter">
+            <div className="diagnostics-encoder-counter-copy">
+              <strong>{t.diagnostics.encoderCounterTitle}</strong>
+              <span>{t.diagnostics.encoderCounterHelp}</span>
+            </div>
+            <dl>
+              <div>
+                <dt>{t.diagnostics.encoderCounterclockwise}</dt>
+                <dd>{encoderCounts.counterclockwise}</dd>
+              </div>
+              <div>
+                <dt>{t.diagnostics.encoderClockwise}</dt>
+                <dd>{encoderCounts.clockwise}</dd>
+              </div>
+            </dl>
+          </div>
+
           <p className="diagnostics-warning">{t.diagnostics.storageWriteWarning}</p>
 
           <div className="diagnostic-key-grid">
@@ -211,7 +248,7 @@ export function DiagnosticsApp() {
                 className={tested ? "diagnostic-key passed" : "diagnostic-key"}
                 key={index}
               >
-                <span>{t.keymap.key(index + 1)}</span>
+                <span>{product.hardware.controls[index]?.label ?? t.keymap.key(index + 1)}</span>
                 <strong>{tested ? t.diagnostics.checked : t.diagnostics.unchecked}</strong>
               </div>
             ))}

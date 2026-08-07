@@ -119,6 +119,10 @@
     grid-template-columns: 1fr;
   }
 
+  .diagnostics-encoder-counter {
+    grid-template-columns: 1fr;
+  }
+
   .hardware-panel,
   .remap-panel,
   .editor-panel,

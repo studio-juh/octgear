@@ -77,6 +77,7 @@ WebHIDからBOOTSELへ移行できない場合は、boardのBOOTSEL操作を使�
 - BrowserのWebHID support
 - OctGearへの接続
 - 物理キー8個、Encoder CCW / CW / SWのevent
+- Encoder CCW / CWの累積検出回数
 - Vendor reportのrequest / response
 - Firmware-reported layer / key count
 - Keymap storageのwrite / read / restore
@@ -85,9 +86,10 @@ WebHIDからBOOTSELへ移行できない場合は、boardのBOOTSEL操作を使�
 
 1. Connectして、firmwareが`keyCount = 11`を返すことを確認します。
 2. 8キーとencoder 3操作をそれぞれ入力し、全controlが記録されることを確認します。
-3. Diagnostic report testを実行します。
-4. 必要な個体だけStorage testを実行します。
-5. Disconnectして通常HID入力へ戻ることを確認します。
+3. Reset後、Encoderを各方向へゆっくり20ノッチ回し、CCW / CW counterがそれぞれ20増えることを確認します。
+4. Diagnostic report testを実行します。
+5. 必要な個体だけStorage testを実行します。
+6. Disconnectして通常HID入力へ戻ることを確認します。
 
 Diagnostic report testは固定nonceを送り、`RPT` signature、protocol version、echoを検証します。
 

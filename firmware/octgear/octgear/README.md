@@ -51,7 +51,7 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 | `CONFIG_RESPONSE_READY_RETRIES` | `20` | Config input reportのHID ready retry |
 | `CONFIG_RESPONSE_RETRY_DELAY_US` | `100` | Retry間隔 |
 
-Input latencyを調整する場合はdebounceとidle sleepの両方を考慮します。Encoder detentは`config.h`ではなくhardware profileの`stepsPerDetent`で調整します。
+Input latencyを調整する場合はdebounceとidle sleepの両方を考慮します。Encoder detentは`config.h`ではなくhardware profileの`stepsPerDetent`で調整します。Encoder A/Bで両bitが同時に変わる不正遷移やdetentへ戻った不完全なcycleは破棄し、次のdetentを新しい起点として再同期します。
 
 ## Build Invariants
 
