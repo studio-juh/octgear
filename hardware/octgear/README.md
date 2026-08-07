@@ -47,6 +47,6 @@ PCB preview、Gerber、STLはgenerator対象ではありません。製造デー
 - Status表示は外付けWS2812Bへ出力し、対応boardではonboard WS2812にもミラーする
 - Case Middleは側面LEDの光を外周へ通す構造のため、透明または半透明の造形素材を推奨する
 - OLEDは使用しない
-- Key 5は通常inputとrescue boot triggerを兼用
+- Key 4は通常inputとrescue boot triggerを兼用
 
 現在のGPIOとfirmware indexは[`pinout.md`](pinout.md)を参照してください。Data flowと影響範囲は[`docs/architecture.md`](../../docs/architecture.md)にあります。

@@ -132,11 +132,11 @@ Webは最後に読んだkeymap / layer mask / RGB colorsと、編集中の値を
 
 ### Rescue Boot
 
-起動時にKey 5がLOWならread-onlyの`OCTGEAR` MSCとSerial rescueを有効にします。このmodeでは通常HID出力を行わず、LEDを弱い緑で表示します。USBを抜いて通常接続すると終了します。
+起動時にKey 4がLOWならread-onlyの`OCTGEAR` MSCとSerial rescueを有効にします。このmodeでは通常HID出力を行わず、LEDを弱い緑で表示します。USBを抜いて通常接続すると終了します。
 
 ### WebUSB Landing Boot
 
-通常起動中にK1、K5、Encoder SWを1秒間保持すると、通常入力をreleaseして水色のLED acknowledgementを表示し、watchdog scratch 0/1へmagicと反転値を書いてwarm rebootします。`setup()`はflagを消去してからWebUSB interfaceとRemapper landing URLを追加します。この起動では通常HID / WebHIDを維持し、押し続けられたKey 5によるRescue bootは抑止します。flagはFlashへ保存しないため、次の再起動は通常のUSB構成です。
+通常起動中にK1、K5、Encoder SWを1秒間保持すると、通常入力をreleaseして水色のLED acknowledgementを表示し、watchdog scratch 0/1へmagicと反転値を書いてwarm rebootします。`setup()`はflagを消去してからWebUSB interfaceとRemapper landing URLを追加します。この起動では通常HID / WebHIDを維持し、Rescue boot判定を抑止します。Rescue triggerはshortcutに含まれないK4です。flagはFlashへ保存しないため、次の再起動は通常のUSB構成です。
 
 ## Cross-System Contracts
 

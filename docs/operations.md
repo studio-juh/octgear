@@ -114,10 +114,10 @@ Diagnostic report testは固定nonceを送り、`RPT` signature、protocol versi
 
 ## Rescue Boot
 
-WebHIDを利用できない場合、Key 5 bootでoffline rescueを起動できます。
+WebHIDを利用できない場合、Key 4 bootでoffline rescueを起動できます。
 
 1. OctGearをUSBから外します。
-2. Key 5を押したままUSB接続します。
+2. Key 4を押したままUSB接続します。
 3. LEDが弱い緑になり、read-onlyの`OCTGEAR` driveが現れるまで待ちます。
 4. Windowsでは`RESCUE.CMD`を実行します。
 5. `help`でcommand一覧を確認します。
@@ -188,6 +188,6 @@ Keyboard modifier bitmap:
 | 打鍵アニメーションの左右が逆 | Remapperの「LEDテープ方向 / 反転」を切り替える |
 | Encoderのdetent数が違う | profileの`stepsPerDetent`を確認して再build |
 | UF2 driveへ直接書けない | UF2をdownloadしてOSからcopy |
-| `OCTGEAR` driveが出ない | USB接続前からKey 5を保持しているか確認 |
+| `OCTGEAR` driveが出ない | USB接続前からKey 4を保持しているか確認 |
 | WebUSBの接続通知が出ない | desktop Chromiumの通知対応を確認し、出ない場合はRemapper URLを直接開く |
 | Rescue portを自動検出できない | OSのserial port権限とmanual selectionを確認 |

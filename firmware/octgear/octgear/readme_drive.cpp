@@ -34,7 +34,7 @@ constexpr char README_TEXT[] =
   "Web設定が使えない場合だけ RESCUE.CMD を実行します。\r\n"
   "救済プロンプトでは help でコマンド一覧、exit で終了できます。\r\n"
   "\r\n"
-  "このドライブを表示するには、Key 5を押したままUSBに接続します。\r\n"
+  "このドライブを表示するには、Key 4を押したままUSBに接続します。\r\n"
   "レスキューモードを終了するには、USBを抜いて通常どおり接続し直します。\r\n";
 
 constexpr char README_EN_TEXT[] =
@@ -55,7 +55,7 @@ constexpr char README_EN_TEXT[] =
   "Run RESCUE.CMD only when the web remapper is not available.\r\n"
   "At the rescue prompt, type help to see commands, or exit to close it.\r\n"
   "\r\n"
-  "To show this drive, hold Key 5 while plugging in USB.\r\n"
+  "To show this drive, hold Key 4 while plugging in USB.\r\n"
   "To leave rescue mode, unplug USB and reconnect normally.\r\n";
 
 constexpr char URL_TEXT[] =

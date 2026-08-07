@@ -26,7 +26,7 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 
 ## Setup And Loop
 
-`setup()`はLED、keymap、scannerを初期化し、watchdog scratchのWebUSB landing flag、Key 5のRescue boot状態の順に判定してからUSB deviceを開始します。Landing flagがある起動ではRescue判定を抑止します。
+`setup()`はLED、keymap、scannerを初期化し、watchdog scratchのWebUSB landing flag、Key 4のRescue boot状態の順に判定してからUSB deviceを開始します。Landing flagがある起動ではRescue判定を抑止します。
 
 `loop()`はscanner、通常HID送信、config report、Serial rescue、status LEDを順に更新します。Remapperまたはrescueがactiveな間は通常HID出力を止め、長いscan sleepへ切り替えます。PCがUSBをサスペンドしている間は外付け・内蔵status LEDを消灯し、resume後は現在Layerの表示へ戻します。
 

@@ -24,7 +24,7 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 - 頒布キット向けの組み立て・Firmware導入・動作確認ガイドと製造データ配布
 - WebHIDからのBOOTSEL移行と、同梱UF2の更新
 - K1 + K5 + Encoder SWの1秒長押しによる、一時的なWebUSB Remapper案内
-- Key 5起動によるREADME drive / Serial rescue
+- Key 4起動によるREADME drive / Serial rescue
 
 ## Web Pages
 
@@ -92,7 +92,7 @@ scripts/                   環境構築、生成、firmware build
 
 通常起動中にK1、K5、Encoder SWを同時に1秒間押すと、LEDが水色に光って再起動し、その起動だけWebUSBのRemapper案内を有効にします。対応するdesktop Chromiumでは接続通知からRemapperを開けます。次回の再起動では通常のUSB構成へ戻ります。
 
-Key 5を押しながらUSB接続すると、その起動だけread-onlyの`OCTGEAR`ドライブとSerial rescueが有効になります。通常起動では表示されません。詳しい操作と復旧手順は[Operations](docs/operations.md)にあります。
+Key 4を押しながらUSB接続すると、その起動だけread-onlyの`OCTGEAR`ドライブとSerial rescueが有効になります。通常起動では表示されません。詳しい操作と復旧手順は[Operations](docs/operations.md)にあります。
 
 ## USB Identity
 

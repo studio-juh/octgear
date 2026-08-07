@@ -13,8 +13,8 @@
 | Key 1 | 0 | Row 1 / Column 1 | Matrix Row 1 / Column 1 |
 | Key 2 | 1 | Row 1 / Column 2 | Matrix Row 1 / Column 2 |
 | Key 3 | 2 | Row 1 / Column 3 | Matrix Row 1 / Column 3 |
-| Key 4 | 3 | Row 1 / Column 4 | Matrix Row 1 / Column 4 |
-| Key 5 | 4 | Row 2 / Column 1 | Matrix Row 2 / Column 1 / README drive trigger |
+| Key 4 | 3 | Row 1 / Column 4 | Matrix Row 1 / Column 4 / README drive trigger |
+| Key 5 | 4 | Row 2 / Column 1 | Matrix Row 2 / Column 1 |
 | Key 6 | 5 | Row 2 / Column 2 | Matrix Row 2 / Column 2 |
 | Key 7 | 6 | Row 2 / Column 3 | Matrix Row 2 / Column 3 |
 | Key 8 | 7 | Row 2 / Column 4 | Matrix Row 2 / Column 4 |

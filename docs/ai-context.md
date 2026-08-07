@@ -64,7 +64,7 @@ Webが300 ms間隔でheartbeatを送ります。Firmwareは最後のheartbeatか
 
 ### WebUSB Landing Boot
 
-通常起動中にK1、K5、Encoder SWを1秒間同時押しすると、watchdog scratchへ1回限りのboot flagを書いてwarm rebootします。次の起動はAdafruit TinyUSBのWebUSB landing descriptorでRemapper URLを公開し、flagを即座に消去します。通常HIDとWebHIDは維持し、このbootでは押し続けられたKey 5によるRescue判定を抑止します。次回の再起動では通常のUSB構成へ戻ります。
+通常起動中にK1、K5、Encoder SWを1秒間同時押しすると、watchdog scratchへ1回限りのboot flagを書いてwarm rebootします。次の起動はAdafruit TinyUSBのWebUSB landing descriptorでRemapper URLを公開し、flagを即座に消去します。通常HIDとWebHIDは維持し、このbootではK4のRescue判定を抑止します。次回の再起動では通常のUSB構成へ戻ります。
 
 ### USB And LED States
 
@@ -80,7 +80,7 @@ PCのresume後は現在Layerの表示へ戻ります。Layer表示は全灯ま�
 
 ### Rescue
 
-Key 5を押しながらUSB接続すると、その起動だけread-onlyの`OCTGEAR` MSCと115200 baudのSerial rescueを有効にします。通常HIDは出力しません。
+Key 4を押しながらUSB接続すると、その起動だけread-onlyの`OCTGEAR` MSCと115200 baudのSerial rescueを有効にします。通常HIDは出力しません。
 
 ## Cross-System Invariants
 
