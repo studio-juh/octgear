@@ -62,8 +62,8 @@ Bareboneへこのsetを加えた場合の材料原価は約`1,212円 / 台`で�
 
 | Part | Volume |
 | --- | ---: |
-| `octgear-encoder-knob.stl` | `2.49 cm³` |
-| `octgear-case-top.stl` | `12.60 cm³` |
+| `octgear-encoder-knob.stl` | `2.44 cm³` |
+| `octgear-case-top.stl` | `12.63 cm³` |
 | `octgear-case-bottom.stl` | `13.20 cm³` |
 | `octgear-led-diffuser.stl` | `1.18 cm³` |
 | **Total** | **`29.47 cm³`** |
