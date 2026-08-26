@@ -63,7 +63,7 @@ export const octgearProduct = {
         width: "21%",
       },
     },
-    translucentStlFiles: ["octgear-case-middle.stl"],
+    translucentStlFiles: ["octgear-led-diffuser.stl"],
     hardwareLicenseUrl:
       "https://github.com/studio-juh/octgear/blob/main/HARDWARE-LICENSE.md",
   },

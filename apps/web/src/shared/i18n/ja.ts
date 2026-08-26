@@ -87,7 +87,7 @@ export const ja = {
     ],
     optionalToolsTitle: "あると良いもの",
     optionalToolItems: [
-      "スイッチプラー",
+      "キースイッチプラー",
       "ペンチ（ロータリーエンコーダーのナット締めに使用）",
     ],
     photoPlaceholder: (index: number) =>
@@ -156,11 +156,11 @@ export const ja = {
         title: "ケース上面",
         quantity: "1",
         description:
-          "8個のSwitch開口とEncoder軸の穴がある上面部品です。造形面と開口部を確認します。",
+          "8個のキースイッチ用開口とEncoder軸の穴がある上面部品です。造形面と開口部を確認します。",
         photo: {
           file: "octgear-case-top.jpg",
           title: "ケース上面",
-          alt: "8個のSwitch開口とEncoder軸穴があるOctGearのケース上面の写真",
+          alt: "8個のキースイッチ用開口とEncoder軸穴があるOctGearのケース上面の写真",
         },
       },
       {
@@ -219,13 +219,13 @@ export const ja = {
         },
       },
       {
-        title: "Key Switch",
+        title: "キースイッチ",
         quantity: "8",
         description:
-          "MX互換Switchを使用します。ソケットへ差し込む前に2本の端子が真っすぐか確認します。",
+          "MX互換キースイッチを使用します。ソケットへ差し込む前に2本の端子が真っすぐか確認します。",
         photo: {
           file: "octgear-key-switches.jpg",
-          title: "MX互換Switchの端子",
+          title: "MX互換キースイッチの端子",
           alt: "OctGearで使用する8個のMX互換キースイッチと端子を示す写真",
         },
       },
@@ -257,7 +257,7 @@ export const ja = {
     ledStripLabel: "Side LEDs",
     completedReferenceTitle: "完成例",
     completedReferenceDescription:
-      "組み立て後の外観と、透明／半透明のCase Middleから側面LEDの光が見える状態を確認できます。画像を選択すると拡大表示します。",
+      "組み立て後の外観と、透明／半透明のLED拡散部品から側面LEDの光が見える状態を確認できます。画像を選択すると拡大表示します。",
     completedImages: [
       {
         file: "octgear-completed-top.jpg",
@@ -272,7 +272,7 @@ export const ja = {
     ],
     pcbReferenceTitle: "PCB製造プレビュー",
     pcbReferenceDescription:
-      "Top、配線レイヤー、Bottomを拡大して、スイッチ位置、外形、端子列を確認できます。画像を選択すると原寸で開きます。",
+      "Top、配線レイヤー、Bottomを拡大して、キースイッチ位置、外形、端子列を確認できます。画像を選択すると原寸で開きます。",
     pcbImages: [
       {
         file: "octgear-pcb-top.png",
@@ -349,6 +349,8 @@ export const ja = {
         title: "EC11 Encoderを取り付ける",
         description:
           "加工前・加工後の写真を見比べ、Encoder外周の固定脚を写真と同じ状態へ折り曲げます。PCBへ垂直に差し込み、固定脚とA/C/B/SW端子をはんだ付けします。RP2040に近い側から数えて2番目のPCB端子を、Encoder中央端子とSWのGND側へ配線します。ナットはケースとノブの高さを確認できる状態まで仮締めにします。",
+        note:
+          "作業のコツ: ケース上面へキースイッチを1〜2個だけ先に取り付け、そのキースイッチをソケットへ差し込んでPCBを仮固定すると、Encoderの位置合わせとはんだ付けがしやすくなります。キースイッチ端子が曲がらないよう、抵抗がある場合は無理に押し込まないでください。",
         warning:
           "注意: RP2040に近い側から2番目の端子は、RP2040の出力へ直結された仮想GNDです。Encoder中央端子とSWのGNDとして使用できますが、LEDのGNDには使用できません。LEDを接続するとRP2040出力の電流容量を超えます。",
         checks: [
@@ -415,21 +417,6 @@ export const ja = {
         },
       },
       {
-        title: "ケース上面とSwitchを取り付ける",
-        description:
-          "ケース上面へ四隅のSwitchから固定し、端子を真っすぐにしてソケットへ差し込みます。抵抗が強い場合は押し込まず、端子の曲がりを確認します。",
-        checks: [
-          "Switch端子が折れたり、下へ潜り込んだりしていない",
-          "ケース上面とSwitchが浮かず、全キーを軽く押せる",
-          "一度大きく曲がった端子は無理に再使用していない",
-        ],
-        photo: {
-          file: "octgear-switches-in-case-top.jpg",
-          title: "ケース上面へ取り付けたSwitch",
-          alt: "OctGearのケース上面へ8個のキースイッチを取り付けた写真",
-        },
-      },
-      {
         title: "ケースを閉じる前に通電確認する",
         description:
           "耐熱・非導電面に置いてUSBを接続し、異臭や異常発熱がないことを確認します。Firmwareを書き込み、Diagnosticsで8キー、Encoder 3操作、LEDを確認します。",
@@ -447,9 +434,9 @@ export const ja = {
       {
         title: "PCBとLEDをケースへ収める",
         description:
-          "Bottom、光を通すMiddle、Topの順を確認します。LEDテープは本体から少し離した側面位置へ配置し、配線を外周、ねじ穴、Switchで挟まないよう収めます。",
+          "ケース底面へLED拡散部品とPCBを収め、ケース上面の向きを確認します。LEDテープは本体から少し離した側面位置へ配置し、配線を外周、ねじ穴、キースイッチで挟まないよう収めます。",
         checks: [
-          "Case Middleに透明または半透明の素材を使用している",
+          "LED拡散部品に透明または半透明の素材を使用している",
           "LED 1〜4が想定する左から右の順に並んでいる",
           "PCBや配線をケースで挟んでいない",
         ],
@@ -457,6 +444,21 @@ export const ja = {
           file: "octgear-led-strip-case-placement.jpg",
           title: "ケース内のLEDテープ配置",
           alt: "OctGearのケース内でメインPCBに沿って4灯のLEDテープを配置した写真",
+        },
+      },
+      {
+        title: "ケース上面とキースイッチを取り付ける",
+        description:
+          "ケース上面へ四隅のキースイッチから固定し、端子を真っすぐにしてソケットへ差し込みます。抵抗が強い場合は押し込まず、端子の曲がりを確認します。",
+        checks: [
+          "キースイッチ端子が折れたり、下へ潜り込んだりしていない",
+          "ケース上面とキースイッチが浮かず、全キーを軽く押せる",
+          "一度大きく曲がった端子は無理に再使用していない",
+        ],
+        photo: {
+          file: "octgear-switches-in-case-top.jpg",
+          title: "ケース上面へ取り付けたキースイッチ",
+          alt: "OctGearのケース上面へ8個のキースイッチを取り付けた写真",
         },
       },
       {
@@ -478,17 +480,17 @@ export const ja = {
     downloadsKicker: "Manufacturing Files",
     downloadsTitle: "製造・3Dプリントデータ",
     downloadsDescription:
-      "PCB発注用Gerberと、ケース3層・エンコーダノブのSTLをダウンロードできます。ファイル名はOctGearの部品名へ統一しています。",
-    stlViewerTitle: "ケースとノブを3Dで確認",
+      "PCB発注用Gerberと、ケース上面・底面、LED拡散部品、エンコーダノブ、ゴム足固定ジグのSTLをダウンロードできます。ファイル名はOctGearの部品名へ統一しています。",
+    stlViewerTitle: "ケース部品、ノブ、ジグを3Dで確認",
     stlViewerDescription:
       "モデルを切り替え、ドラッグで回転しながら形状と穴位置を確認できます。STLはブラウザ内だけで処理します。",
     stlViewerLoading: "STLを読み込み中",
     stlViewerError: "3D表示を読み込めませんでした。STLを直接ダウンロードしてください。",
     stlViewerReset: "表示をリセット",
     stlViewerInstructions: "ドラッグ: 回転 / ホイール・ピンチ: ズーム",
-    middleCaseMaterialTitle: "Case Middleは透明／半透明素材を推奨",
+    middleCaseMaterialTitle: "LED拡散部品は透明／半透明素材を推奨",
     middleCaseMaterialDescription:
-      "Middle層は側面LEDの光を外周へ通すライトガイドとして機能します。透明または乳白色などの半透明フィラメント／レジンを使用すると、側面からLayer色とアニメーションが見える構造です。",
+      "LED拡散部品は側面LEDの光を外周へ通すライトガイドとして機能します。透明または乳白色などの半透明フィラメント／レジンを使用すると、側面からLayer色とアニメーションが見える構造です。",
     downloads: [
       {
         format: "ZIP",
@@ -498,27 +500,33 @@ export const ja = {
       },
       {
         format: "STL",
-        title: "Case Top",
-        description: "ケース上層",
+        title: "ケース上面",
+        description: "キースイッチを固定するケース上面",
         file: "octgear-case-top.stl",
       },
       {
         format: "STL",
-        title: "Case Middle",
-        description: "LED光を通す中間層／透明・半透明推奨",
-        file: "octgear-case-middle.stl",
+        title: "ケース底面",
+        description: "PCB、配線、固定ナットを収めるケース底面",
+        file: "octgear-case-bottom.stl",
       },
       {
         format: "STL",
-        title: "Case Bottom",
-        description: "ケース下層",
-        file: "octgear-case-bottom.stl",
+        title: "LED拡散部品",
+        description: "側面LED光を通す部品／透明・半透明推奨",
+        file: "octgear-led-diffuser.stl",
       },
       {
         format: "STL",
         title: "Encoder Knob",
         description: "D軸ロータリーエンコーダ用ノブ",
         file: "octgear-encoder-knob.stl",
+      },
+      {
+        format: "STL",
+        title: "ゴム足固定ジグ",
+        description: "ゴム足の位置決め用。完成品には組み込まない",
+        file: "octgear-rubber-foot-fixing-jig.stl",
       },
     ],
     downloadAction: "Download",
@@ -575,12 +583,12 @@ export const ja = {
       {
         problem: "特定のキーだけ反応しない",
         solution:
-          "USBを外し、スイッチ端子の曲がり、差し込み不足、はんだ接合を確認します。ダイオードなしMatrixのため、矩形になる複数キー同時押しは制限があります。",
+          "USBを外し、キースイッチ端子の曲がり、差し込み不足、はんだ接合を確認します。ダイオードなしMatrixのため、矩形になる複数キー同時押しは制限があります。",
       },
       {
         problem: "同じ行または列のキーがまとめて反応しない",
         solution:
-          "USBを外し、該当するMatrix Row／ColumnとRP2040-Zeroの端子を確認します。個別Switchより共通信号の接合不良やbridgeを優先して調べます。",
+          "USBを外し、該当するMatrix Row／ColumnとRP2040-Zeroの端子を確認します。個別キースイッチより共通信号の接合不良やbridgeを優先して調べます。",
       },
       {
         problem: "エンコーダの回転方向が逆",

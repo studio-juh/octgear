@@ -62,15 +62,15 @@ Bareboneへこのsetを加えた場合の材料原価は約`1,212円 / 台`で�
 
 | Part | Volume |
 | --- | ---: |
-| `Dknob.stl` | `2.49 cm³` |
-| `t.stl` | `12.56 cm³` |
-| `b.stl` | `9.96 cm³` |
-| `m.stl` | `4.83 cm³` |
-| **Total** | **`29.84 cm³`** |
+| `octgear-encoder-knob.stl` | `2.49 cm³` |
+| `octgear-case-top.stl` | `12.60 cm³` |
+| `octgear-case-bottom.stl` | `13.20 cm³` |
+| `octgear-led-diffuser.stl` | `1.18 cm³` |
+| **Total** | **`29.47 cm³`** |
 
 PLAの密度を`1.24 g/cm³`とすると、100%充填相当で約`37g`、材料費は約`74円`です。実際の使用量はwall、infill、support、skirtなどのslicer設定で変わるため、量産条件を決めた後はslicer表示の重量へ置き換えます。
 
-MiddleはLEDの光を拡散させるため、NaturalまたはTranslucentのPLA / PETGを使用します。Top、Bottom、Knobと異なるfilamentを使う場合、1台あたりの消費原価とは別に複数spoolの初期購入費が必要です。
+LED拡散部品はLEDの光を拡散させるため、NaturalまたはTranslucentのPLA / PETGを使用します。ケース上面、底面、ノブと異なるfilamentを使う場合、1台あたりの消費原価とは別に複数spoolの初期購入費が必要です。`octgear-rubber-foot-fixing-jig.stl`の体積は`3.95 cm³`ですが、製品へ組み込まない製造治具のため1台あたりの材料原価には含めません。
 
 ## Packaging
 

@@ -89,7 +89,7 @@ export const en: typeof ja = {
     ],
     optionalToolsTitle: "Helpful extras",
     optionalToolItems: [
-      "Switch puller",
+      "Key-switch puller",
       "Pliers for tightening the rotary encoder nut",
     ],
     photoPlaceholder: (index) =>
@@ -125,7 +125,7 @@ export const en: typeof ja = {
         title: "Hot-swap sockets",
         quantity: "8",
         description:
-          "These mount to Key 1–8 on the PCB back. Identify the switch contact and two solder pads.",
+          "These mount to Key 1–8 on the PCB back. Identify the key-switch contact and two solder pads.",
         photo: {
           file: "octgear-hot-swap-sockets.jpg",
           title: "Correct socket orientation and contacts",
@@ -158,11 +158,11 @@ export const en: typeof ja = {
         title: "Case Top",
         quantity: "1",
         description:
-          "This top part has eight switch openings and the encoder shaft hole. Inspect the printed surface and openings.",
+          "This top part has eight key-switch openings and the encoder shaft hole. Inspect the printed surface and openings.",
         photo: {
           file: "octgear-case-top.jpg",
           title: "Case Top",
-          alt: "OctGear Case Top with eight switch openings and the encoder shaft hole",
+          alt: "OctGear Case Top with eight key-switch openings and the encoder shaft hole",
         },
       },
       {
@@ -224,10 +224,10 @@ export const en: typeof ja = {
         title: "Key switches",
         quantity: "8",
         description:
-          "Use MX-compatible switches. Check that both pins are straight before inserting each switch into its socket.",
+          "Use MX-compatible key switches. Check that both pins are straight before inserting each key switch into its socket.",
         photo: {
           file: "octgear-key-switches.jpg",
-          title: "MX-compatible switch pins",
+          title: "MX-compatible key-switch pins",
           alt: "Eight MX-compatible key switches and their pins for OctGear",
         },
       },
@@ -259,7 +259,7 @@ export const en: typeof ja = {
     ledStripLabel: "Side LEDs",
     completedReferenceTitle: "Completed build",
     completedReferenceDescription:
-      "See the assembled device and the side LED glow through the transparent or translucent Case Middle. Select an image to enlarge it.",
+      "See the assembled device and the side LED glow through the transparent or translucent LED diffuser. Select an image to enlarge it.",
     completedImages: [
       {
         file: "octgear-completed-top.jpg",
@@ -274,7 +274,7 @@ export const en: typeof ja = {
     ],
     pcbReferenceTitle: "PCB manufacturing previews",
     pcbReferenceDescription:
-      "Open the Top, routing layers, or Bottom preview at full size to inspect switch positions, board outline, and terminal rows.",
+      "Open the Top, routing layers, or Bottom preview at full size to inspect key-switch positions, board outline, and terminal rows.",
     pcbImages: [
       {
         file: "octgear-pcb-top.png",
@@ -351,6 +351,8 @@ export const en: typeof ja = {
         title: "Install the EC11 encoder",
         description:
           "Compare the before and after photos and bend the encoder's outer mounting tabs to match. Insert the encoder vertically, then solder the mounting tabs and A/C/B/SW pins. Connect the second PCB terminal counted from the RP2040 side to the encoder center terminal and the ground side of SW. Leave the nut lightly tightened until the case and knob height can be checked.",
+        note:
+          "Tip: Install only one or two key switches in the Case Top first, then insert them into their sockets to hold the PCB temporarily. This makes encoder alignment and soldering easier. Do not force a key switch if there is resistance, as its pins may bend.",
         warning:
           "Caution: The second terminal from the RP2040 side is a virtual ground connected directly to an RP2040 output. It may be used for the encoder center terminal and SW ground, but it must not be used as LED ground. Connecting LEDs would exceed the RP2040 output current capacity.",
         checks: [
@@ -417,21 +419,6 @@ export const en: typeof ja = {
         },
       },
       {
-        title: "Install the Case Top and switches",
-        description:
-          "Secure switches in the Case Top starting at its corners, straighten each pin, and insert it into the socket. If resistance is high, stop and inspect the pins instead of forcing it.",
-        checks: [
-          "No switch pin is folded or trapped underneath",
-          "The Case Top and switches sit flat and every key moves freely",
-          "A severely bent pin is not forced back into service",
-        ],
-        photo: {
-          file: "octgear-switches-in-case-top.jpg",
-          title: "Switches installed in the Case Top",
-          alt: "Eight key switches installed in the OctGear Case Top",
-        },
-      },
-      {
         title: "Power-test before closing the case",
         description:
           "Place the assembly on a heat-resistant, nonconductive surface and connect USB. Check for odor or abnormal heat, install firmware, and use Diagnostics to test eight keys, three encoder actions, and the LEDs.",
@@ -449,9 +436,9 @@ export const en: typeof ja = {
       {
         title: "Place the PCB and LEDs in the case",
         description:
-          "Confirm the Bottom, light-transmitting Middle, and Top order. Position the LED strip slightly away from the body along the side, and keep wires clear of the edge, screw holes, and switches.",
+          "Place the LED diffuser and PCB in the Case Bottom, then confirm the Case Top orientation. Position the LED strip slightly away from the body along the side, and keep wires clear of the edge, screw holes, and key switches.",
         checks: [
-          "Case Middle uses a transparent or translucent material",
+          "The LED diffuser uses a transparent or translucent material",
           "LED 1–4 follow the intended left-to-right order",
           "The case does not pinch the PCB or wiring",
         ],
@@ -459,6 +446,21 @@ export const en: typeof ja = {
           file: "octgear-led-strip-case-placement.jpg",
           title: "LED strip placement in the case",
           alt: "Four-pixel LED strip placed along the OctGear main PCB inside the case",
+        },
+      },
+      {
+        title: "Install the Case Top and key switches",
+        description:
+          "Secure key switches in the Case Top starting at its corners, straighten each pin, and insert it into the socket. If resistance is high, stop and inspect the pins instead of forcing it.",
+        checks: [
+          "No key-switch pin is folded or trapped underneath",
+          "The Case Top and key switches sit flat and every key moves freely",
+          "A severely bent pin is not forced back into service",
+        ],
+        photo: {
+          file: "octgear-switches-in-case-top.jpg",
+          title: "Key switches installed in the Case Top",
+          alt: "Eight key switches installed in the OctGear Case Top",
         },
       },
       {
@@ -480,17 +482,17 @@ export const en: typeof ja = {
     downloadsKicker: "Manufacturing Files",
     downloadsTitle: "Manufacturing and 3D print files",
     downloadsDescription:
-      "Download the PCB fabrication Gerbers plus STL files for the three case layers and encoder knob. File names use consistent OctGear part names.",
-    stlViewerTitle: "Inspect the case and knob in 3D",
+      "Download the PCB fabrication Gerbers plus STL files for the Case Top, Case Bottom, LED diffuser, encoder knob, and rubber-foot fixing jig. File names use consistent OctGear part names.",
+    stlViewerTitle: "Inspect the case parts, knob, and jig in 3D",
     stlViewerDescription:
       "Switch models and drag to inspect the shape and hole positions. STL data is processed only in your browser.",
     stlViewerLoading: "Loading STL",
     stlViewerError: "The 3D view could not load. Download the STL directly instead.",
     stlViewerReset: "Reset view",
     stlViewerInstructions: "Drag: rotate / Wheel or pinch: zoom",
-    middleCaseMaterialTitle: "Use transparent or translucent material for Case Middle",
+    middleCaseMaterialTitle: "Use transparent or translucent material for the LED diffuser",
     middleCaseMaterialDescription:
-      "The Middle layer acts as a light guide that carries the side LED light to the outer edge. Clear, frosted, or other translucent filament or resin lets layer colors and animations glow through the side.",
+      "The LED diffuser acts as a light guide that carries the side LED light to the outer edge. Clear, frosted, or other translucent filament or resin lets layer colors and animations glow through the side.",
     downloads: [
       {
         format: "ZIP",
@@ -501,26 +503,32 @@ export const en: typeof ja = {
       {
         format: "STL",
         title: "Case Top",
-        description: "Top case layer",
+        description: "Case Top that holds the key switches",
         file: "octgear-case-top.stl",
       },
       {
         format: "STL",
-        title: "Case Middle",
-        description: "Light-transmitting middle layer; clear or translucent recommended",
-        file: "octgear-case-middle.stl",
+        title: "Case Bottom",
+        description: "Case Bottom that holds the PCB, wiring, and mounting nut",
+        file: "octgear-case-bottom.stl",
       },
       {
         format: "STL",
-        title: "Case Bottom",
-        description: "Bottom case layer",
-        file: "octgear-case-bottom.stl",
+        title: "LED Diffuser",
+        description: "Side LED light guide; clear or translucent material recommended",
+        file: "octgear-led-diffuser.stl",
       },
       {
         format: "STL",
         title: "Encoder Knob",
         description: "Knob for a D-shaft rotary encoder",
         file: "octgear-encoder-knob.stl",
+      },
+      {
+        format: "STL",
+        title: "Rubber-foot Fixing Jig",
+        description: "Positions the rubber feet; not installed in the finished device",
+        file: "octgear-rubber-foot-fixing-jig.stl",
       },
     ],
     downloadAction: "Download",
@@ -577,12 +585,12 @@ export const en: typeof ja = {
       {
         problem: "Only one key does not respond",
         solution:
-          "Disconnect USB and inspect the switch terminal, seating, and solder joint. Because the matrix has no diodes, rectangular multi-key combinations are limited.",
+          "Disconnect USB and inspect the key-switch terminal, seating, and solder joint. Because the matrix has no diodes, rectangular multi-key combinations are limited.",
       },
       {
         problem: "A complete row or column of keys does not respond",
         solution:
-          "Disconnect USB and inspect the corresponding matrix Row / Column and RP2040-Zero pin. Check the shared signal joint or a solder bridge before individual switches.",
+          "Disconnect USB and inspect the corresponding matrix Row / Column and RP2040-Zero pin. Check the shared signal joint or a solder bridge before individual key switches.",
       },
       {
         problem: "Encoder direction is reversed",
