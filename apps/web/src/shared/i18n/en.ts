@@ -746,7 +746,7 @@ export const en: typeof ja = {
     statusKeyAnimationBrightness: "Animation brightness limit",
     statusKeyAnimationBrightnessValue: "Animation brightness limit value",
     statusKeyAnimationBrightnessRange: (max) =>
-      `0-${max} / set above LED brightness for contrast`,
+      `0-${max} / highlights the layer color above LED brightness`,
     statusKeyAnimationBrightnessUpdated: (brightness) =>
       `Animation brightness limit: ${brightness}`,
     statusKeyAnimationBrightnessFailed: "Failed to change animation brightness limit",

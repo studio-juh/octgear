@@ -746,7 +746,7 @@ export const ja = {
     statusKeyAnimationBrightness: "アニメーション輝度上限",
     statusKeyAnimationBrightnessValue: "アニメーション輝度上限の数値",
     statusKeyAnimationBrightnessRange: (max: number) =>
-      `0-${max} / LED輝度上限より高くすると強調`,
+      `0-${max} / Layer色をLED輝度上限より明るく強調`,
     statusKeyAnimationBrightnessUpdated: (brightness: number) =>
       `アニメーション輝度上限: ${brightness}`,
     statusKeyAnimationBrightnessFailed: "アニメーション輝度上限の変更に失敗しました",

@@ -20,7 +20,7 @@ RP2040 Arduino coreとAdafruit TinyUSBを使う、現行8キー + rotary encoder
 - 3-sector Flash journalへのkeymap保存
 - UF2 bootloaderへのreboot
 - Key 4 boot時のread-only README drive / Serial rescue。全設定の表示、キーマップとdevice設定の変更、既定値への初期化に対応
-- GPIO 14の外付けWS2812Bへ、USB未mount時は4 pixelsを流れるカラーホイール、PCのUSBサスペンド中は消灯、Remapper接続時は1秒間のカラーホイール、その後は4 pixels同色のlayer状態、rescue時は緑を表示。Layer色は200 msで滑らかに遷移し、通常打鍵は白色、Layer変更を伴うcontrolは切り替え後のLayer色で選択中のアニメーションを重ねる。対応boardでは内蔵WS2812にもlayer色をミラーする。Layer表示と打鍵アニメーションの輝度上限を個別に`0-128`で保存
+- GPIO 14の外付けWS2812Bへ、USB未mount時は4 pixelsを流れるカラーホイール、PCのUSBサスペンド中は消灯、Remapper接続時は1秒間のカラーホイール、その後は4 pixels同色のlayer状態、rescue時は緑を表示。Layer色は200 msで滑らかに遷移し、通常打鍵は現在Layer色、Layer変更を伴うcontrolは切り替え後のLayer色で選択中のアニメーションを重ねる。対応boardでは内蔵WS2812にもlayer色をミラーする。Layer表示と打鍵アニメーションの輝度上限を個別に`0-128`で保存
 
 通常時は低遅延scanを行い、Remapper / Diagnostics heartbeat中は通常HID出力を抑止します。Rescue boot中も通常HID出力は行いません。
 
@@ -52,9 +52,9 @@ Key matrixにはダイオードがありません。複数Row間で2列以上が
 | K3 / K7 | LED 3（pixel 2） |
 | K4 / K8 / Encoder CCW / CW / SW | LED 4（pixel 3、右端） |
 
-選べる効果は次の4種類です。通常controlは白色、Next / Previous / Momentary Layerなど実際にLayer変更を起こしたcontrolは切り替え後のLayer色をハイライト色として使います。同時打鍵は最大8個まで色と強度を合成します。内蔵LEDは打鍵アニメーションを表示せずLayer色を維持します。
+選べる効果は次の4種類です。通常controlは現在Layer色、Next / Previous / Momentary Layerなど実際にLayer変更を起こしたcontrolは切り替え後のLayer色をハイライト色として使います。同時打鍵は最大8個まで色と強度を合成します。内蔵LEDは打鍵アニメーションを表示せずLayer色を維持します。
 
-Layer色はLED輝度上限（既定`32`）、白色または切り替え後のLayer色のハイライトはアニメーション輝度上限（既定`96`）で個別にscaleしてから合成します。アニメーション上限を高くしても光っていないpixelはLayer側の明るさを維持します。
+Layer色はLED輝度上限（既定`32`）、現在または切り替え後のLayer色のハイライトはアニメーション輝度上限（既定`96`）で個別にscaleしてから合成します。アニメーション上限を高くしても光っていないpixelはLayer側の明るさを維持します。
 
 | Effect | Behavior |
 | --- | --- |

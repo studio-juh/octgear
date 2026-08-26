@@ -74,11 +74,6 @@ uint8_t physicalPixelIndex(uint8_t logicalPixel) {
     : logicalPixel;
 }
 
-uint32_t whiteAnimationTargetColor() {
-  const uint8_t brightness = statusKeyAnimationBrightness();
-  return statusPixel.Color(brightness, brightness, brightness);
-}
-
 uint32_t layerAnimationTargetColor(const LayerColor& color) {
   const uint8_t peak = color.red > color.green
     ? (color.red > color.blue ? color.red : color.blue)
@@ -710,7 +705,11 @@ void triggerStatusLedKeyAnimation(uint8_t keyIndex) {
   if (keyIndex >= Config::KEY_COUNT) {
     return;
   }
-  startKeyAnimation(keyIndex, whiteAnimationTargetColor(), true);
+  startKeyAnimation(
+    keyIndex,
+    layerAnimationTargetColor(layerColor(activeLayer())),
+    false
+  );
 }
 
 void triggerStatusLedLayerAnimation(uint8_t keyIndex, uint8_t layer) {

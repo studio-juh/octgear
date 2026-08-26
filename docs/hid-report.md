@@ -97,7 +97,7 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 `statusKeyAnimation`と`SetStatusKeyAnimation`の`animation`は、`0`が波紋、`1`が無効、`2`が全灯フラッシュ、`3`が押下位置中心のスパークです。変更はFlashへ即座に保存します。
 
-`statusKeyAnimationBrightness`と`SetStatusKeyAnimationBrightness`の`brightness`は`0-128`です。既定値は`96`で、通常打鍵の白色ハイライトとLayer変更時の切り替え後Layer色ハイライトに適用します。Layer側の`statusLedBrightness`より高く設定すると、光っていないpixelの明るさを変えずにコントラストを強められます。`0`ではアニメーション効果を選択したままハイライトだけを消せます。変更はFlashへ即座に保存します。
+`statusKeyAnimationBrightness`と`SetStatusKeyAnimationBrightness`の`brightness`は`0-128`です。既定値は`96`で、通常打鍵の現在Layer色ハイライトとLayer変更時の切り替え後Layer色ハイライトに適用します。Layer側の`statusLedBrightness`より高く設定すると、光っていないpixelの明るさを変えずにコントラストを強められます。`0`ではアニメーション効果を選択したままハイライトだけを消せます。変更はFlashへ即座に保存します。
 
 `statusLayerDisplayMode`と`SetStatusLayerDisplayMode`の`mode`は、`0`が全灯、`1`が4灯パターンです。4灯パターンはFirmware Layer 0-7をLED 1から4の順に`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。`1`のpixelには現在Layerの色を使います。変更はFlashへ即座に保存します。
 

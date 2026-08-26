@@ -14,7 +14,7 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 - 外付けWS2812Bのphysical pixel順を標準／反転で設定、Flash保存
 - PCのUSBサスペンド中は外付け・内蔵LEDを消灯
 - 打鍵アニメーションを無効／波紋／フラッシュ／スパークから選択、Flash保存
-- Layer変更を伴うcontrolの打鍵アニメーションは切り替え後のLayer色で表示
+- 通常打鍵は現在Layer色、Layer変更を伴うcontrolは切り替え後のLayer色でアニメーション表示
 - Layer表示と独立した打鍵アニメーション輝度上限でコントラストを調整
 - Encoder回転方向の反転設定とFlash保存
 - PCB v3（Row 1 = GPIO 2）／PCB v2互換（GPIO 0）の切り替えとFlash保存
