@@ -464,6 +464,21 @@ export const en: typeof ja = {
         },
       },
       {
+        title: "Fit the 1/4-inch mounting nut",
+        description:
+          "Before tightening the case screws, press the 1/4-inch mounting nut straight into the hexagonal recess at the center of the Case Bottom. Confirm that it sits fully and does not protrude from the recess.",
+        checks: [
+          "The nut sits level at the bottom of the hexagonal recess",
+          "The threaded hole is centered in the Case Bottom opening",
+          "Pressing in the nut has not cracked or distorted the Case Bottom",
+        ],
+        photo: {
+          file: "octgear-quarter-inch-mount-nut-installed.jpg",
+          title: "1/4-inch mounting nut fitted in the Case Bottom",
+          alt: "A 1/4-inch mounting nut fitted into the central hexagonal recess in the OctGear Case Bottom",
+        },
+      },
+      {
         title: "Finish the screws, feet, keycaps, and knob",
         description:
           "Tighten screws a little at a time in a diagonal pattern and use cushioning tape only if play needs adjustment. Install the rubber feet, keycaps, and knob, then check the feel of every control.",
