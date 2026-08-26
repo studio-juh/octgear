@@ -696,8 +696,13 @@ export const ja = {
   hardware: {
     kicker: "Board Profile",
     title: "Hardware",
-    expandDetails: "詳細を表示",
-    collapseDetails: "詳細を閉じる",
+    settingsTitle: "Hardware設定",
+    openSettings: "設定を開く",
+    closeSettings: "閉じる",
+    summary: (revision: number, keyCount: number) =>
+      `PCB v${revision} / ${keyCount} controls`,
+    profileDetails: "Board詳細",
+    deviceSettings: "変更可能な設定",
     keys: "Keys",
     encoder: "Encoder",
     encoderValue: (pinCount: number) => `${pinCount}pin A/C/B/SW`,

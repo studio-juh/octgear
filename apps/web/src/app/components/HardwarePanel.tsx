@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   MAX_LAYER_TAP_DANCE_TERM_MS,
   MIN_LAYER_TAP_DANCE_TERM_MS,
@@ -34,6 +33,7 @@ type HardwarePanelProps = {
   onStatusLayerDisplayModeChange: (mode: StatusLayerDisplayMode) => void;
   onLayerTapDanceTermChange: (termMs: number) => void;
   onLayerTapDanceTermApply: () => void;
+  onClose: () => void;
 };
 
 export function HardwarePanel({
@@ -60,9 +60,9 @@ export function HardwarePanel({
   onStatusLayerDisplayModeChange,
   onLayerTapDanceTermChange,
   onLayerTapDanceTermApply,
+  onClose,
 }: HardwarePanelProps) {
   const { hardware, usbIdentity } = useProductDefinition();
-  const [detailsExpanded, setDetailsExpanded] = useState(false);
   const brightnessChanged =
     !!deviceState && statusLedBrightness !== deviceState.statusLedBrightness;
   const animationBrightnessChanged =
@@ -72,22 +72,77 @@ export function HardwarePanel({
     !!deviceState && layerTapDanceTermMs !== deviceState.layerTapDanceTermMs;
 
   return (
-    <aside className="panel hardware-panel">
-      <div className="hardware-panel-heading">
+    <>
+      <div className="modal-header">
         <div className="panel-meta">
           <span className="panel-kicker">{t.hardware.kicker}</span>
-          <h2>{t.hardware.title}</h2>
+          <h2 id="hardware-settings-modal-title">{t.hardware.settingsTitle}</h2>
         </div>
-        <button
-          type="button"
-          className="hardware-details-toggle"
-          aria-expanded={detailsExpanded}
-          aria-controls="hardware-profile-details"
-          onClick={() => setDetailsExpanded((expanded) => !expanded)}
-        >
-          {detailsExpanded ? t.hardware.collapseDetails : t.hardware.expandDetails}
-        </button>
+        <div className="hardware-modal-actions">
+          <button
+            type="button"
+            className="ghost-button"
+            autoFocus
+            onClick={onClose}
+          >
+            {t.hardware.closeSettings}
+          </button>
+        </div>
       </div>
+      <div className="hardware-settings-modal-body">
+      <section className="hardware-profile-section" aria-labelledby="hardware-profile-title">
+        <h3 id="hardware-profile-title" className="hardware-settings-section-title">
+          {t.hardware.profileDetails}
+        </h3>
+        <dl id="hardware-profile-details">
+          <div>
+            <dt>{t.hardware.keys}</dt>
+            <dd>{hardware.physicalKeyCount}</dd>
+          </div>
+          <div>
+            <dt>{t.hardware.encoder}</dt>
+            <dd>{t.hardware.encoderValue(hardware.encoder.pinCount)}</dd>
+          </div>
+          <div>
+            <dt>{t.hardware.matrix}</dt>
+            <dd>{t.hardware.matrixValue(
+              deviceState?.matrixRowCount ?? hardware.matrix.rowCount,
+              hardware.matrix.columnCount,
+              hardware.matrix.diodeDirection,
+            )}</dd>
+          </div>
+          <div>
+            <dt>{t.hardware.deviceLayer}</dt>
+            <dd>{deviceState?.activeLayer ?? "-"}</dd>
+          </div>
+          <div>
+            <dt>{t.hardware.reportKeys}</dt>
+            <dd>{deviceState?.keyCount ?? "-"}</dd>
+          </div>
+          <div>
+            <dt>{t.hardware.usbId}</dt>
+            <dd>
+              {formatUsbId(usbIdentity.vendorId)}:{formatUsbId(usbIdentity.productId)}
+            </dd>
+          </div>
+          <div>
+            <dt>{t.hardware.externalRgb}</dt>
+            <dd>
+              {hardware.externalRgbLed
+                ? t.hardware.externalRgbValue(hardware.externalRgbLedCount)
+                : t.hardware.none}
+            </dd>
+          </div>
+          <div>
+            <dt>{t.hardware.oled}</dt>
+            <dd>{t.hardware.none}</dd>
+          </div>
+        </dl>
+      </section>
+      <section className="hardware-controls-section" aria-labelledby="hardware-controls-title">
+        <h3 id="hardware-controls-title" className="hardware-settings-section-title">
+          {t.hardware.deviceSettings}
+        </h3>
       <dl className="hardware-controls">
         <div className="hardware-animation-row">
           <dt>{t.hardware.pcbRevision}</dt>
@@ -322,50 +377,8 @@ export function HardwarePanel({
           </dd>
         </div>
       </dl>
-      <dl id="hardware-profile-details" hidden={!detailsExpanded}>
-        <div>
-          <dt>{t.hardware.keys}</dt>
-          <dd>{hardware.physicalKeyCount}</dd>
-        </div>
-        <div>
-          <dt>{t.hardware.encoder}</dt>
-          <dd>{t.hardware.encoderValue(hardware.encoder.pinCount)}</dd>
-        </div>
-        <div>
-          <dt>{t.hardware.matrix}</dt>
-          <dd>{t.hardware.matrixValue(
-            deviceState?.matrixRowCount ?? hardware.matrix.rowCount,
-            hardware.matrix.columnCount,
-            hardware.matrix.diodeDirection,
-          )}</dd>
-        </div>
-        <div>
-          <dt>{t.hardware.deviceLayer}</dt>
-          <dd>{deviceState?.activeLayer ?? "-"}</dd>
-        </div>
-        <div>
-          <dt>{t.hardware.reportKeys}</dt>
-          <dd>{deviceState?.keyCount ?? "-"}</dd>
-        </div>
-        <div>
-          <dt>{t.hardware.usbId}</dt>
-          <dd>
-            {formatUsbId(usbIdentity.vendorId)}:{formatUsbId(usbIdentity.productId)}
-          </dd>
-        </div>
-        <div>
-          <dt>{t.hardware.externalRgb}</dt>
-          <dd>
-            {hardware.externalRgbLed
-              ? t.hardware.externalRgbValue(hardware.externalRgbLedCount)
-              : t.hardware.none}
-          </dd>
-        </div>
-        <div>
-          <dt>{t.hardware.oled}</dt>
-          <dd>{t.hardware.none}</dd>
-        </div>
-      </dl>
-    </aside>
+      </section>
+      </div>
+    </>
   );
 }

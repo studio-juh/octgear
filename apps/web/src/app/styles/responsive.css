@@ -227,6 +227,15 @@
     flex-direction: column;
   }
 
+  .hardware-settings-modal {
+    max-height: calc(100dvh - 32px);
+  }
+
+  .hardware-modal-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .key-grid,
   .encoder-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -242,6 +251,20 @@
 
   .modifier-selects {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .hardware-settings-modal #hardware-profile-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hardware-settings-modal .hardware-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .hardware-settings-modal .hardware-controls > * {
+    grid-column: 1;
   }
 }
 

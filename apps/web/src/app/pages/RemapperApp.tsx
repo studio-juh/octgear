@@ -101,6 +101,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
   );
   const [activeLayer, setActiveLayer] = useState(0);
   const [selectedKey, setSelectedKey] = useState(0);
+  const [hardwareModalOpen, setHardwareModalOpen] = useState(false);
   const [firmwareModalOpen, setFirmwareModalOpen] = useState(false);
   const [resetModalOpen, setResetModalOpen] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -186,6 +187,44 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
   }, [selectedAssignment]);
 
   useEffect(() => () => cancelScheduledColorPreview(), []);
+
+  useEffect(() => {
+    if (!hardwareModalOpen) {
+      return;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setHardwareModalOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [hardwareModalOpen]);
+
+  useEffect(() => {
+    if (!hardwareModalOpen && !firmwareModalOpen && !resetModalOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    document.body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      const paddingRight = Number.parseFloat(
+        window.getComputedStyle(document.body).paddingRight,
+      ) || 0;
+      document.body.style.paddingRight = `${paddingRight + scrollbarWidth}px`;
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPaddingRight;
+    };
+  }, [firmwareModalOpen, hardwareModalOpen, resetModalOpen]);
 
   useEffect(() => {
     if (!resetModalOpen || resetting) {
@@ -882,34 +921,27 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
 
       <div className="workspace-viewport" data-workspace-scale={workspaceScale}>
         <section className="workspace" aria-label={t.app.workspaceLabel}>
-          <HardwarePanel
-            deviceState={deviceState}
-            encoderDirectionUpdating={encoderDirectionUpdating}
-            pcbRevisionUpdating={pcbRevisionUpdating}
-            statusLedDirectionUpdating={statusLedDirectionUpdating}
-            statusLedBrightness={statusLedBrightness}
-            statusLedBrightnessUpdating={statusLedBrightnessUpdating}
-            statusKeyAnimationUpdating={statusKeyAnimationUpdating}
-            statusKeyAnimationBrightness={statusKeyAnimationBrightness}
-            statusKeyAnimationBrightnessUpdating={statusKeyAnimationBrightnessUpdating}
-            statusLayerDisplayModeUpdating={statusLayerDisplayModeUpdating}
-            layerTapDanceTermMs={layerTapDanceTermMs}
-            layerTapDanceTermUpdating={layerTapDanceTermUpdating}
-            onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
-            onPcbRevisionChange={(revision) => void updatePcbRevision(revision)}
-            onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
-            onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
-            onStatusLedBrightnessApply={() => void applyStatusLedBrightness()}
-            onStatusKeyAnimationChange={(animation) =>
-              void updateStatusKeyAnimation(animation)}
-            onStatusKeyAnimationBrightnessChange={updateStatusKeyAnimationBrightnessDraft}
-            onStatusKeyAnimationBrightnessApply={() =>
-              void applyStatusKeyAnimationBrightness()}
-            onStatusLayerDisplayModeChange={(mode) =>
-              void updateStatusLayerDisplayMode(mode)}
-            onLayerTapDanceTermChange={updateLayerTapDanceTermDraft}
-            onLayerTapDanceTermApply={() => void applyLayerTapDanceTerm()}
-          />
+          <aside className="panel hardware-panel">
+            <div className="hardware-panel-heading">
+              <div className="panel-meta">
+                <span className="panel-kicker">{t.hardware.kicker}</span>
+                <h2>{t.hardware.title}</h2>
+              </div>
+            </div>
+            <p className="hardware-panel-summary">
+              {t.hardware.summary(
+                deviceState?.pcbRevision ?? hardware.pcbRevision.default,
+                deviceState?.keyCount ?? hardware.keyCount,
+              )}
+            </p>
+            <button
+              type="button"
+              className="hardware-settings-trigger"
+              onClick={() => setHardwareModalOpen(true)}
+            >
+              {t.hardware.openSettings}
+            </button>
+          </aside>
           <RemapPanel
             activeLayer={activeLayer}
             selectedKey={selectedKey}
@@ -953,6 +985,52 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       </div>
 
       <SiteFooter />
+
+      {hardwareModalOpen ? (
+        <div
+          className="modal-backdrop"
+          role="presentation"
+          onClick={() => setHardwareModalOpen(false)}
+        >
+          <div
+            className="modal-shell hardware-settings-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="hardware-settings-modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <HardwarePanel
+              deviceState={deviceState}
+              encoderDirectionUpdating={encoderDirectionUpdating}
+              pcbRevisionUpdating={pcbRevisionUpdating}
+              statusLedDirectionUpdating={statusLedDirectionUpdating}
+              statusLedBrightness={statusLedBrightness}
+              statusLedBrightnessUpdating={statusLedBrightnessUpdating}
+              statusKeyAnimationUpdating={statusKeyAnimationUpdating}
+              statusKeyAnimationBrightness={statusKeyAnimationBrightness}
+              statusKeyAnimationBrightnessUpdating={statusKeyAnimationBrightnessUpdating}
+              statusLayerDisplayModeUpdating={statusLayerDisplayModeUpdating}
+              layerTapDanceTermMs={layerTapDanceTermMs}
+              layerTapDanceTermUpdating={layerTapDanceTermUpdating}
+              onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
+              onPcbRevisionChange={(revision) => void updatePcbRevision(revision)}
+              onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
+              onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
+              onStatusLedBrightnessApply={() => void applyStatusLedBrightness()}
+              onStatusKeyAnimationChange={(animation) =>
+                void updateStatusKeyAnimation(animation)}
+              onStatusKeyAnimationBrightnessChange={updateStatusKeyAnimationBrightnessDraft}
+              onStatusKeyAnimationBrightnessApply={() =>
+                void applyStatusKeyAnimationBrightness()}
+              onStatusLayerDisplayModeChange={(mode) =>
+                void updateStatusLayerDisplayMode(mode)}
+              onLayerTapDanceTermChange={updateLayerTapDanceTermDraft}
+              onLayerTapDanceTermApply={() => void applyLayerTapDanceTerm()}
+              onClose={() => setHardwareModalOpen(false)}
+            />
+          </div>
+        </div>
+      ) : null}
 
       {firmwareModalOpen ? (
         <div

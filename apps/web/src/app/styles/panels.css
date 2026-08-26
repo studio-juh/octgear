@@ -109,9 +109,8 @@
 .hardware-panel {
   display: grid;
   align-content: start;
-  align-self: start;
   gap: 12px;
-  min-height: 0;
+  min-height: 334px;
   background: rgba(250, 244, 236, 0.9);
 }
 
@@ -122,30 +121,80 @@
   gap: 12px;
 }
 
-.hardware-details-toggle {
-  min-height: 32px;
-  padding: 0 10px;
-  color: var(--accent-strong);
-  font-size: 12px;
+.hardware-panel-summary {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
   font-weight: 700;
 }
 
-.hardware-panel dl {
+.hardware-settings-trigger {
+  width: 100%;
+  min-height: 38px;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.hardware-settings-modal {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(680px, 100%);
+  max-height: calc(100dvh - 48px);
+  overflow: hidden;
+}
+
+.hardware-settings-modal .modal-header {
+  margin-bottom: 12px;
+}
+
+.hardware-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hardware-settings-modal-body {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.hardware-settings-modal dl {
   display: grid;
   gap: 8px;
   margin: 0;
 }
 
-.hardware-panel .hardware-controls {
+.hardware-settings-modal .hardware-controls {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 12px;
 }
 
-.hardware-panel dl[hidden] {
-  display: none;
+.hardware-profile-section,
+.hardware-controls-section {
+  display: grid;
+  gap: 10px;
 }
 
-.hardware-panel dl div {
+.hardware-controls-section {
+  margin-top: 18px;
+}
+
+.hardware-settings-section-title {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hardware-settings-modal #hardware-profile-details {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hardware-settings-modal dl div {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -155,29 +204,46 @@
   font-size: 13px;
 }
 
-.hardware-panel dl div:last-child {
+.hardware-settings-modal dl div:last-child {
   padding-bottom: 0;
   border-bottom: 0;
 }
 
-.hardware-panel .hardware-controls > :not(.hardware-direction-row) {
+.hardware-settings-modal #hardware-profile-details > div,
+.hardware-settings-modal #hardware-profile-details > div:last-child {
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(78, 61, 38, 0.1);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.46);
+}
+
+.hardware-settings-modal #hardware-profile-details dd {
+  overflow-wrap: anywhere;
+}
+
+.hardware-settings-modal .hardware-controls > :not(.hardware-direction-row) {
   grid-column: 1 / -1;
 }
 
-.hardware-panel dl div.hardware-direction-row {
+.hardware-settings-modal dl div.hardware-direction-row {
   align-items: flex-start;
   flex-direction: column;
   gap: 4px;
 }
 
-.hardware-panel dt,
+.hardware-settings-modal dt,
 .editor-panel label span,
 .assignment-summary dt,
 .firmware-panel span {
   color: var(--text-muted);
 }
 
-.hardware-panel dd {
+.hardware-settings-modal dd {
   margin: 0;
   font-weight: 700;
   text-align: right;
@@ -216,7 +282,7 @@
   font-weight: 600;
 }
 
-.hardware-panel dl div.hardware-brightness-row {
+.hardware-settings-modal dl div.hardware-brightness-row {
   align-items: center;
 }
 

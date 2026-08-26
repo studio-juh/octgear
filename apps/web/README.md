@@ -84,7 +84,7 @@ Save時はdeviceが返したlayer / key countへnormalizeし、assignment、laye
 
 Read左のoverflow menuから初期化を選ぶと、確認dialogを経て全assignment、layer有効状態、RGB色、PCBリビジョン、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、各輝度上限をfirmwareの既定値へ戻し、実機へ保存してからUIを再読込します。
 
-Hardware panelのPCBリビジョンは現行v3（Row 1 = GPIO 2）と旧v2（GPIO 0）だけを選択でき、変更時に即座に実機へ保存・適用します。Encoder方向checkboxも変更時に即座に実機へ保存します。既定値はhardware profileの`encoder.reversed`です。LED輝度上限は`0-128`で編集し、「適用」で実機へ保存します。`0`は消灯、既定値は`32`です。
+WorkspaceのHardware cardはPCB revisionとcontrol数だけを表示し、「設定を開く」からHardware設定モーダルを開きます。モーダル上部にはBoard詳細を常時表示し、その下に変更可能な設定をまとめます。PCBリビジョンは現行v3（Row 1 = GPIO 2）と旧v2（GPIO 0）だけを選択でき、変更時に即座に実機へ保存・適用します。Encoder方向checkboxも変更時に即座に実機へ保存します。既定値はhardware profileの`encoder.reversed`です。LED輝度上限は`0-128`で編集し、「適用」で実機へ保存します。`0`は消灯、既定値は`32`です。
 
 LEDテープ方向checkboxも変更時に即座に実機へ保存します。標準順は盤面左端のLED 1をphysical pixel 0へ対応させ、反転時は最後のphysical pixelへ対応させます。既定値はhardware profileの`externalRgbLedReversed`です。
 
@@ -96,7 +96,7 @@ Layer表示のプルダウンは、Layer色の全灯と4灯パターンを切り
 
 ## Remapper Layout
 
-PCとタブレットでは、topbarの「表示倍率」からWorkspaceを`80%`、`90%`、`100%`へ切り替えられます。既定値は`90%`で、選択値はbrowserのlocal storageへ保存します。倍率はHardware、Remap、Editor、keyboard pickerへ適用し、接続操作は読みやすい通常サイズを保ちます。
+PCとタブレットでは、topbarの「表示倍率」からWorkspaceを`80%`、`90%`、`100%`へ切り替えられます。既定値は`90%`で、選択値はbrowserのlocal storageへ保存します。倍率はHardware card、Remap、Editor、keyboard pickerへ適用し、Hardware設定モーダルと接続操作は読みやすい通常サイズを保ちます。
 
 段組みは従来の安定したbreakpointを維持し、`1060px`を超える画面では3列、`901-1060px`では2列、`900px`以下では1列で表示します。`640px`以下ではtouch targetを小さくしないため倍率選択を隠し、Workspaceを`100%`で表示します。
 
