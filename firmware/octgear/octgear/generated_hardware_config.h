@@ -35,7 +35,7 @@ constexpr uint8_t MATRIX_COLUMN_COUNT = 4;
 using KeyMask = uint16_t;
 
 constexpr uint8_t MATRIX_ROW_PINS[MATRIX_ROW_COUNT] = {
-  0, 9
+  2, 9
 };
 
 constexpr uint8_t MATRIX_COLUMN_PINS[MATRIX_COLUMN_COUNT] = {

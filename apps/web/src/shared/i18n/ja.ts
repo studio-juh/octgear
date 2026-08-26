@@ -494,9 +494,9 @@ export const ja = {
     downloads: [
       {
         format: "ZIP",
-        title: "PCB Gerber v2",
+        title: "PCB Gerber v3",
         description: "銅箔、Mask、Silkscreen、外形、Drill",
-        file: "octgear-pcb-gerbers-v2.zip",
+        file: "octgear-pcb-gerbers-v3.zip",
       },
       {
         format: "STL",

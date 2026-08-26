@@ -21,7 +21,7 @@
 
 | Row | Index | GPIO | Mode |
 | --- | ---: | ---: | --- |
-| Row 1 | 0 | 0 | Scan output; selected row is OUTPUT LOW |
+| Row 1 | 0 | 2 | Scan output; selected row is OUTPUT LOW |
 | Row 2 | 1 | 9 | Scan output; selected row is OUTPUT LOW |
 
 | Column | Index | GPIO | Mode |

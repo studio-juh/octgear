@@ -30,7 +30,7 @@
   "matrix": {
     "diodeDirection": "none",
     "rows": [
-      { "id": "row1", "label": "Row 1", "firmwareIndex": 0, "gpio": 0 },
+      { "id": "row1", "label": "Row 1", "firmwareIndex": 0, "gpio": 2 },
       { "id": "row2", "label": "Row 2", "firmwareIndex": 1, "gpio": 9 }
     ],
     "columns": [

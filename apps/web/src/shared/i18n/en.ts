@@ -496,9 +496,9 @@ export const en: typeof ja = {
     downloads: [
       {
         format: "ZIP",
-        title: "PCB Gerber v2",
+        title: "PCB Gerber v3",
         description: "Copper, mask, silkscreen, outline, and drill files",
-        file: "octgear-pcb-gerbers-v2.zip",
+        file: "octgear-pcb-gerbers-v3.zip",
       },
       {
         format: "STL",
