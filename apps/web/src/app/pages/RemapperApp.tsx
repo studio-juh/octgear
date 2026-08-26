@@ -34,6 +34,7 @@ import {
   sendRemapperHeartbeat,
   setDeviceLayer,
   setDeviceLayerTapDanceTerm,
+  setDevicePcbRevision,
   setDeviceEncoderReversed,
   setDeviceStatusLedBrightness,
   setDeviceStatusLedReversed,
@@ -104,6 +105,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
   const [resetModalOpen, setResetModalOpen] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [encoderDirectionUpdating, setEncoderDirectionUpdating] = useState(false);
+  const [pcbRevisionUpdating, setPcbRevisionUpdating] = useState(false);
   const [statusLedDirectionUpdating, setStatusLedDirectionUpdating] = useState(false);
   const [statusLedBrightness, setStatusLedBrightness] = useState<number>(
     hardware.statusLedBrightness.default,
@@ -290,6 +292,26 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
       setStatus(error instanceof Error ? error.message : t.hardware.encoderDirectionFailed);
     } finally {
       setEncoderDirectionUpdating(false);
+    }
+  }
+
+  async function updatePcbRevision(revision: number) {
+    if (!connected || !deviceState) {
+      setStatus(t.connection.deviceNotConnected);
+      return;
+    }
+
+    try {
+      setPcbRevisionUpdating(true);
+      const saved = await setDevicePcbRevision(transport, revision);
+      setDeviceState((current) =>
+        current ? { ...current, pcbRevision: saved } : current,
+      );
+      setStatus(t.hardware.pcbRevisionUpdated(saved));
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : t.hardware.pcbRevisionFailed);
+    } finally {
+      setPcbRevisionUpdating(false);
     }
   }
 
@@ -863,6 +885,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
           <HardwarePanel
             deviceState={deviceState}
             encoderDirectionUpdating={encoderDirectionUpdating}
+            pcbRevisionUpdating={pcbRevisionUpdating}
             statusLedDirectionUpdating={statusLedDirectionUpdating}
             statusLedBrightness={statusLedBrightness}
             statusLedBrightnessUpdating={statusLedBrightnessUpdating}
@@ -873,6 +896,7 @@ export function RemapperApp({ homeHref }: RemapperAppProps) {
             layerTapDanceTermMs={layerTapDanceTermMs}
             layerTapDanceTermUpdating={layerTapDanceTermUpdating}
             onEncoderReversedChange={(reversed) => void updateEncoderReversed(reversed)}
+            onPcbRevisionChange={(revision) => void updatePcbRevision(revision)}
             onStatusLedReversedChange={(reversed) => void updateStatusLedReversed(reversed)}
             onStatusLedBrightnessChange={updateStatusLedBrightnessDraft}
             onStatusLedBrightnessApply={() => void applyStatusLedBrightness()}

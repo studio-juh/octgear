@@ -5,6 +5,7 @@
 
 #include "config.h"
 #include "key_assignment.h"
+#include "key_scanner.h"
 #include "keymap.h"
 #include "keymap_storage.h"
 #include "status_led.h"
@@ -182,6 +183,11 @@ void printHelp() {
   Serial.print(Config::LAYER_COUNT - 1);
   Serial.println(F("> <0|1>"));
   Serial.println(F("  encoder-reversed <0|1>"));
+  Serial.print(F("  pcb-revision <"));
+  Serial.print(Config::LEGACY_PCB_REVISION);
+  Serial.print('|');
+  Serial.print(Config::DEFAULT_PCB_REVISION);
+  Serial.println(F(">"));
   Serial.println(F("  led-reversed <0|1>"));
   Serial.print(F("  led-brightness <0-"));
   Serial.print(Config::MAX_STATUS_LED_BRIGHTNESS);
@@ -228,7 +234,9 @@ void handleState() {
   Serial.print(F(" layerDisplay="));
   Serial.print(static_cast<uint8_t>(statusLayerDisplayMode()));
   Serial.print(F(" tapDanceMs="));
-  Serial.println(layerTapDanceTermMs());
+  Serial.print(layerTapDanceTermMs());
+  Serial.print(F(" pcbRevision="));
+  Serial.println(pcbRevision());
 
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     const LayerColor color = layerColor(layer);
@@ -457,6 +465,29 @@ void handleEncoderReversed(char*& cursor) {
   Serial.println(F("OK"));
 }
 
+void handlePcbRevision(char*& cursor) {
+  uint8_t revision = 0;
+  if (!parseByte(cursor, revision)) {
+    Serial.println(F("ERR pcb-revision"));
+    return;
+  }
+
+  const uint8_t previous = pcbRevision();
+  if (!setPcbRevision(revision)) {
+    Serial.println(F("ERR pcb-revision"));
+    return;
+  }
+
+  if (!savePcbRevisionToStorage()) {
+    setPcbRevision(previous);
+    Serial.println(F("ERR storage"));
+    return;
+  }
+
+  beginKeyScanner();
+  Serial.println(F("OK"));
+}
+
 void handleLedReversed(char*& cursor) {
   bool reversed = false;
   if (!parseBoolean(cursor, reversed)) {
@@ -603,6 +634,7 @@ void handleReset(char*& cursor) {
   applyStatusLedBrightness();
   applyStatusKeyAnimation();
   applyStatusLayerDisplayMode();
+  beginKeyScanner();
   clearStatusLedPreview();
   Serial.println(F("OK reset"));
 }
@@ -659,6 +691,8 @@ void handleCommand(char* line) {
     handleLayerEnabled(cursor);
   } else if (strcmp(command, "encoder-reversed") == 0) {
     handleEncoderReversed(cursor);
+  } else if (strcmp(command, "pcb-revision") == 0) {
+    handlePcbRevision(cursor);
   } else if (strcmp(command, "led-reversed") == 0) {
     handleLedReversed(cursor);
   } else if (strcmp(command, "led-brightness") == 0) {

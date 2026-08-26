@@ -2,7 +2,7 @@
 
 現行8キー + ロータリーエンコーダ版のファームウェアとPCB設計を合わせるためのピン割り当てです。
 
-この表は `hardware/octgear/profile.json` から生成します。
+この表は `hardware/octgear/profile.json` から生成します。既定はPCB v3です。RemapperまたはSerial rescueからPCB v2互換へ切り替えられます。
 
 ## Key Matrix
 
@@ -19,10 +19,10 @@
 | Key 7 | 6 | Row 2 / Column 3 | Matrix Row 2 / Column 3 |
 | Key 8 | 7 | Row 2 / Column 4 | Matrix Row 2 / Column 4 |
 
-| Row | Index | GPIO | Mode |
-| --- | ---: | ---: | --- |
-| Row 1 | 0 | 2 | Scan output; selected row is OUTPUT LOW |
-| Row 2 | 1 | 9 | Scan output; selected row is OUTPUT LOW |
+| Row | Index | PCB v3 GPIO | PCB v2 GPIO | Mode |
+| --- | ---: | ---: | ---: | --- |
+| Row 1 | 0 | 2 | 0 | Scan output; selected row is OUTPUT LOW |
+| Row 2 | 1 | 9 | 9 | Scan output; selected row is OUTPUT LOW |
 
 | Column | Index | GPIO | Mode |
 | --- | ---: | ---: | --- |

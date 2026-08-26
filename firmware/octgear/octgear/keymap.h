@@ -35,6 +35,7 @@ struct KeymapSnapshot {
   uint8_t statusKeyAnimationBrightnessValue;
   StatusLayerDisplayMode statusLayerDisplayModeValue;
   uint16_t layerTapDanceTermMsValue;
+  uint8_t pcbRevisionValue;
 };
 
 void beginKeymap();
@@ -67,6 +68,8 @@ StatusLayerDisplayMode statusLayerDisplayMode();
 bool setStatusLayerDisplayMode(StatusLayerDisplayMode mode);
 uint16_t layerTapDanceTermMs();
 bool setLayerTapDanceTermMs(uint16_t termMs);
+uint8_t pcbRevision();
+bool setPcbRevision(uint8_t revision);
 const KeyAssignment& assignmentFor(uint8_t layer, uint8_t keyIndex);
 bool setAssignment(uint8_t layer, uint8_t keyIndex, const KeyAssignment& assignment);
 void clearKeymap();

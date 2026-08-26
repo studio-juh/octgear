@@ -38,6 +38,7 @@ const physicalKeyCount = profile.keys.length;
 const encoderControlCount = profile.encoder.enabled ? profile.encoder.controls.length : 0;
 const keyCount = physicalKeyCount + encoderControlCount;
 const matrixRowPins = profile.matrix.rows.map((row) => row.gpio);
+const legacyMatrixRowPins = profile.pcbRevision.legacyMatrixRowGpios;
 const matrixColumnPins = profile.matrix.columns.map((column) => column.gpio);
 const keyMatrixRows = profile.keys.map((key) => key.row);
 const keyMatrixColumns = profile.keys.map((key) => key.column);
@@ -60,6 +61,10 @@ function validateProfile(value) {
   requireArray(value.defaultLayerColors, "defaultLayerColors");
   requireArray(value.keys, "keys");
   requireObject(value.matrix, "matrix");
+  requireObject(value.pcbRevision, "pcbRevision");
+  requireInteger(value.pcbRevision.default, "pcbRevision.default");
+  requireInteger(value.pcbRevision.legacy, "pcbRevision.legacy");
+  requireArray(value.pcbRevision.legacyMatrixRowGpios, "pcbRevision.legacyMatrixRowGpios");
   requireArray(value.matrix.rows, "matrix.rows");
   requireArray(value.matrix.columns, "matrix.columns");
   requireObject(value.encoder, "encoder");
@@ -112,6 +117,15 @@ function validateProfile(value) {
   if (value.matrix.rows.length === 0 || value.matrix.columns.length === 0) {
     throw new Error("matrix must contain at least one row and column");
   }
+  if (value.pcbRevision.default === value.pcbRevision.legacy) {
+    throw new Error("pcbRevision.default and pcbRevision.legacy must differ");
+  }
+  if (value.pcbRevision.legacyMatrixRowGpios.length !== value.matrix.rows.length) {
+    throw new Error("pcbRevision.legacyMatrixRowGpios length must match matrix.rows");
+  }
+  value.pcbRevision.legacyMatrixRowGpios.forEach((gpio, index) =>
+    requireInteger(gpio, `pcbRevision.legacyMatrixRowGpios[${index}]`)
+  );
 
   value.matrix.rows.forEach((row, index) => validateMatrixLine(row, index, `matrix.rows[${index}]`));
   value.matrix.columns.forEach((column, index) => validateMatrixLine(column, index, `matrix.columns[${index}]`));
@@ -204,6 +218,12 @@ function validateProfile(value) {
   if (value.externalRgbLed) {
     registerPin(usedPins, value.externalRgbLedPin, "externalRgbLedPin");
   }
+
+  const legacyUsedPins = new Map(usedPins);
+  value.matrix.rows.forEach((row) => legacyUsedPins.delete(row.gpio));
+  value.pcbRevision.legacyMatrixRowGpios.forEach((gpio, index) =>
+    registerPin(legacyUsedPins, gpio, `pcbRevision.legacyMatrixRowGpios[${index}]`)
+  );
 }
 
 function validateMatrixLine(line, index, name) {
@@ -248,11 +268,17 @@ constexpr uint8_t EXTERNAL_RGB_LED_COUNT = ${profile.externalRgbLedCount};
 constexpr bool EXTERNAL_RGB_LED_REVERSED = ${profile.externalRgbLedReversed ? "true" : "false"};
 constexpr uint8_t MATRIX_ROW_COUNT = ${profile.matrix.rows.length};
 constexpr uint8_t MATRIX_COLUMN_COUNT = ${profile.matrix.columns.length};
+constexpr uint8_t DEFAULT_PCB_REVISION = ${profile.pcbRevision.default};
+constexpr uint8_t LEGACY_PCB_REVISION = ${profile.pcbRevision.legacy};
 
 using KeyMask = uint16_t;
 
 constexpr uint8_t MATRIX_ROW_PINS[MATRIX_ROW_COUNT] = {
   ${matrixRowPins.join(", ")}
+};
+
+constexpr uint8_t LEGACY_MATRIX_ROW_PINS[MATRIX_ROW_COUNT] = {
+  ${legacyMatrixRowPins.join(", ")}
 };
 
 constexpr uint8_t MATRIX_COLUMN_PINS[MATRIX_COLUMN_COUNT] = {
@@ -316,6 +342,10 @@ export const HARDWARE_CONFIG = {
   },
   statusLedKeyAnimation: ${statusLedKeyAnimationValues[profile.statusLedKeyAnimation]},
   statusLedLayerDisplayMode: ${statusLedLayerDisplayModeValues[profile.statusLedLayerDisplayMode]},
+  pcbRevision: {
+    default: ${profile.pcbRevision.default},
+    legacy: ${profile.pcbRevision.legacy},
+  },
   matrix: {
     rowCount: ${profile.matrix.rows.length},
     columnCount: ${profile.matrix.columns.length},
@@ -341,8 +371,8 @@ function pinoutMarkdown() {
   const keyRows = profile.keys.map((key) =>
     `| ${key.logicalName} | ${key.firmwareIndex} | Row ${key.row + 1} / Column ${key.column + 1} | ${key.notes} |`
   ).join("\n");
-  const matrixRows = profile.matrix.rows.map((row) =>
-    `| ${row.label} | ${row.firmwareIndex} | ${row.gpio} | Scan output; selected row is OUTPUT LOW |`
+  const matrixRows = profile.matrix.rows.map((row, index) =>
+    `| ${row.label} | ${row.firmwareIndex} | ${row.gpio} | ${legacyMatrixRowPins[index]} | Scan output; selected row is OUTPUT LOW |`
   ).join("\n");
   const matrixColumnRows = profile.matrix.columns.map((column) =>
     `| ${column.label} | ${column.firmwareIndex} | ${column.gpio} | INPUT_PULLUP |`
@@ -352,7 +382,7 @@ function pinoutMarkdown() {
 
 現行8キー + ロータリーエンコーダ版のファームウェアとPCB設計を合わせるためのピン割り当てです。
 
-この表は \`hardware/${productId}/profile.json\` から生成します。
+この表は \`hardware/${productId}/profile.json\` から生成します。既定はPCB v${profile.pcbRevision.default}です。RemapperまたはSerial rescueからPCB v${profile.pcbRevision.legacy}互換へ切り替えられます。
 
 ## Key Matrix
 
@@ -362,8 +392,8 @@ function pinoutMarkdown() {
 | --- | ---: | --- | --- |
 ${keyRows}
 
-| Row | Index | GPIO | Mode |
-| --- | ---: | ---: | --- |
+| Row | Index | PCB v${profile.pcbRevision.default} GPIO | PCB v${profile.pcbRevision.legacy} GPIO | Mode |
+| --- | ---: | ---: | ---: | --- |
 ${matrixRows}
 
 | Column | Index | GPIO | Mode |

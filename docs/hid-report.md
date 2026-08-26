@@ -48,7 +48,7 @@ byte 3..31  response payload
 
 | Value | Name | Request payload | Response payload |
 | ---: | --- | --- | --- |
-| `0x01` | `GetState` | none | `activeLayer, layerCount, keyCount, matrixRowCount, enabledLayerMask, encoderReversed, statusLedBrightness, statusLedReversed, statusKeyAnimation, statusKeyAnimationBrightness, statusLayerDisplayMode, layerTapDanceTermMs[2]` |
+| `0x01` | `GetState` | none | `activeLayer, layerCount, keyCount, matrixRowCount, enabledLayerMask, encoderReversed, statusLedBrightness, statusLedReversed, statusKeyAnimation, statusKeyAnimationBrightness, statusLayerDisplayMode, layerTapDanceTermMs[2], pcbRevision` |
 | `0x02` | `SetLayer` | `layer` | `layer` |
 | `0x03` | `GetKey` | `layer, keyIndex` | key assignment payload |
 | `0x04` | `SetKey` | key assignment payload | `layer, keyIndex` |
@@ -69,6 +69,7 @@ byte 3..31  response payload
 | `0x13` | `SetStatusKeyAnimationBrightness` | `brightness` | `brightness` |
 | `0x14` | `SetStatusLayerDisplayMode` | `mode` | `mode` |
 | `0x15` | `SetLayerTapDanceTerm` | `termMs[2]` | `termMs[2]` |
+| `0x16` | `SetPcbRevision` | `revision` | `revision` |
 
 通常の同期commandは、requestと同じcommandをbyte 0に持つresponseを1つ返します。`RemapperHeartbeat`と`EnterBootloader`は例外です。Heartbeatは応答を返さず、bootloader commandはdeviceが再起動するためresponseを待ちません。
 
@@ -102,7 +103,9 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 `layerTapDanceTermMs`と`SetLayerTapDanceTerm`の`termMs`はlittle-endianの16-bit値です。設定範囲は`50-1000 ms`、既定値は`250 ms`です。Next Layerの単押し確定と同じcontrolのダブルタップ判定の両方に使い、変更はFlashへ即座に保存します。Storage version 6でfieldを追加しており、旧storage versionは移行せず既定設定へ初期化します。
 
-`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、アニメーション輝度上限、Tap Dance判定時間をcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerと次回起動LayerはLayer 0へ戻ります。
+`pcbRevision`と`SetPcbRevision`の`revision`は`3`が現行PCB（Matrix Row 1 = GPIO 2）、`2`が旧PCB（Matrix Row 1 = GPIO 0）です。任意GPIOは指定できません。変更はFlashへ即座に保存され、scannerを再初期化するため再起動は不要です。未初期化時と設定初期化時はPCB v3、既存のVersion 6保存slotで未使用だったflagが`0`の個体はPCB v2互換として読み込みます。
+
+`ResetConfiguration`は全assignment、layer有効mask、layer RGB色、LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、アニメーション輝度上限、Tap Dance判定時間、PCBリビジョンをcompile済みの既定値へ戻し、保存領域全体へ書き込みます。Active layerと次回起動LayerはLayer 0へ戻ります。
 
 ## Session Lifecycle
 
@@ -157,7 +160,7 @@ Keyboard assignmentはmodifier bitmapと6-key rollover slotsを使用します�
 
 ## Current Contract
 
-- Webは13-byteの`GetState` responseと、この文書にある全commandを実装した現行Firmwareだけを対象にします。
+- Webは14-byteの`GetState` responseと、この文書にある全commandを実装した現行Firmwareだけを対象にします。
 - Webは`GetState`が返す`layerCount`、`keyCount`、`enabledLayerMask`をdeviceの書込可能範囲とlayer状態として使います。
 - 未知のassignment kind、LED mode、payload lengthはprotocol errorとして扱います。FirmwareとWebのencode / decode / validationは常に同時に更新します。
 - Report sizeまたはReport IDを変更する場合はTinyUSB descriptor、firmware buffer、Web codecを同時に変更します。

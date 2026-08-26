@@ -19,6 +19,7 @@ uint8_t lastEncoderState = 0;
 uint8_t encoderDetentState = 0;
 int8_t encoderStepAccumulator = 0;
 int8_t pendingEncoderClicks = 0;
+const uint8_t* activeMatrixRowPins = Config::MATRIX_ROW_PINS;
 
 constexpr Config::KeyMask keyBit(uint8_t keyIndex) {
   return static_cast<Config::KeyMask>(1U << keyIndex);
@@ -31,13 +32,13 @@ constexpr Config::KeyMask PHYSICAL_KEY_MASK =
   static_cast<Config::KeyMask>((1U << Config::PHYSICAL_KEY_COUNT) - 1U);
 
 void selectMatrixRow(uint8_t row) {
-  const uint8_t pin = Config::MATRIX_ROW_PINS[row];
+  const uint8_t pin = activeMatrixRowPins[row];
   digitalWrite(pin, LOW);
   pinMode(pin, OUTPUT);
 }
 
 void releaseMatrixRow(uint8_t row) {
-  pinMode(Config::MATRIX_ROW_PINS[row], INPUT);
+  pinMode(activeMatrixRowPins[row], INPUT);
 }
 
 Config::KeyMask readRawMatrixMask(bool& ghosted) {
@@ -182,8 +183,12 @@ Config::KeyMask consumeEncoderPulseMask() {
 
 void beginKeyScanner() {
   for (uint8_t row = 0; row < Config::MATRIX_ROW_COUNT; row++) {
-    releaseMatrixRow(row);
+    pinMode(Config::MATRIX_ROW_PINS[row], INPUT);
+    pinMode(Config::LEGACY_MATRIX_ROW_PINS[row], INPUT);
   }
+  activeMatrixRowPins = pcbRevision() == Config::LEGACY_PCB_REVISION
+    ? Config::LEGACY_MATRIX_ROW_PINS
+    : Config::MATRIX_ROW_PINS;
 
   for (uint8_t column = 0; column < Config::MATRIX_COLUMN_COUNT; column++) {
     pinMode(Config::MATRIX_COLUMN_PINS[column], INPUT_PULLUP);

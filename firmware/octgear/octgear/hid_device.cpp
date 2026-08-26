@@ -6,6 +6,7 @@
 #include "hid_report_descriptor.h"
 #include "hid_reports.h"
 #include "key_assignment.h"
+#include "key_scanner.h"
 #include "keymap.h"
 #include "keymap_storage.h"
 #include "readme_drive.h"
@@ -99,6 +100,7 @@ void handleGetState() {
     static_cast<uint8_t>(statusLayerDisplayMode()),
     static_cast<uint8_t>(layerTapDanceTermMs() & 0xFF),
     static_cast<uint8_t>((layerTapDanceTermMs() >> 8) & 0xFF),
+    pcbRevision(),
   };
 
   sendConfigResponse(ConfigCommand::GetState, ConfigStatus::Ok, payload, sizeof(payload));
@@ -236,6 +238,7 @@ void handleResetConfiguration() {
 
   applyStatusLedBrightness();
   applyStatusKeyAnimation();
+  beginKeyScanner();
   clearStatusLedPreview();
   const uint8_t payload[] = { activeLayer(), enabledLayerMask() };
   sendConfigResponse(ConfigCommand::ResetConfiguration, ConfigStatus::Ok, payload, sizeof(payload));
@@ -471,6 +474,50 @@ void handleSetLayerTapDanceTerm(const uint8_t* buffer, uint16_t size) {
   );
 }
 
+void handleSetPcbRevision(const uint8_t* buffer, uint16_t size) {
+  if (size < 2) {
+    sendConfigResponse(
+      ConfigCommand::SetPcbRevision,
+      ConfigStatus::InvalidLength,
+      nullptr,
+      0
+    );
+    return;
+  }
+
+  const uint8_t previous = pcbRevision();
+  const uint8_t revision = buffer[1];
+  if (!setPcbRevision(revision)) {
+    sendConfigResponse(
+      ConfigCommand::SetPcbRevision,
+      ConfigStatus::OutOfRange,
+      nullptr,
+      0
+    );
+    return;
+  }
+
+  if (!savePcbRevisionToStorage()) {
+    setPcbRevision(previous);
+    sendConfigResponse(
+      ConfigCommand::SetPcbRevision,
+      ConfigStatus::StorageError,
+      nullptr,
+      0
+    );
+    return;
+  }
+
+  beginKeyScanner();
+  const uint8_t payload[] = { pcbRevision() };
+  sendConfigResponse(
+    ConfigCommand::SetPcbRevision,
+    ConfigStatus::Ok,
+    payload,
+    sizeof(payload)
+  );
+}
+
 void handleGetKey(const uint8_t* buffer, uint16_t size) {
   if (size < 3) {
     sendConfigResponse(ConfigCommand::GetKey, ConfigStatus::InvalidLength, nullptr, 0);
@@ -689,6 +736,9 @@ void setReportCallback(uint8_t reportId, hid_report_type_t reportType, uint8_t c
       break;
     case ConfigCommand::SetLayerTapDanceTerm:
       handleSetLayerTapDanceTerm(buffer, size);
+      break;
+    case ConfigCommand::SetPcbRevision:
+      handleSetPcbRevision(buffer, size);
       break;
     default:
       sendConfigResponse(command, ConfigStatus::UnknownCommand, nullptr, 0);

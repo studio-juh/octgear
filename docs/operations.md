@@ -29,6 +29,8 @@ Readはdeviceから全keymapとlayer設定を再読込し、未保存の編集�
 
 Hardware panelの「回転方向 / 反転」はEncoderのCCW/CWを入れ替え、変更時に実機へ即座に保存します。
 
+Hardware panelの「PCBリビジョン」は、現行PCB v3のRow 1 = GPIO 2と旧PCB v2のRow 1 = GPIO 0を切り替えます。基板に記載されたrevisionへ合わせてください。変更は即座に保存・適用され、再起動は不要です。任意GPIOの指定はできません。
+
 Hardware panelの「LEDテープ方向 / 反転」は、盤面左端のLED 1をphysical pixel 0へ対応させる標準順と、最後のphysical pixelへ対応させる反転順を切り替え、変更時に実機へ即座に保存します。位置依存の打鍵アニメーションとUSB未認識時の流れるアニメーションの向きに適用されます。
 
 Hardware panelの「レイヤー表示」は、従来のLayer色による全灯と、4灯の点灯パターンを切り替えます。4灯パターンでは点灯pixelに現在Layerの色を使い、消灯pixelを含めてLayer切り替え時に200 msで遷移します。設定は変更時にFlashへ即座に保存されます。
@@ -146,6 +148,7 @@ Layerは`0-7`、key番号は`1-11`です。数値はdecimalまたは`0x`付きhe
 | `color <layer> <red> <green> <blue>` | Layer LED色を設定。`0 0 0`で消灯 | Yes |
 | `enabled <layer> <0\|1>` | Layerを無効／有効にする。Layer 0は無効化不可 | Yes |
 | `encoder-reversed <0\|1>` | Encoder回転方向を標準／反転にする | Yes |
+| `pcb-revision <2\|3>` | Matrix Row 1を旧PCBのGPIO 0／現行PCBのGPIO 2へ切り替える | Yes |
 | `led-reversed <0\|1>` | 外付けLEDのphysical pixel順を標準／反転にする | Yes |
 | `led-brightness <0-128>` | Layer表示の輝度上限を設定 | Yes |
 | `animation <0-3>` | 打鍵効果を波紋／無効／フラッシュ／スパークに設定 | Yes |
@@ -171,6 +174,7 @@ color 0 32 160 255
 color 7 0 0 0
 enabled 2 1
 encoder-reversed 1
+pcb-revision 3
 led-reversed 0
 led-brightness 32
 animation 0
@@ -179,7 +183,7 @@ layer-display 1
 tap-dance 250
 ```
 
-`animation`は`0`が波紋、`1`が無効、`2`がフラッシュ、`3`がスパークです。`layer-display`は`0`が全灯、`1`が4灯パターンです。boolean設定は`0`が標準／無効、`1`が反転／有効です。
+`animation`は`0`が波紋、`1`が無効、`2`がフラッシュ、`3`がスパークです。`layer-display`は`0`が全灯、`1`が4灯パターンです。`pcb-revision`は`2`または`3`だけを受け付けます。boolean設定は`0`が標準／無効、`1`が反転／有効です。
 
 Keyboard modifier bitmap:
 
@@ -204,6 +208,7 @@ Keyboard modifier bitmap:
 | 接続直後に切断表示になる | heartbeat timeout、device再起動、別tabの接続を確認 |
 | Remapper接続中に通常キーが出ない | 設計どおり。Disconnectすると通常出力へ戻る |
 | Encoder方向が違う | Remapperの「回転方向 / 反転」を切り替える |
+| K1-K4だけ反応しない | 基板revisionを確認し、Remapperの「PCBリビジョン」をv2またはv3へ合わせる |
 | 打鍵アニメーションの左右が逆 | Remapperの「LEDテープ方向 / 反転」を切り替える |
 | Encoderのdetent数が違う | profileの`stepsPerDetent`を確認して再build |
 | UF2 driveへ直接書けない | UF2をdownloadしてOSからcopy |

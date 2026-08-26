@@ -61,11 +61,11 @@ HomeのOctGear product cardは`public/build-guide/completed/`の正面写真を�
 1. 対象entry pointへ渡された製品定義のVID/PID filterでdeviceを選択
 2. HID deviceをopen
 3. heartbeatを送信
-4. `GetState`でdevice dimensions、layer状態、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションと輝度上限、Tap Dance判定時間を取得
+4. `GetState`でdevice dimensions、layer状態、PCBリビジョン、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションと輝度上限、Tap Dance判定時間を取得
 5. `GetKey`で全keymapを読込
 6. 300 ms間隔のheartbeatとphysical disconnect listenerを開始
 
-Webは現行Firmwareの13-byte `GetState`と全設定commandを必須契約として扱います。過去Firmware向けの短いresponse、未対応command、Layer色fallbackは受け入れません。
+Webは現行Firmwareの14-byte `GetState`と全設定commandを必須契約として扱います。過去Firmware向けの短いresponse、未対応command、Layer色fallbackは受け入れません。
 
 Heartbeat sendが失敗するか700 msでtimeoutするとsessionを閉じます。Firmware側のheartbeat有効期限は3000 msです。
 
@@ -82,9 +82,9 @@ Layerの有効状態とRGB LED色も読込済みと編集中で分けて保持�
 
 Save時はdeviceが返したlayer / key countへnormalizeし、assignment、layer有効状態、RGB色の差分だけを逐次保存します。Readは全keymapとlayer設定を再取得し、編集中内容を置き換えます。Physical `KeyEvent`のpressは現在の表示layerを維持したまま、対応するcontrolだけを選択します。
 
-Read左のoverflow menuから初期化を選ぶと、確認dialogを経て全assignment、layer有効状態、RGB色、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、各輝度上限をfirmwareの既定値へ戻し、実機へ保存してからUIを再読込します。
+Read左のoverflow menuから初期化を選ぶと、確認dialogを経て全assignment、layer有効状態、RGB色、PCBリビジョン、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、各輝度上限をfirmwareの既定値へ戻し、実機へ保存してからUIを再読込します。
 
-Hardware panelのEncoder方向checkboxは変更時に即座に実機へ保存します。既定値はhardware profileの`encoder.reversed`です。LED輝度上限は`0-128`で編集し、「適用」で実機へ保存します。`0`は消灯、既定値は`32`です。
+Hardware panelのPCBリビジョンは現行v3（Row 1 = GPIO 2）と旧v2（GPIO 0）だけを選択でき、変更時に即座に実機へ保存・適用します。Encoder方向checkboxも変更時に即座に実機へ保存します。既定値はhardware profileの`encoder.reversed`です。LED輝度上限は`0-128`で編集し、「適用」で実機へ保存します。`0`は消灯、既定値は`32`です。
 
 LEDテープ方向checkboxも変更時に即座に実機へ保存します。標準順は盤面左端のLED 1をphysical pixel 0へ対応させ、反転時は最後のphysical pixelへ対応させます。既定値はhardware profileの`externalRgbLedReversed`です。
 

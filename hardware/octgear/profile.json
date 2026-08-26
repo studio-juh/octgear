@@ -27,6 +27,11 @@
   "externalRgbLedCount": 4,
   "externalRgbLedReversed": true,
   "oled": false,
+  "pcbRevision": {
+    "default": 3,
+    "legacy": 2,
+    "legacyMatrixRowGpios": [0, 9]
+  },
   "matrix": {
     "diodeDirection": "none",
     "rows": [

@@ -13,6 +13,7 @@ import { t } from "../../shared/i18n";
 type HardwarePanelProps = {
   deviceState: DeviceState | null;
   encoderDirectionUpdating: boolean;
+  pcbRevisionUpdating: boolean;
   statusLedDirectionUpdating: boolean;
   statusLedBrightness: number;
   statusLedBrightnessUpdating: boolean;
@@ -23,6 +24,7 @@ type HardwarePanelProps = {
   layerTapDanceTermMs: number;
   layerTapDanceTermUpdating: boolean;
   onEncoderReversedChange: (reversed: boolean) => void;
+  onPcbRevisionChange: (revision: number) => void;
   onStatusLedReversedChange: (reversed: boolean) => void;
   onStatusLedBrightnessChange: (brightness: number) => void;
   onStatusLedBrightnessApply: () => void;
@@ -37,6 +39,7 @@ type HardwarePanelProps = {
 export function HardwarePanel({
   deviceState,
   encoderDirectionUpdating,
+  pcbRevisionUpdating,
   statusLedDirectionUpdating,
   statusLedBrightness,
   statusLedBrightnessUpdating,
@@ -47,6 +50,7 @@ export function HardwarePanel({
   layerTapDanceTermMs,
   layerTapDanceTermUpdating,
   onEncoderReversedChange,
+  onPcbRevisionChange,
   onStatusLedReversedChange,
   onStatusLedBrightnessChange,
   onStatusLedBrightnessApply,
@@ -85,6 +89,25 @@ export function HardwarePanel({
         </button>
       </div>
       <dl className="hardware-controls">
+        <div className="hardware-animation-row">
+          <dt>{t.hardware.pcbRevision}</dt>
+          <dd>
+            <select
+              value={deviceState?.pcbRevision ?? hardware.pcbRevision.default}
+              aria-label={t.hardware.pcbRevision}
+              disabled={!deviceState || pcbRevisionUpdating}
+              onChange={(event) => onPcbRevisionChange(Number(event.target.value))}
+            >
+              <option value={hardware.pcbRevision.default}>
+                {t.hardware.pcbRevisionDefault(hardware.pcbRevision.default)}
+              </option>
+              <option value={hardware.pcbRevision.legacy}>
+                {t.hardware.pcbRevisionLegacy(hardware.pcbRevision.legacy)}
+              </option>
+            </select>
+            <small>{t.hardware.pcbRevisionHint}</small>
+          </dd>
+        </div>
         <div className="hardware-direction-row">
           <dt>{t.hardware.encoderDirection}</dt>
           <dd>

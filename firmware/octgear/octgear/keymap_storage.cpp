@@ -28,6 +28,7 @@ constexpr uint8_t STATUS_LED_REVERSED_FLAG = 0x02;
 constexpr uint8_t STATUS_KEY_ANIMATION_MASK = 0x0C;
 constexpr uint8_t STATUS_KEY_ANIMATION_SHIFT = 2;
 constexpr uint8_t STATUS_LAYER_DISPLAY_PATTERN_FLAG = 0x10;
+constexpr uint8_t DEFAULT_PCB_REVISION_FLAG = 0x20;
 constexpr int STATUS_LED_BRIGHTNESS_ADDRESS = 15;
 constexpr int CRC_ADDRESS = 16;
 constexpr int STORAGE_HEADER_SIZE = 20;
@@ -227,6 +228,11 @@ void buildSlotData(uint8_t* data, uint32_t generation, SlotKind kind) {
         statusLayerDisplayMode() == StatusLayerDisplayMode::Pattern
           ? STATUS_LAYER_DISPLAY_PATTERN_FLAG
           : 0U
+      ) |
+      (
+        pcbRevision() == Config::DEFAULT_PCB_REVISION
+          ? DEFAULT_PCB_REVISION_FLAG
+          : 0U
       )
     );
   data[STATUS_LED_BRIGHTNESS_ADDRESS] = statusLedBrightness();
@@ -338,6 +344,11 @@ bool loadKeymapFromStorage() {
       ? StatusLayerDisplayMode::Pattern
       : StatusLayerDisplayMode::Solid
   );
+  setPcbRevision(
+    (data[DEVICE_FLAGS_ADDRESS] & DEFAULT_PCB_REVISION_FLAG) != 0
+      ? Config::DEFAULT_PCB_REVISION
+      : Config::LEGACY_PCB_REVISION
+  );
   if (!setLayerTapDanceTermMs(readUint16(data, LAYER_TAP_DANCE_TERM_ADDRESS))) {
     return false;
   }
@@ -402,6 +413,10 @@ bool saveLayerTapDanceTermToStorage() {
   return saveKeymapToStorage();
 }
 
+bool savePcbRevisionToStorage() {
+  return saveKeymapToStorage();
+}
+
 void scheduleActiveLayerSave() {
   if (persistentLayer() == lastSavedActiveLayer) {
     activeLayerSavePending = false;
@@ -455,6 +470,11 @@ bool runKeymapStorageSelfTest() {
   const uint16_t backupLayerTapDanceTermMs = layerTapDanceTermMs();
   const uint16_t patternLayerTapDanceTermMs =
     backupLayerTapDanceTermMs == 731 ? 730 : 731;
+  const uint8_t backupPcbRevision = pcbRevision();
+  const uint8_t patternPcbRevision =
+    backupPcbRevision == Config::DEFAULT_PCB_REVISION
+      ? Config::LEGACY_PCB_REVISION
+      : Config::DEFAULT_PCB_REVISION;
   const uint8_t patternLayerMask = static_cast<uint8_t>(0x55U & ((1U << Config::LAYER_COUNT) - 1U));
   const uint8_t patternActiveLayer = Config::LAYER_COUNT > 2 ? 2 : 0;
   LayerColor backupLayerColors[Config::LAYER_COUNT];
@@ -493,6 +513,7 @@ bool runKeymapStorageSelfTest() {
   setStatusKeyAnimationBrightness(patternStatusKeyAnimationBrightness);
   setStatusLayerDisplayMode(patternStatusLayerDisplayMode);
   setLayerTapDanceTermMs(patternLayerTapDanceTermMs);
+  setPcbRevision(patternPcbRevision);
 
   bool ok = saveCurrentKeymapToStorage(SlotKind::SelfTest);
   if (ok) {
@@ -505,6 +526,7 @@ bool runKeymapStorageSelfTest() {
     setStatusKeyAnimationBrightness(backupStatusKeyAnimationBrightness);
     setStatusLayerDisplayMode(backupStatusLayerDisplayMode);
     setLayerTapDanceTermMs(backupLayerTapDanceTermMs);
+    setPcbRevision(backupPcbRevision);
     ok = loadKeymapFromStorage();
   }
 
@@ -544,6 +566,10 @@ bool runKeymapStorageSelfTest() {
   }
 
   if (ok && layerTapDanceTermMs() != patternLayerTapDanceTermMs) {
+    ok = false;
+  }
+
+  if (ok && pcbRevision() != patternPcbRevision) {
     ok = false;
   }
 
@@ -600,6 +626,7 @@ bool runKeymapStorageSelfTest() {
   setStatusKeyAnimationBrightness(backupStatusKeyAnimationBrightness);
   setStatusLayerDisplayMode(backupStatusLayerDisplayMode);
   setLayerTapDanceTermMs(backupLayerTapDanceTermMs);
+  setPcbRevision(backupPcbRevision);
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     setLayerColor(layer, backupLayerColors[layer]);
   }

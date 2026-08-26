@@ -22,6 +22,10 @@ export type HardwareConfig = {
   };
   readonly statusLedKeyAnimation: number;
   readonly statusLedLayerDisplayMode: number;
+  readonly pcbRevision: {
+    readonly default: number;
+    readonly legacy: number;
+  };
   readonly matrix: {
     readonly rowCount: number;
     readonly columnCount: number;

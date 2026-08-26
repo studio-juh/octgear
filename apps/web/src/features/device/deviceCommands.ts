@@ -30,6 +30,7 @@ export type DeviceState = {
   statusKeyAnimationBrightness: number;
   statusLayerDisplayMode: StatusLayerDisplayMode;
   layerTapDanceTermMs: number;
+  pcbRevision: number;
   enabledLayers: boolean[];
 };
 
@@ -77,7 +78,7 @@ export type DiagnosticStorageResult = {
 };
 
 const DIAGNOSTIC_REPORT_NONCE = [0x43, 0x59, 0x42, 0x38] as const;
-const DEVICE_STATE_PAYLOAD_SIZE = 13;
+const DEVICE_STATE_PAYLOAD_SIZE = 14;
 
 export async function getDeviceState(transport: WebHidTransport): Promise<DeviceState> {
   const response = await sendCommand(transport, ConfigCommand.GetState);
@@ -99,6 +100,7 @@ export async function getDeviceState(transport: WebHidTransport): Promise<Device
     statusKeyAnimationBrightness: response.payload[9],
     statusLayerDisplayMode: decodeStatusLayerDisplayMode(response.payload[10]),
     layerTapDanceTermMs: response.payload[11] | (response.payload[12] << 8),
+    pcbRevision: response.payload[13],
     enabledLayers: decodeEnabledLayers(enabledLayerMask, layerCount),
   };
 }
@@ -181,6 +183,20 @@ export async function setDeviceLayerTapDanceTerm(
   assertConfigOk(response);
   assertPayloadLength(response, 2);
   return response.payload[0] | (response.payload[1] << 8);
+}
+
+export async function setDevicePcbRevision(
+  transport: WebHidTransport,
+  revision: number,
+) {
+  const response = await sendCommand(
+    transport,
+    ConfigCommand.SetPcbRevision,
+    [revision],
+  );
+  assertConfigOk(response);
+  assertPayloadLength(response, 1);
+  return response.payload[0];
 }
 
 export async function setDeviceLayerEnabled(

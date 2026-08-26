@@ -17,6 +17,7 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 - Layer変更を伴うcontrolの打鍵アニメーションは切り替え後のLayer色で表示
 - Layer表示と独立した打鍵アニメーション輝度上限でコントラストを調整
 - Encoder回転方向の反転設定とFlash保存
+- PCB v3（Row 1 = GPIO 2）／PCB v2互換（GPIO 0）の切り替えとFlash保存
 - Keyboard、Consumer Control、次／前レイヤー、Momentary Layer割り当て
 - Next Layerの単押しで次へ進み、同じcontrolのダブルタップで開始位置からPrevious Layerを実行するTap Dance。判定時間は50-1000 msで設定・保存可能（既定250 ms）
 - WebHID Remapperによる読込、編集、差分保存
@@ -87,6 +88,8 @@ scripts/                   環境構築、生成、firmware build
 ```
 
 ## Hardware Summary
+
+PCB v3を既定とし、RemapperからPCB v2のRow 1配線へ切り替えられます。
 
 現行構成はRow 2本、Column 4本のダイオードなしkey matrixと、A/Common/B/SWを独立GPIOへ接続するロータリーエンコーダです。ダイオードがないため、一部の矩形同時押しは電気的に区別できません。Firmwareは曖昧な間のMatrix状態を更新せず、phantom keyの出力を防ぎます。正確なGPIOは生成された[pinout](hardware/octgear/pinout.md)を参照してください。
 

@@ -2,7 +2,7 @@
 
 The materials in this directory are provided under the [OctGear Hardware License 1.0](../../HARDWARE-LICENSE.md). Personal, non-commercial builds are permitted. Commercial manufacture or sale of the reference hardware without material hardware changes is prohibited.
 
-現行2 x 4 key matrix + rotary encoder版のhardware metadataです。PCB designそのものではなく、firmwareとWeb UIが共有するlogical control、matrix pin mapping、layer count、default enabled layers、default layer colors、Layer / 打鍵アニメーション輝度既定値 / 上限、打鍵アニメーション既定値、外付けWS2812B GPIO / pixel count / 既定方向を管理します。
+現行2 x 4 key matrix + rotary encoder版のhardware metadataです。PCB v3を既定とし、同じFirmwareからPCB v2のRow 1配線へ切り替える互換情報も管理します。PCB designそのものではなく、firmwareとWeb UIが共有するlogical control、matrix pin mapping、layer count、default enabled layers、default layer colors、Layer / 打鍵アニメーション輝度既定値 / 上限、打鍵アニメーション既定値、外付けWS2812B GPIO / pixel count / 既定方向を管理します。
 
 ## Files
 
@@ -39,6 +39,7 @@ PCB preview、Gerber、STLはgenerator対象ではありません。製造デー
 
 - 2 Row x 4 Columnのmatrixで、ダイオードは使用しない
 - Columnは`INPUT_PULLUP`、scan対象Rowだけを`OUTPUT LOW`にする
+- PCB v3のRow 1はGPIO 2、PCB v2互換のRow 1はGPIO 0。Remapperからrevision単位で切り替え、任意GPIOは指定させない
 - ダイオードがないため矩形同時押しは区別できず、Firmwareは曖昧な間のMatrix状態を保持する
 - Encoder A/B/SWは`INPUT_PULLUP`、専用Common GPIOは常時`OUTPUT LOW`
 - External WS2812Bのdata inputはGPIO 14へ接続し、4 pixels分のdataを送る

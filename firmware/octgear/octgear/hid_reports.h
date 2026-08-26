@@ -31,6 +31,7 @@ enum class ConfigCommand : uint8_t {
   SetStatusKeyAnimationBrightness = 0x13,
   SetStatusLayerDisplayMode = 0x14,
   SetLayerTapDanceTerm = 0x15,
+  SetPcbRevision = 0x16,
 };
 
 enum class ConfigStatus : uint8_t {

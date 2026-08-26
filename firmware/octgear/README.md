@@ -113,11 +113,13 @@ Generated headerは直接編集しません。Hardware profile変更後は`pnpm 
 
 Layer 2〜7は全controlが`None`です。既定で有効なのはLayer 0/1だけで、Layer 0は無効化できません。Encoder方向の既定値はhardware profileの`encoder.reversed`で現行構成は標準、LEDテープ方向の既定値は`externalRgbLedReversed`で現行構成は反転です。写真どおりにLEDテープを配置した新規個体または設定初期化後の個体では、この反転設定によって盤面左端を論理LED 1として扱います。Layer表示の既定値は`statusLedLayerDisplayMode`の全灯、打鍵アニメーションの既定値は`statusLedKeyAnimation`の波紋、アニメーション輝度上限は`statusKeyAnimationBrightness.default`の`96`、Tap Dance判定時間は`250 ms`です。Version 6で保存した設定はFirmware更新だけでは変更されず、初期化したときにこれらの既定値が適用されます。
 
+PCBリビジョンの既定値はv3（Row 1 = GPIO 2）で、RemapperまたはSerial rescueからv2（GPIO 0）へ切り替えられます。旧Firmwareが保存したVersion 6設定はPCB v2互換として読み込み、新規個体または設定初期化後はPCB v3を使います。
+
 ## Storage
 
-Keymap、通常のactive layer、layer enable mask、layer RGB colors、各LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、Tap Dance判定時間はexternal SPI Flash上の独立した3つの4KB sectorへ循環保存します。各slotはgenerationとCRCを持ち、起動時はCRCが正常な最新generationを読み込みます。保存中に電源が切れて新slotが不完全になっても、直前の正常slotへfallbackします。
+Keymap、通常のactive layer、layer enable mask、layer RGB colors、各LED輝度上限、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーション、Tap Dance判定時間、PCBリビジョンはexternal SPI Flash上の独立した3つの4KB sectorへ循環保存します。各slotはgenerationとCRCを持ち、起動時はCRCが正常な最新generationを読み込みます。保存中に電源が切れて新slotが不完全になっても、直前の正常slotへfallbackします。
 
-現行storage versionは`6`です。Tap Dance判定時間を16-bit値として追加しています。旧versionのslotは移行せず、Version 6 Firmwareでの初回起動時にcompile済み既定値へ初期化します。
+現行storage versionは`6`です。PCBリビジョンは既存headerの未使用flagへ保存するためrecord layoutは変わりません。Version 5以前のslotは移行せず、Version 6 Firmwareでの初回起動時にcompile済み既定値へ初期化します。
 
 標準buildはArduino coreがfilesystem用として扱う64KBをFirmware領域から分離して予約します。Filesystemはmountせず、その先頭12KBをjournalに直接使用します。設定変更時はRAM上の設定全体を次slotへ書き、1回の保存で消去するsectorを1つに限定します。通常Layerの切り替えは10秒間変化がなければ保存し、連続操作を1回の書き込みへまとめます。この間に別の設定を保存した場合は、その書き込みへ現在Layerも含めます。保存形式が無効または未初期化ならcompile済みdefaultで初期化します。
 

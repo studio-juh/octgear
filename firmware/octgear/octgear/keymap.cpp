@@ -20,6 +20,7 @@ StatusKeyAnimation currentStatusKeyAnimation =
 StatusLayerDisplayMode currentStatusLayerDisplayMode =
   static_cast<StatusLayerDisplayMode>(Config::DEFAULT_STATUS_LAYER_DISPLAY_MODE);
 uint16_t currentLayerTapDanceTermMs = Config::DEFAULT_LAYER_TAP_DANCE_TERM_MS;
+uint8_t currentPcbRevision = Config::DEFAULT_PCB_REVISION;
 LayerColor currentLayerColors[Config::LAYER_COUNT];
 KeyAssignment keymap[Config::LAYER_COUNT][Config::KEY_COUNT];
 
@@ -85,6 +86,7 @@ void resetKeymapToDefaults() {
   currentStatusLayerDisplayMode =
     static_cast<StatusLayerDisplayMode>(Config::DEFAULT_STATUS_LAYER_DISPLAY_MODE);
   currentLayerTapDanceTermMs = Config::DEFAULT_LAYER_TAP_DANCE_TERM_MS;
+  currentPcbRevision = Config::DEFAULT_PCB_REVISION;
   resetLayerColors();
   setDefaultKeymap();
 }
@@ -101,6 +103,7 @@ void captureKeymapSnapshot(KeymapSnapshot& snapshot) {
     statusKeyAnimationBrightness();
   snapshot.statusLayerDisplayModeValue = statusLayerDisplayMode();
   snapshot.layerTapDanceTermMsValue = layerTapDanceTermMs();
+  snapshot.pcbRevisionValue = pcbRevision();
 
   for (uint8_t layer = 0; layer < Config::LAYER_COUNT; layer++) {
     snapshot.colors[layer] = layerColor(layer);
@@ -128,6 +131,7 @@ void restoreKeymapSnapshot(const KeymapSnapshot& snapshot) {
   );
   setStatusLayerDisplayMode(snapshot.statusLayerDisplayModeValue);
   setLayerTapDanceTermMs(snapshot.layerTapDanceTermMsValue);
+  setPcbRevision(snapshot.pcbRevisionValue);
   restoreActiveLayers(
     snapshot.persistentLayerIndex,
     snapshot.activeLayerIndex
@@ -237,6 +241,22 @@ bool setLayerTapDanceTermMs(uint16_t termMs) {
   }
 
   currentLayerTapDanceTermMs = termMs;
+  return true;
+}
+
+uint8_t pcbRevision() {
+  return currentPcbRevision;
+}
+
+bool setPcbRevision(uint8_t revision) {
+  if (
+    revision != Config::DEFAULT_PCB_REVISION &&
+    revision != Config::LEGACY_PCB_REVISION
+  ) {
+    return false;
+  }
+
+  currentPcbRevision = revision;
   return true;
 }
 

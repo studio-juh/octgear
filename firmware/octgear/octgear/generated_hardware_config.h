@@ -31,11 +31,17 @@ constexpr uint8_t EXTERNAL_RGB_LED_COUNT = 4;
 constexpr bool EXTERNAL_RGB_LED_REVERSED = true;
 constexpr uint8_t MATRIX_ROW_COUNT = 2;
 constexpr uint8_t MATRIX_COLUMN_COUNT = 4;
+constexpr uint8_t DEFAULT_PCB_REVISION = 3;
+constexpr uint8_t LEGACY_PCB_REVISION = 2;
 
 using KeyMask = uint16_t;
 
 constexpr uint8_t MATRIX_ROW_PINS[MATRIX_ROW_COUNT] = {
   2, 9
+};
+
+constexpr uint8_t LEGACY_MATRIX_ROW_PINS[MATRIX_ROW_COUNT] = {
+  0, 9
 };
 
 constexpr uint8_t MATRIX_COLUMN_PINS[MATRIX_COLUMN_COUNT] = {

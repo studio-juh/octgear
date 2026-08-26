@@ -34,6 +34,10 @@ export const HARDWARE_CONFIG = {
   },
   statusLedKeyAnimation: 0,
   statusLedLayerDisplayMode: 0,
+  pcbRevision: {
+    default: 3,
+    legacy: 2,
+  },
   matrix: {
     rowCount: 2,
     columnCount: 4,

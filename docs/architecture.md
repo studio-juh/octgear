@@ -44,7 +44,7 @@ Physical controls ─────>│ RP2040 firmware              │───�
 | `apps/web/src/products/octgear/generatedHardwareConfig.ts` | Web UIのcontrol metadata |
 | `hardware/octgear/pinout.md` | 人が読むpinout |
 
-生成スクリプトはMatrix Row / Columnとキーのindex・範囲、全GPIOの重複、encoder controlが`enc-ccw`、`enc-cw`、`enc-sw`の順で連続することを検証します。生成物は直接編集しません。
+生成スクリプトはMatrix Row / Columnとキーのindex・範囲、PCB v3 / v2互換の各pin構成におけるGPIO重複、encoder controlが`enc-ccw`、`enc-cw`、`enc-sw`の順で連続することを検証します。生成物は直接編集しません。
 
 ## Firmware Modules
 
@@ -54,8 +54,8 @@ Firmware entry pointは`firmware/octgear/octgear/octgear.ino`です。
 | --- | --- |
 | `config.h` | timing、LED、heartbeat、WebUSB案内、rescue等の手動設定 |
 | `generated_hardware_config.h` | profile由来のpin / count定数 |
-| `key_scanner.*` | Matrix scan / debounce、quadrature decode、control mask生成 |
-| `keymap.*` | RAM上のassignment、active layer、layer RGB color、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションと輝度上限 |
+| `key_scanner.*` | PCBリビジョンに応じたMatrix scan / debounce、quadrature decode、control mask生成 |
+| `keymap.*` | RAM上のassignment、active layer、layer RGB color、PCBリビジョン、Encoder方向、LEDテープ方向、Layer表示モード、打鍵アニメーションと輝度上限 |
 | `keymap_storage.*` | 3-sector Flash journalのload / save / CRC / self-test |
 | `key_assignment.*` | assignmentの型とconstructor |
 | `hid_device.*` | USB lifecycle、config command、通常HID出力の調停 |
