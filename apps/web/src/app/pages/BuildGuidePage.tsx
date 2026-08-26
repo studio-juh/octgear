@@ -335,32 +335,66 @@ export function BuildGuidePage() {
             id="assembly-title"
           />
           <ol className="guide-steps">
-            {guide.steps.map((step, index) => (
-              <li key={step.title}>
-                <div className="guide-step-number">
-                  {String(index + 1).padStart(2, "0")}
-                </div>
-                <div className="guide-step-content">
-                  <div className="guide-step-copy">
-                    <h3>{step.title}</h3>
-                    <p>{step.description}</p>
-                    <ul>
-                      {step.checks.map((check) => (
-                        <li key={check}>{check}</li>
-                      ))}
-                    </ul>
+            {guide.steps.map((step, index) => {
+              const photos: readonly GuidePhoto[] =
+                "photos" in step && step.photos
+                  ? step.photos
+                  : "photo" in step && step.photo
+                    ? [step.photo]
+                    : [];
+
+              return (
+                <li key={step.title}>
+                  <div className="guide-step-number">
+                    {String(index + 1).padStart(2, "0")}
                   </div>
-                  <GuidePhotoSlot
-                    assetBaseUrl={`${buildGuideAssetUrl}assembly/`}
-                    photo={step.photo}
-                    placeholder={guide.photoPlaceholder(index + 1)}
-                    pendingLabel={guide.photoPending}
-                    enlargeLabel={guide.enlargeGuideImage(step.photo.title)}
-                    onExpand={setExpandedImage}
-                  />
-                </div>
-              </li>
-            ))}
+                  <div className="guide-step-content">
+                    <div className="guide-step-copy">
+                      <h3>{step.title}</h3>
+                      <p>{step.description}</p>
+                      {"warning" in step && step.warning ? (
+                        <div
+                          className="guide-notice warning guide-step-warning"
+                          role="note"
+                        >
+                          <strong>{step.warning}</strong>
+                        </div>
+                      ) : null}
+                      {"note" in step && step.note ? (
+                        <div className="guide-notice guide-step-note" role="note">
+                          <strong>{step.note}</strong>
+                        </div>
+                      ) : null}
+                      <ul>
+                        {step.checks.map((check) => (
+                          <li key={check}>{check}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div
+                      className="guide-step-photo-gallery"
+                      data-photo-count={photos.length}
+                    >
+                      {photos.map((photo) => (
+                        <figure key={photo.file || photo.title}>
+                          <GuidePhotoSlot
+                            assetBaseUrl={`${buildGuideAssetUrl}assembly/`}
+                            photo={photo}
+                            placeholder={guide.photoPlaceholder(index + 1)}
+                            pendingLabel={guide.photoPending}
+                            enlargeLabel={guide.enlargeGuideImage(photo.title)}
+                            onExpand={setExpandedImage}
+                          />
+                          {photo.file ? (
+                            <figcaption>{photo.title}</figcaption>
+                          ) : null}
+                        </figure>
+                      ))}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ol>
         </section>
 
@@ -626,8 +660,8 @@ function GuidePhotoSlot({
           src,
           title: photo.title,
           alt: photo.alt,
-          width: 1200,
-          height: 900,
+          width: 640,
+          height: 480,
         })
       }
     >
@@ -635,8 +669,8 @@ function GuidePhotoSlot({
         src={src}
         alt={photo.alt}
         loading="lazy"
-        width="1200"
-        height="900"
+        width="640"
+        height="480"
       />
     </button>
   );

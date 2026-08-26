@@ -784,6 +784,32 @@ button.guide-photo-slot.available {
   border-radius: 8px;
 }
 
+.guide-step-photo-gallery {
+  display: grid;
+  gap: 10px;
+}
+
+.guide-step-photo-gallery[data-photo-count="3"],
+.guide-step-photo-gallery[data-photo-count="4"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.guide-step-photo-gallery[data-photo-count="3"] > figure:last-child {
+  grid-column: 1 / -1;
+}
+
+.guide-step-photo-gallery figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.guide-step-photo-gallery figcaption {
+  margin-top: 5px;
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
 .guide-step-number {
   display: grid;
   place-items: center;
@@ -809,6 +835,19 @@ button.guide-photo-slot.available {
   margin-top: 7px;
   color: var(--text-muted);
   line-height: 1.65;
+}
+
+.guide-step-warning,
+.guide-step-note {
+  margin-top: 12px;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.guide-step-note {
+  border-left-color: var(--accent);
+  background: rgba(13, 122, 114, 0.08);
 }
 
 .guide-download-grid {

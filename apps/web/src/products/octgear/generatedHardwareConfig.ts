@@ -41,7 +41,7 @@ export const HARDWARE_CONFIG = {
   },
   externalRgbLed: true,
   externalRgbLedCount: 4,
-  externalRgbLedReversed: false,
+  externalRgbLedReversed: true,
   oled: false,
   encoder: {
     enabled: true,

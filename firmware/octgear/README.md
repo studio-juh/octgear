@@ -111,7 +111,7 @@ Generated headerは直接編集しません。Hardware profile変更後は`pnpm 
 | Encoder CW | Volume Up | None |
 | Encoder SW | None | None |
 
-Layer 2〜7は全controlが`None`です。既定で有効なのはLayer 0/1だけで、Layer 0は無効化できません。Encoder方向の既定値はhardware profileの`encoder.reversed`、LEDテープ方向の既定値は`externalRgbLedReversed`で、現行構成はいずれも標準です。Layer表示の既定値は`statusLedLayerDisplayMode`の全灯、打鍵アニメーションの既定値は`statusLedKeyAnimation`の波紋、アニメーション輝度上限は`statusKeyAnimationBrightness.default`の`96`、Tap Dance判定時間は`250 ms`です。Version 6で保存した設定はFirmware更新だけでは変更されず、初期化したときにこれらの既定値が適用されます。
+Layer 2〜7は全controlが`None`です。既定で有効なのはLayer 0/1だけで、Layer 0は無効化できません。Encoder方向の既定値はhardware profileの`encoder.reversed`で現行構成は標準、LEDテープ方向の既定値は`externalRgbLedReversed`で現行構成は反転です。写真どおりにLEDテープを配置した新規個体または設定初期化後の個体では、この反転設定によって盤面左端を論理LED 1として扱います。Layer表示の既定値は`statusLedLayerDisplayMode`の全灯、打鍵アニメーションの既定値は`statusLedKeyAnimation`の波紋、アニメーション輝度上限は`statusKeyAnimationBrightness.default`の`96`、Tap Dance判定時間は`250 ms`です。Version 6で保存した設定はFirmware更新だけでは変更されず、初期化したときにこれらの既定値が適用されます。
 
 ## Storage
 

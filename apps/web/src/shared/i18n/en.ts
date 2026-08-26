@@ -73,7 +73,7 @@ export const en: typeof ja = {
       "EC11 rotary encoder (15 mm height) and knob",
       "WS2812B LED strip (DC 5 V, 1 m / 60 LEDs; four LEDs used)",
       "M2 × 8 mm screws or compatible self-tapping screws",
-      "Case and plate (self-print in 3D or order from JLC3DP or a similar service)",
+      "Case parts (Case Top, Case Bottom, and LED diffuser; self-print in 3D or order from JLC3DP or a similar service)",
       "Spacers are normally unnecessary; use cushioning tape or similar material only if adjustment is needed",
       "Four rubber bumpers (used as non-slip feet on the case bottom)",
     ],
@@ -97,28 +97,17 @@ export const en: typeof ja = {
     photoPending: "Assembly photo to be added",
     partsReferenceTitle: "Identify the parts",
     partsReferenceDescription:
-      "Check the shape, quantity, and orientation of every part before assembly. Each frame is a placeholder for a real build photo.",
+      "Each part type is shown separately because there is no single overview photo. Before assembly, compare each part with the photos and check its shape, quantity, and orientation.",
     partReferences: [
-      {
-        title: "Complete parts set",
-        quantity: "1 set",
-        description:
-          "Lay out the PCB, electronics, case, fasteners, switches, and keycaps and check for missing parts.",
-        photo: {
-          file: "",
-          title: "Overhead view of every included part",
-          alt: "All OctGear parts arranged by type",
-        },
-      },
       {
         title: "OctGear main PCB",
         quantity: "1",
         description:
           "Identify the back with Key 1–8 labels, the RP2040 and encoder side, and the USB connector side.",
         photo: {
-          file: "",
-          title: "PCB front, back, and reference orientation",
-          alt: "Front and back of the OctGear main PCB with its assembly orientation",
+          file: "octgear-main-pcb-back.jpg",
+          title: "PCB back and key numbers",
+          alt: "Back of the OctGear main PCB showing Key 1 through Key 8 and the socket positions",
         },
       },
       {
@@ -127,9 +116,9 @@ export const en: typeof ja = {
         description:
           "Use a Waveshare RP2040-Zero or pin-compatible board. Check the USB connector and pin labels before assembly.",
         photo: {
-          file: "",
-          title: "RP2040-Zero sides and USB orientation",
-          alt: "Both sides of an RP2040-Zero and its orientation on the OctGear PCB",
+          file: "octgear-rp2040-zero-solder-side.jpg",
+          title: "Installed RP2040-Zero solder side",
+          alt: "Solder side and USB orientation of an RP2040-Zero installed on the OctGear PCB",
         },
       },
       {
@@ -138,20 +127,20 @@ export const en: typeof ja = {
         description:
           "These mount to Key 1–8 on the PCB back. Identify the switch contact and two solder pads.",
         photo: {
-          file: "",
+          file: "octgear-hot-swap-sockets.jpg",
           title: "Correct socket orientation and contacts",
           alt: "Correct orientation and contacts of a key hot-swap socket",
         },
       },
       {
-        title: "EC11 encoder and knob",
-        quantity: "1 each",
+        title: "EC11 encoder and hardware",
+        quantity: "1 set",
         description:
-          "Use a 15 mm EC11. Identify its A/C/B/SW pins, mounting tabs, and D-shaft knob orientation.",
+          "Use a 15 mm EC11. Identify its A/C/B/SW pins, mounting tabs, nut, and washer.",
         photo: {
-          file: "",
-          title: "EC11 pins, mounting tabs, and knob",
-          alt: "Pins and mounting tabs of an EC11 rotary encoder with its knob",
+          file: "octgear-ec11-encoder-hardware.jpg",
+          title: "EC11 body, nut, and washer",
+          alt: "Pins and mounting tabs of an EC11 rotary encoder with its nut and washer",
         },
       },
       {
@@ -160,31 +149,97 @@ export const en: typeof ja = {
         description:
           "Identify the cut marks, 5 V, GND, DIN, and data arrows, then prepare a four-pixel segment.",
         photo: {
-          file: "",
+          file: "octgear-ws2812b-four-pixel-strip.jpg",
           title: "Four-pixel strip and data direction",
           alt: "Four-pixel WS2812B LED strip showing the cut marks and data direction",
         },
       },
       {
-        title: "Case, plate, and fasteners",
-        quantity: "1 set",
+        title: "Case Top",
+        quantity: "1",
         description:
-          "Separate the Top, clear or translucent Middle, Bottom, plate, screws, and rubber bumpers.",
+          "This top part has eight switch openings and the encoder shaft hole. Inspect the printed surface and openings.",
         photo: {
-          file: "",
-          title: "Case layers and fastening parts",
-          alt: "OctGear case layers, plate, screws, and rubber bumpers",
+          file: "octgear-case-top.jpg",
+          title: "Case Top",
+          alt: "OctGear Case Top with eight switch openings and the encoder shaft hole",
         },
       },
       {
-        title: "Switches and keycaps",
-        quantity: "8 each",
+        title: "Case Bottom",
+        quantity: "1",
         description:
-          "Prepare MX-compatible switches and keycaps. All positions accept 1U; only Key 1 and Key 5 optionally use wider caps.",
+          "This bottom part holds the PCB, wiring, and mounting nut. Check the screw holes and internal channels.",
         photo: {
-          file: "",
-          title: "Switch pins and keycap size comparison",
-          alt: "Switch pins beside 1U, 1.25U, and 1.5U keycaps",
+          file: "octgear-case-bottom.jpg",
+          title: "Inside the Case Bottom",
+          alt: "Inside of the OctGear Case Bottom showing screw holes, wiring channels, and the mounting nut position",
+        },
+      },
+      {
+        title: "LED diffuser",
+        quantity: "1",
+        description:
+          "This clear or translucent part carries light from the four side LEDs to the outer edge. It fits into the Case Bottom channel.",
+        photo: {
+          file: "octgear-led-diffuser.jpg",
+          title: "Clear LED diffuser",
+          alt: "Clear bar-shaped diffuser for the OctGear side LEDs",
+        },
+      },
+      {
+        title: "1/4-inch mounting nut",
+        quantity: "1",
+        description:
+          "This mounting nut is fixed at the center of the Case Bottom. Verify the thread specification on the actual part.",
+        photo: {
+          file: "octgear-quarter-inch-mount-nut.jpg",
+          title: "Mounting nut",
+          alt: "Hexagonal mounting nut installed in the OctGear Case Bottom",
+        },
+      },
+      {
+        title: "Case screws",
+        quantity: "5",
+        description:
+          "These M2 × 8 mm or equivalent screws secure the top parts from the Case Bottom.",
+        photo: {
+          file: "octgear-case-screws.jpg",
+          title: "Case screws",
+          alt: "Five screws used to fasten the OctGear case",
+        },
+      },
+      {
+        title: "Encoder knob",
+        quantity: "1",
+        description:
+          "Fit this knob to the EC11 D-shaft, matching the shaft profile to the inside of the knob.",
+        photo: {
+          file: "octgear-encoder-knob.jpg",
+          title: "D-shaft encoder knob",
+          alt: "White knob for the OctGear EC11 rotary encoder",
+        },
+      },
+      {
+        title: "Key switches",
+        quantity: "8",
+        description:
+          "Use MX-compatible switches. Check that both pins are straight before inserting each switch into its socket.",
+        photo: {
+          file: "octgear-key-switches.jpg",
+          title: "MX-compatible switch pins",
+          alt: "Eight MX-compatible key switches and their pins for OctGear",
+        },
+      },
+      {
+        title: "Keycaps",
+        quantity: "8",
+        description:
+          "All positions accept 1U keycaps. Wider caps are optional only for Key 1 and Key 5 to close the visual gaps.",
+        photo: {
+          file: "octgear-keycaps.jpg",
+          title: "1U keycaps",
+          alt: "Eight 1U keycaps for OctGear",
         },
       },
     ],
@@ -247,16 +302,34 @@ export const en: typeof ja = {
       {
         title: "Prepare the work area and test-fit the parts",
         description:
-          "Lay out the parts on a heat-resistant mat and stack the PCB, plate, and case without fastening them. Confirm the USB connector, Key 1, encoder side, and screw holes align.",
+          "Lay out the parts on a heat-resistant mat and stack the PCB, Case Top, and Case Bottom without fastening them. Confirm the USB connector, Key 1, encoder side, and screw holes align.",
         checks: [
           "The PCB has no cracks, deep scratches, or bent terminals",
           "Key 1–4 are on top, Key 5–8 below, and the rotary is on the right",
           "USB is disconnected and the work area has ventilation",
         ],
         photo: {
-          file: "",
-          title: "Part sides and test-fit orientation",
-          alt: "All OctGear parts test-fitted with the correct side and orientation",
+          file: "octgear-case-pcb-test-fit.jpg",
+          title: "PCB test-fit in the case",
+          alt: "OctGear main PCB and RP2040-Zero test-fitted in the case in the correct orientation",
+        },
+      },
+      {
+        title: "Install the RP2040-Zero",
+        description:
+          "Orient the RP2040-Zero so its USB Type-C connector faces the case opening. For a compatible board, compare the pinout first, then confirm every pin and the mounting height before soldering.",
+        warning:
+          "Caution: Before soldering, view the assembly from the side and confirm that the USB Type-C connector remains level. The case will not close if the board is fixed at an angle.",
+        checks: [
+          "The USB connector and PCB are not reversed",
+          "The USB Type-C connector is level when viewed from the side of the case",
+          "The RP2040-Zero is parallel to the PCB with no bridged pins",
+          "A compatible board matches the OctGear GPIO pinout",
+        ],
+        photo: {
+          file: "octgear-rp2040-zero-installed.jpg",
+          title: "Correct RP2040-Zero orientation and height",
+          alt: "RP2040-Zero mounted on the OctGear PCB with the correct orientation and height",
         },
       },
       {
@@ -269,54 +342,63 @@ export const en: typeof ja = {
           "No solder bridge reaches an adjacent pad",
         ],
         photo: {
-          file: "",
+          file: "octgear-hot-swap-sockets-soldered.jpg",
           title: "Socket orientation and a sound solder joint",
           alt: "Hot-swap sockets soldered flat in the correct orientation on the OctGear PCB back",
         },
       },
       {
-        title: "Install the RP2040-Zero",
-        description:
-          "Orient the RP2040-Zero so its USB connector faces the case opening. For a compatible board, compare the pinout first, then confirm every pin and the mounting height before soldering.",
-        checks: [
-          "The USB connector and PCB are not reversed",
-          "The RP2040-Zero is parallel to the PCB with no bridged pins",
-          "A compatible board matches the OctGear GPIO pinout",
-        ],
-        photo: {
-          file: "",
-          title: "Correct RP2040-Zero orientation and height",
-          alt: "RP2040-Zero mounted on the OctGear PCB with the correct orientation and height",
-        },
-      },
-      {
         title: "Install the EC11 encoder",
         description:
-          "Insert the encoder vertically and solder its mounting tabs and A/C/B/SW pins. Leave the nut lightly tightened until the case and knob height can be checked.",
+          "Compare the before and after photos and bend the encoder's outer mounting tabs to match. Insert the encoder vertically, then solder the mounting tabs and A/C/B/SW pins. Connect the second PCB terminal counted from the RP2040 side to the encoder center terminal and the ground side of SW. Leave the nut lightly tightened until the case and knob height can be checked.",
+        warning:
+          "Caution: The second terminal from the RP2040 side is a virtual ground connected directly to an RP2040 output. It may be used for the encoder center terminal and SW ground, but it must not be used as LED ground. Connecting LEDs would exceed the RP2040 output current capacity.",
         checks: [
+          "Only the outer mounting tabs were formed; the A/C/B/SW pins were not bent",
+          "The second terminal from the RP2040 side is wired to the encoder center terminal and the ground side of SW",
+          "LED ground is not connected to the virtual ground terminal",
           "The encoder body sits against the PCB and its shaft is vertical",
           "Every pin and mounting tab has a sound solder joint",
           "Rotation and the push switch move without binding",
         ],
-        photo: {
-          file: "",
-          title: "Encoder orientation, pins, and temporary nut position",
-          alt: "EC11 encoder mounted vertically on the OctGear PCB with its pins and nut visible",
-        },
+        photos: [
+          {
+            file: "octgear-ec11-mounting-tabs-before-bending.jpg",
+            title: "1. Before bending the mounting tabs",
+            alt: "EC11 rotary encoder before its outer mounting tabs are bent",
+          },
+          {
+            file: "octgear-ec11-mounting-tabs-after-bending.jpg",
+            title: "2. After bending the mounting tabs",
+            alt: "EC11 rotary encoder with its outer mounting tabs bent for installation on the OctGear PCB",
+          },
+          {
+            file: "octgear-ec11-encoder-installed.jpg",
+            title: "3. Installed on the PCB",
+            alt: "EC11 encoder mounted vertically on the OctGear PCB with its pins and nut visible",
+          },
+          {
+            file: "octgear-ec11-encoder-soldering.jpg",
+            title: "4. Solder the encoder",
+            alt: "Soldered EC11 encoder pins and wiring on the OctGear PCB",
+          },
+        ],
       },
       {
         title: "Prepare and wire a four-pixel LED strip",
         description:
           "Cut the WS2812B strip at a cut mark after four pixels and connect GPIO 14 to DIN on the first pixel. Verify 5 V, GND, and data direction, then insulate exposed joints.",
+        note:
+          "Note: The position shown is the firmware default. If LED movement is reversed on an existing device, change it later with LED strip direction / Reverse in Remapper.",
         checks: [
           "The arrows run from the first pixel toward the fourth",
           "5 V and GND are not reversed",
           "Wires reach the case edge without crossing moving parts or screw holes",
         ],
         photo: {
-          file: "",
-          title: "LED cut mark, DIN, and three wires",
-          alt: "Four-pixel WS2812B strip showing its cut mark and DIN, 5 V, and GND wires",
+          file: "octgear-led-encoder-wiring.jpg",
+          title: "LED and encoder wiring",
+          alt: "Four-pixel WS2812B strip and EC11 encoder wired to the OctGear PCB",
         },
       },
       {
@@ -329,24 +411,24 @@ export const en: typeof ja = {
           "A gentle movement of each wire does not loosen its joint",
         ],
         photo: {
-          file: "",
-          title: "Good joint and solder bridge comparison",
-          alt: "Comparison between a sound solder joint and a solder bridge that needs repair",
+          file: "octgear-rp2040-zero-solder-side.jpg",
+          title: "RP2040-Zero solder joints",
+          alt: "Solder joints on the back of the RP2040-Zero installed on the OctGear PCB",
         },
       },
       {
-        title: "Install the plate and switches",
+        title: "Install the Case Top and switches",
         description:
-          "Secure switches in the plate starting at its corners, straighten each pin, and insert it into the socket. If resistance is high, stop and inspect the pins instead of forcing it.",
+          "Secure switches in the Case Top starting at its corners, straighten each pin, and insert it into the socket. If resistance is high, stop and inspect the pins instead of forcing it.",
         checks: [
           "No switch pin is folded or trapped underneath",
-          "The plate and switches sit flat and every key moves freely",
+          "The Case Top and switches sit flat and every key moves freely",
           "A severely bent pin is not forced back into service",
         ],
         photo: {
-          file: "",
-          title: "Switch pins and plate insertion order",
-          alt: "Straight switch pins and the corner-first installation order for the OctGear plate",
+          file: "octgear-switches-in-case-top.jpg",
+          title: "Switches installed in the Case Top",
+          alt: "Eight key switches installed in the OctGear Case Top",
         },
       },
       {
@@ -359,9 +441,9 @@ export const en: typeof ja = {
           "Correct faults now instead of enclosing them in the case",
         ],
         photo: {
-          file: "",
-          title: "Firmware and Diagnostics test outside the case",
-          alt: "OctGear PCB connected to USB and tested in Diagnostics before closing the case",
+          file: "octgear-powered-led-test.jpg",
+          title: "LED power test over USB",
+          alt: "OctGear PCB connected over USB with all four LEDs lit before the case is closed",
         },
       },
       {
@@ -374,9 +456,9 @@ export const en: typeof ja = {
           "The case does not pinch the PCB or wiring",
         ],
         photo: {
-          file: "",
-          title: "Case stack, LED position, and wire routing",
-          alt: "OctGear Bottom, Middle, and Top stack with the LED strip position and wire routing",
+          file: "octgear-led-strip-case-placement.jpg",
+          title: "LED strip placement in the case",
+          alt: "Four-pixel LED strip placed along the OctGear main PCB inside the case",
         },
       },
       {
@@ -389,9 +471,9 @@ export const en: typeof ja = {
           "The unit sits steadily and every key moves freely",
         ],
         photo: {
-          file: "",
-          title: "Screw order and finished clearances",
-          alt: "Finished OctGear showing the screw order, rubber feet, keycaps, and encoder knob clearance",
+          file: "octgear-completed-keycaps-knob.jpg",
+          title: "Finished keycaps and encoder knob",
+          alt: "Finished OctGear with eight keycaps and the encoder knob installed",
         },
       },
     ],

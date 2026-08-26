@@ -71,7 +71,7 @@ export const ja = {
       "EC11ロータリーエンコーダー（高さ15mm）とノブ",
       "WS2812B LEDテープ（DC5V、1m／60 LEDs、使用数4灯）",
       "M2 × 8mmねじ、または対応するセルフタッピングねじ",
-      "ケース、プレート（セルフ3Dプリント、またはJLC3DP等で発注）",
+      "ケース部品（ケース上面・底面、LED拡散部品。セルフ3Dプリント、またはJLC3DP等で発注）",
       "スペーサーは原則不要（必要な場合はクッションテープ等で調整）",
       "クッションゴム4個（ケース底面の滑り止め足として使用）",
     ],
@@ -95,28 +95,17 @@ export const ja = {
     photoPending: "撮影写真を追加予定",
     partsReferenceTitle: "部品を見分ける",
     partsReferenceDescription:
-      "組み立て前に形状、数量、表裏を確認します。各枠は実物写真へ差し替えるためのプレースホルダーです。",
+      "俯瞰写真の代わりに部品を1種類ずつ掲載しています。組み立て前に、写真と照らし合わせて形状、数量、表裏を確認します。",
     partReferences: [
-      {
-        title: "構成品一式",
-        quantity: "1 set",
-        description:
-          "PCB、電子部品、ケース、ねじ、キー部品をすべて並べ、不足がないか確認します。",
-        photo: {
-          file: "",
-          title: "全構成品を並べた俯瞰写真",
-          alt: "OctGearの全構成品を種類ごとに並べた写真",
-        },
-      },
       {
         title: "OctGear メインPCB",
         quantity: "1",
         description:
           "キー番号が見える裏面、RP2040とEncoderを取り付ける右側、USB端子側を確認します。",
         photo: {
-          file: "",
-          title: "PCBの表面・裏面と基準方向",
-          alt: "OctGearメインPCBの表面と裏面および取り付け方向を示す写真",
+          file: "octgear-main-pcb-back.jpg",
+          title: "PCB裏面とキー番号",
+          alt: "Key 1からKey 8の番号とソケット取付位置が見えるOctGearメインPCB裏面の写真",
         },
       },
       {
@@ -125,9 +114,9 @@ export const ja = {
         description:
           "Waveshare RP2040-Zeroまたはpin互換品です。USB端子とpin表記を実装前に確認します。",
         photo: {
-          file: "",
-          title: "RP2040-Zeroの表裏とUSB端子方向",
-          alt: "RP2040-Zeroの表裏とOctGear PCBへの取り付け方向を示す写真",
+          file: "octgear-rp2040-zero-solder-side.jpg",
+          title: "実装したRP2040-Zeroの裏面",
+          alt: "OctGear PCBへ取り付けたRP2040-Zeroの裏面とUSB端子方向を示す写真",
         },
       },
       {
@@ -136,20 +125,20 @@ export const ja = {
         description:
           "PCB裏面のKey 1〜8へ取り付けます。端子と2つのはんだpadの形状を確認します。",
         photo: {
-          file: "",
+          file: "octgear-hot-swap-sockets.jpg",
           title: "ソケットの正しい向きと端子",
           alt: "キーホットスワップソケットの正しい向きと端子を示す写真",
         },
       },
       {
-        title: "EC11 Encoderとノブ",
-        quantity: "各1",
+        title: "EC11 Encoderと固定金具",
+        quantity: "1 set",
         description:
-          "高さ15mmのEC11です。A/C/B/SW端子、固定脚、D軸ノブの向きを確認します。",
+          "高さ15mmのEC11です。A/C/B/SW端子、固定脚、ナット、ワッシャーを確認します。",
         photo: {
-          file: "",
-          title: "EC11の端子・固定脚・ノブ",
-          alt: "EC11ロータリーエンコーダーの端子と固定脚およびノブを示す写真",
+          file: "octgear-ec11-encoder-hardware.jpg",
+          title: "EC11本体・ナット・ワッシャー",
+          alt: "EC11ロータリーエンコーダーの端子、固定脚、ナット、ワッシャーを示す写真",
         },
       },
       {
@@ -158,31 +147,97 @@ export const ja = {
         description:
           "切断位置、5V、GND、DIN、data方向の矢印を確認し、4灯分を使用します。",
         photo: {
-          file: "",
+          file: "octgear-ws2812b-four-pixel-strip.jpg",
           title: "4灯へ切り出したLEDとdata方向",
           alt: "4灯へ切り出したWS2812B LEDテープとdata方向を示す写真",
         },
       },
       {
-        title: "Case・Plate・固定部品",
-        quantity: "1 set",
+        title: "ケース上面",
+        quantity: "1",
         description:
-          "Top、透明／半透明Middle、Bottom、Plate、ねじ、クッションゴムを区別します。",
+          "8個のSwitch開口とEncoder軸の穴がある上面部品です。造形面と開口部を確認します。",
         photo: {
-          file: "",
-          title: "ケース各層と固定部品",
-          alt: "OctGearのケース各層、プレート、ねじ、クッションゴムを示す写真",
+          file: "octgear-case-top.jpg",
+          title: "ケース上面",
+          alt: "8個のSwitch開口とEncoder軸穴があるOctGearのケース上面の写真",
         },
       },
       {
-        title: "Switch・Keycap",
-        quantity: "各8",
+        title: "Case Bottom",
+        quantity: "1",
         description:
-          "MX互換SwitchとKeycapを用意します。すべて1Uで使用でき、Key 1と5だけ幅広capも任意です。",
+          "PCB、配線、固定ナットを収める底面部品です。ねじ穴と内側の溝を確認します。",
         photo: {
-          file: "",
-          title: "Switch端子とKeycapサイズ比較",
-          alt: "キースイッチの端子と1U、1.25U、1.5Uキーキャップを比較する写真",
+          file: "octgear-case-bottom.jpg",
+          title: "Case Bottom内側",
+          alt: "ねじ穴、配線溝、固定ナット位置が見えるOctGear Case Bottom内側の写真",
+        },
+      },
+      {
+        title: "LED拡散部品",
+        quantity: "1",
+        description:
+          "側面4灯の光を外周へ導く透明／半透明部品です。Case Bottomの溝へ収めます。",
+        photo: {
+          file: "octgear-led-diffuser.jpg",
+          title: "透明なLED拡散部品",
+          alt: "OctGearの側面LED光を拡散する透明な棒状部品の写真",
+        },
+      },
+      {
+        title: "1/4 inch mount nut",
+        quantity: "1",
+        description:
+          "Case Bottom中央へ固定するmount用ナットです。ねじ規格を実物で確認します。",
+        photo: {
+          file: "octgear-quarter-inch-mount-nut.jpg",
+          title: "mount固定ナット",
+          alt: "OctGearのCase Bottomへ取り付ける六角形のmount固定ナットの写真",
+        },
+      },
+      {
+        title: "ケース固定ねじ",
+        quantity: "5",
+        description:
+          "Case Bottomから上面部品を固定するM2 × 8mm相当のねじです。",
+        photo: {
+          file: "octgear-case-screws.jpg",
+          title: "ケース固定ねじ",
+          alt: "OctGearケースの固定に使用する5本のねじの写真",
+        },
+      },
+      {
+        title: "Encoderノブ",
+        quantity: "1",
+        description:
+          "EC11のD軸へ取り付けます。軸形状とノブ内側の向きを合わせます。",
+        photo: {
+          file: "octgear-encoder-knob.jpg",
+          title: "D軸用Encoderノブ",
+          alt: "OctGearのEC11ロータリーエンコーダーへ取り付ける白いノブの写真",
+        },
+      },
+      {
+        title: "Key Switch",
+        quantity: "8",
+        description:
+          "MX互換Switchを使用します。ソケットへ差し込む前に2本の端子が真っすぐか確認します。",
+        photo: {
+          file: "octgear-key-switches.jpg",
+          title: "MX互換Switchの端子",
+          alt: "OctGearで使用する8個のMX互換キースイッチと端子を示す写真",
+        },
+      },
+      {
+        title: "Keycap",
+        quantity: "8",
+        description:
+          "すべて1Uで使用できます。隙間を詰める場合のみKey 1と5へ幅広capを選べます。",
+        photo: {
+          file: "octgear-keycaps.jpg",
+          title: "1U Keycap",
+          alt: "OctGearで使用する8個の1Uキーキャップの写真",
         },
       },
     ],
@@ -245,16 +300,34 @@ export const ja = {
       {
         title: "作業面を整え、部品を仮合わせする",
         description:
-          "耐熱マット上に構成品を並べ、PCB、Plate、ケースを固定せずに重ねます。USB端子、Key 1、Encoder側、ねじ穴が一致することを確認します。",
+          "耐熱マット上に構成品を並べ、PCB、ケース上面、ケース底面を固定せずに重ねます。USB端子、Key 1、Encoder側、ねじ穴が一致することを確認します。",
         checks: [
           "PCBに割れ、深い傷、曲がった端子がない",
           "上段Key 1〜4、下段Key 5〜8、右側Rotaryの向きになっている",
           "USBケーブルを外し、換気できる場所で作業している",
         ],
         photo: {
-          file: "",
-          title: "全パーツの表裏と仮合わせ方向",
-          alt: "OctGearの全パーツを正しい表裏と向きで仮合わせした写真",
+          file: "octgear-case-pcb-test-fit.jpg",
+          title: "ケース内へのPCB仮合わせ",
+          alt: "OctGearのケースへメインPCBとRP2040-Zeroを正しい向きで仮合わせした写真",
+        },
+      },
+      {
+        title: "RP2040-Zeroを取り付ける",
+        description:
+          "USB Type-C端子がケースの開口側になるようRP2040-Zeroを合わせます。互換boardはpin配置を照合し、全pinの向きと高さを確認してからはんだ付けします。",
+        warning:
+          "注意: はんだ付け前にケース側面から見て、USB Type-C端子が水平を維持していることを確認してください。傾いたまま固定するとケースが閉まりません。",
+        checks: [
+          "USB端子とPCBの向きを逆にしていない",
+          "ケース側面から見てUSB Type-C端子が水平になっている",
+          "RP2040-ZeroがPCBと平行で、端子間をブリッジしていない",
+          "互換boardのGPIO配置がOctGear pinoutと一致している",
+        ],
+        photo: {
+          file: "octgear-rp2040-zero-installed.jpg",
+          title: "RP2040-Zeroの正しい向きと実装高さ",
+          alt: "OctGear PCBへ正しい向きと高さで取り付けたRP2040-Zeroの写真",
         },
       },
       {
@@ -267,54 +340,63 @@ export const ja = {
           "隣接padへはんだブリッジしていない",
         ],
         photo: {
-          file: "",
+          file: "octgear-hot-swap-sockets-soldered.jpg",
           title: "ソケットの向きと正常なはんだ接合",
           alt: "OctGear PCB裏面へ正しい向きではんだ付けしたホットスワップソケットの写真",
         },
       },
       {
-        title: "RP2040-Zeroを取り付ける",
-        description:
-          "USB端子がケースの開口側になるようRP2040-Zeroを合わせます。互換boardはpin配置を照合し、全pinの向きと高さを確認してからはんだ付けします。",
-        checks: [
-          "USB端子とPCBの向きを逆にしていない",
-          "RP2040-ZeroがPCBと平行で、端子間をブリッジしていない",
-          "互換boardのGPIO配置がOctGear pinoutと一致している",
-        ],
-        photo: {
-          file: "",
-          title: "RP2040-Zeroの正しい向きと実装高さ",
-          alt: "OctGear PCBへ正しい向きと高さで取り付けたRP2040-Zeroの写真",
-        },
-      },
-      {
         title: "EC11 Encoderを取り付ける",
         description:
-          "EncoderをPCBへ垂直に差し込み、固定脚とA/C/B/SW端子をはんだ付けします。ナットはケースとノブの高さを確認できる状態まで仮締めにします。",
+          "加工前・加工後の写真を見比べ、Encoder外周の固定脚を写真と同じ状態へ折り曲げます。PCBへ垂直に差し込み、固定脚とA/C/B/SW端子をはんだ付けします。RP2040に近い側から数えて2番目のPCB端子を、Encoder中央端子とSWのGND側へ配線します。ナットはケースとノブの高さを確認できる状態まで仮締めにします。",
+        warning:
+          "注意: RP2040に近い側から2番目の端子は、RP2040の出力へ直結された仮想GNDです。Encoder中央端子とSWのGNDとして使用できますが、LEDのGNDには使用できません。LEDを接続するとRP2040出力の電流容量を超えます。",
         checks: [
+          "外周の固定脚だけを加工し、A/C/B/SW端子を曲げていない",
+          "RP2040に近い側から2番目の端子をEncoder中央端子とSWのGND側へ配線している",
+          "LEDのGNDを仮想GNDへ接続していない",
           "Encoder本体がPCBへ密着し、軸が傾いていない",
           "固定脚を含む全端子が確実に接合されている",
           "回転と押し込みに引っ掛かりがない",
         ],
-        photo: {
-          file: "",
-          title: "Encoderの向き・端子・仮締め状態",
-          alt: "OctGear PCBへ垂直に取り付けたEC11 Encoderと端子およびナットの写真",
-        },
+        photos: [
+          {
+            file: "octgear-ec11-mounting-tabs-before-bending.jpg",
+            title: "1. 固定脚を曲げる前",
+            alt: "外周の固定脚を折り曲げる前のEC11ロータリーエンコーダーの写真",
+          },
+          {
+            file: "octgear-ec11-mounting-tabs-after-bending.jpg",
+            title: "2. 固定脚を曲げた後",
+            alt: "OctGear PCBへ取り付けるため外周の固定脚を折り曲げたEC11ロータリーエンコーダーの写真",
+          },
+          {
+            file: "octgear-ec11-encoder-installed.jpg",
+            title: "3. PCBへ取り付けた状態",
+            alt: "OctGear PCBへ垂直に取り付けたEC11 Encoderと端子およびナットの写真",
+          },
+          {
+            file: "octgear-ec11-encoder-soldering.jpg",
+            title: "4. Encoderをはんだ付けする",
+            alt: "OctGear PCBへ取り付けたEC11 Encoderの端子と配線をはんだ付けした写真",
+          },
+        ],
       },
       {
         title: "LEDテープを4灯へ加工して配線する",
         description:
           "WS2812Bを切断markで4灯分にし、GPIO 14側を最初のpixelのDINへ接続します。5V、GND、data方向を確認し、露出部を絶縁します。",
+        note:
+          "補足: 写真の配置がFirmwareの既定方向です。既存個体でLEDの動きが左右逆になる場合は、Remapperの「LEDテープ方向／反転」で変更できます。",
         checks: [
           "LEDの矢印が最初のpixelから4灯目へ流れる向きになっている",
           "5VとGNDを逆接続していない",
           "配線がケース外周へ届き、可動部やねじ穴を横切らない",
         ],
         photo: {
-          file: "",
-          title: "LEDの切断位置・DIN・3本の配線",
-          alt: "4灯へ切り出したWS2812B LEDテープの切断位置とDIN、5V、GND配線を示す写真",
+          file: "octgear-led-encoder-wiring.jpg",
+          title: "LED・Encoderの配線",
+          alt: "OctGear PCBへ4灯のWS2812B LEDテープとEC11 Encoderを配線した写真",
         },
       },
       {
@@ -327,24 +409,24 @@ export const ja = {
           "すべての配線を軽く動かしても接合部が外れない",
         ],
         photo: {
-          file: "",
-          title: "正常な接合とはんだbridgeの比較",
-          alt: "正常なはんだ接合と修正が必要なはんだbridgeを比較する写真",
+          file: "octgear-rp2040-zero-solder-side.jpg",
+          title: "RP2040-Zeroのはんだ接合部",
+          alt: "OctGear PCBへ取り付けたRP2040-Zero裏面のはんだ接合部を示す写真",
         },
       },
       {
-        title: "PlateとSwitchを取り付ける",
+        title: "ケース上面とSwitchを取り付ける",
         description:
-          "Plateへ四隅のSwitchから固定し、端子を真っすぐにしてソケットへ差し込みます。抵抗が強い場合は押し込まず、端子の曲がりを確認します。",
+          "ケース上面へ四隅のSwitchから固定し、端子を真っすぐにしてソケットへ差し込みます。抵抗が強い場合は押し込まず、端子の曲がりを確認します。",
         checks: [
           "Switch端子が折れたり、下へ潜り込んだりしていない",
-          "PlateとSwitchが浮かず、全キーを軽く押せる",
+          "ケース上面とSwitchが浮かず、全キーを軽く押せる",
           "一度大きく曲がった端子は無理に再使用していない",
         ],
         photo: {
-          file: "",
-          title: "Switch端子とPlateへの差し込み順",
-          alt: "Switch端子の正常な状態とOctGear Plateへ四隅から取り付ける手順の写真",
+          file: "octgear-switches-in-case-top.jpg",
+          title: "ケース上面へ取り付けたSwitch",
+          alt: "OctGearのケース上面へ8個のキースイッチを取り付けた写真",
         },
       },
       {
@@ -357,9 +439,9 @@ export const ja = {
           "不具合をケース内へ残さず、この段階で修正する",
         ],
         photo: {
-          file: "",
-          title: "ケース外でのFirmware・Diagnostics確認",
-          alt: "ケースを閉じる前のOctGear PCBをUSB接続してDiagnostics確認している写真",
+          file: "octgear-powered-led-test.jpg",
+          title: "USB接続時のLED点灯確認",
+          alt: "ケースを閉じる前のOctGear PCBをUSB接続し4灯のLEDを点灯確認している写真",
         },
       },
       {
@@ -372,9 +454,9 @@ export const ja = {
           "PCBや配線をケースで挟んでいない",
         ],
         photo: {
-          file: "",
-          title: "ケース積層順・LED位置・配線経路",
-          alt: "OctGearのBottom、Middle、Topの積層順とLEDテープ位置および配線経路を示す写真",
+          file: "octgear-led-strip-case-placement.jpg",
+          title: "ケース内のLEDテープ配置",
+          alt: "OctGearのケース内でメインPCBに沿って4灯のLEDテープを配置した写真",
         },
       },
       {
@@ -387,9 +469,9 @@ export const ja = {
           "机上でがたつかず、全キーを軽く押せる",
         ],
         photo: {
-          file: "",
-          title: "ねじ締め順と完成時の隙間",
-          alt: "OctGearのねじ締め順、ゴム足、Keycap、Encoderノブの完成状態を示す写真",
+          file: "octgear-completed-keycaps-knob.jpg",
+          title: "KeycapとEncoderノブの完成状態",
+          alt: "8個のKeycapとEncoderノブを取り付けた完成状態のOctGearの写真",
         },
       },
     ],

@@ -25,7 +25,7 @@
   "externalRgbLed": true,
   "externalRgbLedPin": 14,
   "externalRgbLedCount": 4,
-  "externalRgbLedReversed": false,
+  "externalRgbLedReversed": true,
   "oled": false,
   "matrix": {
     "diodeDirection": "none",
