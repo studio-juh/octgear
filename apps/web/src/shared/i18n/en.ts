@@ -724,10 +724,13 @@ export const en: typeof ja = {
     statusLayerDisplayMode: "Layer display",
     statusLayerDisplaySolid: "Solid layer color",
     statusLayerDisplayPattern: "4-LED pattern",
+    statusLayerDisplayRainbowCycle: "Rainbow cycle",
     statusLayerDisplayPatternHint:
       "Layers 0–7: 1000 / 0100 / 0010 / 0001 / 0111 / 1011 / 1101 / 1110",
+    statusLayerDisplayRainbowCycleHint:
+      "Cycles a flowing rainbow across all four LEDs instead of showing the layer color.",
     statusLayerDisplayModeUpdated: (mode) =>
-      `Layer display: ${mode === 1 ? "4-LED pattern" : "solid"}`,
+      `Layer display: ${["solid", "4-LED pattern", "rainbow cycle"][mode] ?? mode}`,
     statusLayerDisplayModeFailed: "Failed to change layer display",
     layerTapDanceTerm: "Tap Dance term",
     layerTapDanceTermValue: "Tap Dance term value",
@@ -740,8 +743,9 @@ export const en: typeof ja = {
     statusKeyAnimationRipple: "Ripple",
     statusKeyAnimationFlash: "Flash",
     statusKeyAnimationSpark: "Spark",
+    statusKeyAnimationRainbow: "Keypress rainbow",
     statusKeyAnimationUpdated: (animation) =>
-      `Animation effect: ${["Ripple", "Off", "Flash", "Spark"][animation] ?? animation}`,
+      `Animation effect: ${["Ripple", "Off", "Flash", "Spark", "Keypress rainbow"][animation] ?? animation}`,
     statusKeyAnimationFailed: "Failed to change animation effect",
     statusKeyAnimationBrightness: "Animation brightness limit",
     statusKeyAnimationBrightnessValue: "Animation brightness limit value",

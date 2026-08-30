@@ -88,9 +88,9 @@ WorkspaceのHardware cardはPCB revisionとcontrol数だけを表示し、「設
 
 LEDテープ方向checkboxも変更時に即座に実機へ保存します。標準順は盤面左端のLED 1をphysical pixel 0へ対応させ、反転時は最後のphysical pixelへ対応させます。既定値はhardware profileの`externalRgbLedReversed`です。
 
-Layer表示のプルダウンは、Layer色の全灯と4灯パターンを切り替え、変更時に即座に実機へ保存します。4灯パターンはFirmware Layer 0-7を`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。既定値はhardware profileの`statusLedLayerDisplayMode`です。
+Layer表示のプルダウンは、Layer色の全灯、4灯パターン、虹色サイクルを切り替え、変更時に即座に実機へ保存します。4灯パターンはFirmware Layer 0-7を`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。虹色サイクルはLayer色の代わりに4灯へ異なる色相を表示して流します。既定値はhardware profileの`statusLedLayerDisplayMode`です。
 
-アニメーション効果のプルダウンは、打鍵時の表示を無効／波紋／フラッシュ／スパークから選び、変更時に即座に実機へ保存します。既定値はhardware profileの`statusLedKeyAnimation`です。
+アニメーション効果のプルダウンは、打鍵時の表示を無効／波紋／フラッシュ／スパーク／打鍵虹色から選び、変更時に即座に実機へ保存します。打鍵虹色は4灯へ異なる色相を表示してLayer表示へ戻します。既定値はhardware profileの`statusLedKeyAnimation`です。
 
 アニメーション輝度上限は`0-128`で編集し、「適用」で実機へ保存します。Layer表示のLED輝度上限とは独立しており、より高い値にすると光っているpixelだけを明るくしてコントラストを強めます。既定値は`96`です。
 

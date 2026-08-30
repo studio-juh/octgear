@@ -723,10 +723,13 @@ export const ja = {
     statusLayerDisplayMode: "レイヤー表示",
     statusLayerDisplaySolid: "全灯（レイヤー色）",
     statusLayerDisplayPattern: "4灯パターン",
+    statusLayerDisplayRainbowCycle: "虹色サイクル",
     statusLayerDisplayPatternHint:
       "Layer 0–7: 1000 / 0100 / 0010 / 0001 / 0111 / 1011 / 1101 / 1110",
+    statusLayerDisplayRainbowCycleHint:
+      "4灯の虹色が流れ続けます。レイヤー色は表示しません。",
     statusLayerDisplayModeUpdated: (mode: number) =>
-      `レイヤー表示: ${mode === 1 ? "4灯パターン" : "全灯"}`,
+      `レイヤー表示: ${["全灯", "4灯パターン", "虹色サイクル"][mode] ?? mode}`,
     statusLayerDisplayModeFailed: "レイヤー表示の変更に失敗しました",
     layerTapDanceTerm: "タップダンス判定時間",
     layerTapDanceTermValue: "タップダンス判定時間の数値",
@@ -740,8 +743,9 @@ export const ja = {
     statusKeyAnimationRipple: "波紋",
     statusKeyAnimationFlash: "フラッシュ",
     statusKeyAnimationSpark: "スパーク",
+    statusKeyAnimationRainbow: "打鍵虹色",
     statusKeyAnimationUpdated: (animation: number) =>
-      `アニメーション効果: ${["波紋", "無効", "フラッシュ", "スパーク"][animation] ?? animation}`,
+      `アニメーション効果: ${["波紋", "無効", "フラッシュ", "スパーク", "打鍵虹色"][animation] ?? animation}`,
     statusKeyAnimationFailed: "アニメーション効果の変更に失敗しました",
     statusKeyAnimationBrightness: "アニメーション輝度上限",
     statusKeyAnimationBrightnessValue: "アニメーション輝度上限の数値",

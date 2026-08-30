@@ -192,11 +192,11 @@ void printHelp() {
   Serial.print(F("  led-brightness <0-"));
   Serial.print(Config::MAX_STATUS_LED_BRIGHTNESS);
   Serial.println(F(">"));
-  Serial.println(F("  animation <0:ripple|1:disabled|2:flash|3:spark>"));
+  Serial.println(F("  animation <0:ripple|1:disabled|2:flash|3:spark|4:rainbow>"));
   Serial.print(F("  animation-brightness <0-"));
   Serial.print(Config::MAX_STATUS_KEY_ANIMATION_BRIGHTNESS);
   Serial.println(F(">"));
-  Serial.println(F("  layer-display <0:solid|1:pattern>"));
+  Serial.println(F("  layer-display <0:solid|1:pattern|2:rainbow>"));
   Serial.print(F("  tap-dance <"));
   Serial.print(Config::MIN_LAYER_TAP_DANCE_TERM_MS);
   Serial.print('-');

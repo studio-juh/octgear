@@ -91,7 +91,7 @@ Assignmentは`None`、`Keyboard`、`Consumer`、`LayerCycle`、`MomentaryLayer`�
 - Consumer assignmentは16-bit usageを1つ持ちます。
 - 押下中のKeyboard assignmentは単一の6KRO reportへ統合し、modifierはOR、keycodeは重複を除いて送ります。6種類を超える場合はErrorRollOverを送ります。
 - Consumer assignmentは最後に押された押下中キーを優先し、そのキーを離すと一つ前の押下中usageへ戻ります。Encoder CCW / CWだけはdetentごとのtapとして送ります。
-- Layer colorはRGB各8-bitで、`0,0,0`を消灯としてFlashへ保存します。外付け4灯はLayer色の全灯表示と、8 Layerを識別する点灯パターンを切り替えられます。
+- Layer colorはRGB各8-bitで、`0,0,0`を消灯としてFlashへ保存します。外付け4灯はLayer色の全灯表示、8 Layerを識別する点灯パターン、流れる虹色サイクルを切り替えられます。
 
 Compile済みdefault keymapはLayer 0/1だけにassignmentを持ち、Layer 2-7は全controlが`None`です。具体的な割り当ては[Firmware Default Keymap](../firmware/octgear/README.md#default-keymap)を参照してください。
 

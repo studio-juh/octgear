@@ -24,6 +24,7 @@ constexpr uint16_t STATUS_KEY_RIPPLE_STEP_MS = 45;
 constexpr uint16_t STATUS_KEY_RIPPLE_PULSE_MS = 160;
 constexpr uint16_t STATUS_KEY_FLASH_MS = 180;
 constexpr uint16_t STATUS_KEY_SPARK_MS = 240;
+constexpr uint16_t STATUS_KEY_RAINBOW_MS = 320;
 constexpr uint8_t STATUS_KEY_ANIMATION_SLOTS = 8;
 constexpr uint16_t STATUS_REMAPPER_ANIMATION_MS = 1000;
 constexpr uint16_t REMAPPER_HEARTBEAT_TIMEOUT_MS = 3000;

@@ -24,10 +24,12 @@ const statusLedKeyAnimationValues = {
   disabled: 1,
   flash: 2,
   spark: 3,
+  rainbow: 4,
 };
 const statusLedLayerDisplayModeValues = {
   solid: 0,
   pattern: 1,
+  rainbowCycle: 2,
 };
 
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
@@ -92,10 +94,10 @@ function validateProfile(value) {
     );
   }
   if (!(value.statusLedKeyAnimation in statusLedKeyAnimationValues)) {
-    throw new Error("statusLedKeyAnimation must be ripple, disabled, flash, or spark");
+    throw new Error("statusLedKeyAnimation must be ripple, disabled, flash, spark, or rainbow");
   }
   if (!(value.statusLedLayerDisplayMode in statusLedLayerDisplayModeValues)) {
-    throw new Error("statusLedLayerDisplayMode must be solid or pattern");
+    throw new Error("statusLedLayerDisplayMode must be solid, pattern, or rainbowCycle");
   }
   if (typeof value.externalRgbLed !== "boolean") {
     throw new Error("externalRgbLed must be a boolean");
@@ -417,7 +419,7 @@ The compiled default direction is ${profile.encoder.reversed ? "reversed" : "sta
 
 ## Status LED
 
-外付けWS2812Bのdata inputをGPIO ${profile.externalRgbLedPin}へ接続します。Firmwareは${profile.externalRgbLedCount} pixels分のdataを送り、layer、打鍵アニメーション、Remapper、rescue状態を表示します。論理上はLED 1を盤面左端として扱い、物理pixel順の既定値は${profile.externalRgbLedReversed ? "反転" : "標準"}です。物理キーの打鍵アニメーションはmatrix columnに対応し、EncoderのCCW / CW / SWは論理上の右端LEDへ割り当てます。Remapperから向き、Layer表示モード、打鍵アニメーション効果を変更して保存できます。Layer表示モードの既定値は${profile.statusLedLayerDisplayMode === "pattern" ? "4灯パターン" : "全灯"}です。Boardに内蔵WS2812がある場合はlayer色をミラーします。Layer表示の輝度上限は0-${profile.statusLedBrightness.max}で既定値${profile.statusLedBrightness.default}、打鍵アニメーションの輝度上限は0-${profile.statusKeyAnimationBrightness.max}で既定値${profile.statusKeyAnimationBrightness.default}です。
+外付けWS2812Bのdata inputをGPIO ${profile.externalRgbLedPin}へ接続します。Firmwareは${profile.externalRgbLedCount} pixels分のdataを送り、layer、打鍵アニメーション、Remapper、rescue状態を表示します。論理上はLED 1を盤面左端として扱い、物理pixel順の既定値は${profile.externalRgbLedReversed ? "反転" : "標準"}です。物理キーの打鍵アニメーションはmatrix columnに対応し、EncoderのCCW / CW / SWは論理上の右端LEDへ割り当てます。Remapperから向き、Layer表示モード、打鍵アニメーション効果を変更して保存できます。Layer表示モードの既定値は${profile.statusLedLayerDisplayMode === "pattern" ? "4灯パターン" : profile.statusLedLayerDisplayMode === "rainbowCycle" ? "虹色サイクル" : "全灯"}です。Boardに内蔵WS2812がある場合はlayer色をミラーします。Layer表示の輝度上限は0-${profile.statusLedBrightness.max}で既定値${profile.statusLedBrightness.default}、打鍵アニメーションの輝度上限は0-${profile.statusKeyAnimationBrightness.max}で既定値${profile.statusKeyAnimationBrightness.default}です。
 
 | Signal | GPIO | Pixels | Mode |
 | --- | ---: | ---: | --- |

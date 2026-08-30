@@ -15,11 +15,13 @@ enum class StatusKeyAnimation : uint8_t {
   Disabled = 1,
   Flash = 2,
   Spark = 3,
+  Rainbow = 4,
 };
 
 enum class StatusLayerDisplayMode : uint8_t {
   Solid = 0,
   Pattern = 1,
+  RainbowCycle = 2,
 };
 
 struct KeymapSnapshot {

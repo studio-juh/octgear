@@ -207,7 +207,7 @@ StatusKeyAnimation statusKeyAnimation() {
 }
 
 bool setStatusKeyAnimation(StatusKeyAnimation animation) {
-  if (animation > StatusKeyAnimation::Spark) {
+  if (animation > StatusKeyAnimation::Rainbow) {
     return false;
   }
 
@@ -220,7 +220,7 @@ StatusLayerDisplayMode statusLayerDisplayMode() {
 }
 
 bool setStatusLayerDisplayMode(StatusLayerDisplayMode mode) {
-  if (mode > StatusLayerDisplayMode::Pattern) {
+  if (mode > StatusLayerDisplayMode::RainbowCycle) {
     return false;
   }
 

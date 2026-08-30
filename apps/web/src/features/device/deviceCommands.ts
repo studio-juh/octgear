@@ -43,11 +43,13 @@ export enum StatusKeyAnimation {
   Disabled = 1,
   Flash = 2,
   Spark = 3,
+  Rainbow = 4,
 }
 
 export enum StatusLayerDisplayMode {
   Solid = 0,
   Pattern = 1,
+  RainbowCycle = 2,
 }
 
 export type LayerEnabledResult = {
@@ -473,6 +475,7 @@ function decodeStatusKeyAnimation(value: number): StatusKeyAnimation {
     case StatusKeyAnimation.Disabled:
     case StatusKeyAnimation.Flash:
     case StatusKeyAnimation.Spark:
+    case StatusKeyAnimation.Rainbow:
       return value;
     default:
       throw new Error(t.device.invalidStatusKeyAnimation(value));
@@ -482,7 +485,8 @@ function decodeStatusKeyAnimation(value: number): StatusKeyAnimation {
 function decodeStatusLayerDisplayMode(value: number): StatusLayerDisplayMode {
   if (
     value !== StatusLayerDisplayMode.Solid &&
-    value !== StatusLayerDisplayMode.Pattern
+    value !== StatusLayerDisplayMode.Pattern &&
+    value !== StatusLayerDisplayMode.RainbowCycle
   ) {
     throw new Error(t.device.invalidStatusLayerDisplayMode(value));
   }

@@ -95,11 +95,11 @@ Layer colorの各channelは`0-255`です。RGBがすべて`0`の場合、通常m
 
 `statusLedReversed`と`SetStatusLedReversed`の`reversed`は、`0`がLED 1をphysical pixel 0へ対応させる標準順、`1`がLED 1を最後のphysical pixelへ対応させる反転順です。変更はFlashへ即座に保存し、USB未mount時の流れるカラーホイールと位置依存の打鍵アニメーションへ適用します。
 
-`statusKeyAnimation`と`SetStatusKeyAnimation`の`animation`は、`0`が波紋、`1`が無効、`2`が全灯フラッシュ、`3`が押下位置中心のスパークです。変更はFlashへ即座に保存します。
+`statusKeyAnimation`と`SetStatusKeyAnimation`の`animation`は、`0`が波紋、`1`が無効、`2`が全灯フラッシュ、`3`が押下位置中心のスパーク、`4`が4灯へ異なる虹色を表示して320 msでLayer表示へ戻る打鍵虹色です。変更はFlashへ即座に保存します。
 
 `statusKeyAnimationBrightness`と`SetStatusKeyAnimationBrightness`の`brightness`は`0-128`です。既定値は`96`で、通常打鍵の現在Layer色ハイライトとLayer変更時の切り替え後Layer色ハイライトに適用します。Layer側の`statusLedBrightness`より高く設定すると、光っていないpixelの明るさを変えずにコントラストを強められます。`0`ではアニメーション効果を選択したままハイライトだけを消せます。変更はFlashへ即座に保存します。
 
-`statusLayerDisplayMode`と`SetStatusLayerDisplayMode`の`mode`は、`0`が全灯、`1`が4灯パターンです。4灯パターンはFirmware Layer 0-7をLED 1から4の順に`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。`1`のpixelには現在Layerの色を使います。変更はFlashへ即座に保存します。
+`statusLayerDisplayMode`と`SetStatusLayerDisplayMode`の`mode`は、`0`が全灯、`1`が4灯パターン、`2`が虹色サイクルです。4灯パターンはFirmware Layer 0-7をLED 1から4の順に`1000`、`0100`、`0010`、`0001`、`0111`、`1011`、`1101`、`1110`で表示します。`1`のpixelには現在Layerの色を使います。虹色サイクルはLayer色の代わりに4灯へ異なる色相を表示し、連続して流します。変更はFlashへ即座に保存します。
 
 `layerTapDanceTermMs`と`SetLayerTapDanceTerm`の`termMs`はlittle-endianの16-bit値です。設定範囲は`50-1000 ms`、既定値は`250 ms`です。Next Layerの単押し確定と同じcontrolのダブルタップ判定の両方に使い、変更はFlashへ即座に保存します。Storage version 6でfieldを追加しており、旧storage versionは移行せず既定設定へ初期化します。
 

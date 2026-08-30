@@ -29,6 +29,8 @@ constexpr uint8_t STATUS_KEY_ANIMATION_MASK = 0x0C;
 constexpr uint8_t STATUS_KEY_ANIMATION_SHIFT = 2;
 constexpr uint8_t STATUS_LAYER_DISPLAY_PATTERN_FLAG = 0x10;
 constexpr uint8_t DEFAULT_PCB_REVISION_FLAG = 0x20;
+constexpr uint8_t STATUS_KEY_ANIMATION_HIGH_FLAG = 0x40;
+constexpr uint8_t STATUS_LAYER_DISPLAY_RAINBOW_FLAG = 0x80;
 constexpr int STATUS_LED_BRIGHTNESS_ADDRESS = 15;
 constexpr int CRC_ADDRESS = 16;
 constexpr int STORAGE_HEADER_SIZE = 20;
@@ -221,12 +223,22 @@ void buildSlotData(uint8_t* data, uint32_t generation, SlotKind kind) {
       (encoderReversed() ? ENCODER_REVERSED_FLAG : 0U) |
       (statusLedReversed() ? STATUS_LED_REVERSED_FLAG : 0U) |
       (
-        static_cast<uint8_t>(statusKeyAnimation()) <<
+        (static_cast<uint8_t>(statusKeyAnimation()) & 0x03U) <<
         STATUS_KEY_ANIMATION_SHIFT
+      ) |
+      (
+        (static_cast<uint8_t>(statusKeyAnimation()) & 0x04U) != 0
+          ? STATUS_KEY_ANIMATION_HIGH_FLAG
+          : 0U
       ) |
       (
         statusLayerDisplayMode() == StatusLayerDisplayMode::Pattern
           ? STATUS_LAYER_DISPLAY_PATTERN_FLAG
+          : 0U
+      ) |
+      (
+        statusLayerDisplayMode() == StatusLayerDisplayMode::RainbowCycle
+          ? STATUS_LAYER_DISPLAY_RAINBOW_FLAG
           : 0U
       ) |
       (
@@ -335,14 +347,17 @@ bool loadKeymapFromStorage() {
   setStatusKeyAnimation(
     static_cast<StatusKeyAnimation>(
       (data[DEVICE_FLAGS_ADDRESS] & STATUS_KEY_ANIMATION_MASK) >>
-      STATUS_KEY_ANIMATION_SHIFT
+      STATUS_KEY_ANIMATION_SHIFT |
+      ((data[DEVICE_FLAGS_ADDRESS] & STATUS_KEY_ANIMATION_HIGH_FLAG) != 0 ? 0x04U : 0U)
     )
   );
   setStatusKeyAnimationBrightness(data[STATUS_KEY_ANIMATION_BRIGHTNESS_ADDRESS]);
   setStatusLayerDisplayMode(
-    (data[DEVICE_FLAGS_ADDRESS] & STATUS_LAYER_DISPLAY_PATTERN_FLAG) != 0
-      ? StatusLayerDisplayMode::Pattern
-      : StatusLayerDisplayMode::Solid
+    (data[DEVICE_FLAGS_ADDRESS] & STATUS_LAYER_DISPLAY_RAINBOW_FLAG) != 0
+      ? StatusLayerDisplayMode::RainbowCycle
+      : ((data[DEVICE_FLAGS_ADDRESS] & STATUS_LAYER_DISPLAY_PATTERN_FLAG) != 0
+          ? StatusLayerDisplayMode::Pattern
+          : StatusLayerDisplayMode::Solid)
   );
   setPcbRevision(
     (data[DEVICE_FLAGS_ADDRESS] & DEFAULT_PCB_REVISION_FLAG) != 0
@@ -454,9 +469,9 @@ bool runKeymapStorageSelfTest() {
   const uint8_t patternStatusLedBrightness = backupStatusLedBrightness == 97 ? 96 : 97;
   const StatusKeyAnimation backupStatusKeyAnimation = statusKeyAnimation();
   const StatusKeyAnimation patternStatusKeyAnimation =
-    backupStatusKeyAnimation == StatusKeyAnimation::Spark
-      ? StatusKeyAnimation::Flash
-      : StatusKeyAnimation::Spark;
+    backupStatusKeyAnimation == StatusKeyAnimation::Rainbow
+      ? StatusKeyAnimation::Spark
+      : StatusKeyAnimation::Rainbow;
   const uint8_t backupStatusKeyAnimationBrightness =
     statusKeyAnimationBrightness();
   const uint8_t patternStatusKeyAnimationBrightness =
@@ -464,9 +479,9 @@ bool runKeymapStorageSelfTest() {
   const StatusLayerDisplayMode backupStatusLayerDisplayMode =
     statusLayerDisplayMode();
   const StatusLayerDisplayMode patternStatusLayerDisplayMode =
-    backupStatusLayerDisplayMode == StatusLayerDisplayMode::Pattern
-      ? StatusLayerDisplayMode::Solid
-      : StatusLayerDisplayMode::Pattern;
+    backupStatusLayerDisplayMode == StatusLayerDisplayMode::RainbowCycle
+      ? StatusLayerDisplayMode::Pattern
+      : StatusLayerDisplayMode::RainbowCycle;
   const uint16_t backupLayerTapDanceTermMs = layerTapDanceTermMs();
   const uint16_t patternLayerTapDanceTermMs =
     backupLayerTapDanceTermMs == 731 ? 730 : 731;

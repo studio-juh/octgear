@@ -9,6 +9,7 @@ namespace {
 
 uint32_t lastUpdateMs = 0;
 uint8_t colorWheelPosition = 0;
+uint8_t keyRainbowPosition = 0;
 bool idleShown = false;
 bool previewActive = false;
 uint8_t displayedLayer = 0xFF;
@@ -31,6 +32,7 @@ struct KeyAnimationEvent {
   uint32_t startMs;
   uint32_t targetColor;
   bool preserveBaseChannels;
+  uint8_t rainbowPosition;
 };
 
 static_assert(Config::EXTERNAL_RGB_LED_COUNT > 0);
@@ -296,10 +298,11 @@ void startKeyAnimation(
   uint32_t targetColor,
   bool preserveBaseChannels
 ) {
+  const bool rainbow = statusKeyAnimation() == StatusKeyAnimation::Rainbow;
   if (
     statusKeyAnimation() == StatusKeyAnimation::Disabled ||
     statusKeyAnimationBrightness() == 0 ||
-    targetColor == 0
+    (!rainbow && targetColor == 0)
   ) {
     return;
   }
@@ -325,7 +328,9 @@ void startKeyAnimation(
     millis(),
     targetColor,
     preserveBaseChannels,
+    keyRainbowPosition,
   };
+  keyRainbowPosition = static_cast<uint8_t>(keyRainbowPosition + 37U);
   keyAnimationLastFrameMs = 0;
 }
 
@@ -338,6 +343,9 @@ uint32_t animationDurationMs(
   }
   if (animation == StatusKeyAnimation::Spark) {
     return Config::STATUS_KEY_SPARK_MS;
+  }
+  if (animation == StatusKeyAnimation::Rainbow) {
+    return Config::STATUS_KEY_RAINBOW_MS;
   }
 
   const uint8_t distanceToStart = event.center;
@@ -359,6 +367,13 @@ uint16_t animationStrength(
     return static_cast<uint16_t>(
       (Config::STATUS_KEY_FLASH_MS - elapsedMs) * 255U /
       Config::STATUS_KEY_FLASH_MS
+    );
+  }
+
+  if (animation == StatusKeyAnimation::Rainbow) {
+    return static_cast<uint16_t>(
+      (Config::STATUS_KEY_RAINBOW_MS - elapsedMs) * 255U /
+      Config::STATUS_KEY_RAINBOW_MS
     );
   }
 
@@ -433,12 +448,21 @@ void updateKeyAnimations() {
       }
 
       weights[pixel] = static_cast<uint16_t>(weights[pixel] + strength);
+      const uint32_t targetColor = animation == StatusKeyAnimation::Rainbow
+        ? scalePixelColor(
+            colorWheel(static_cast<uint8_t>(
+              event.rainbowPosition +
+              pixel * (256U / Config::EXTERNAL_RGB_LED_COUNT)
+            )),
+            statusKeyAnimationBrightness()
+          )
+        : event.targetColor;
       weightedRed[pixel] +=
-        static_cast<uint32_t>(colorChannel(event.targetColor, 16)) * strength;
+        static_cast<uint32_t>(colorChannel(targetColor, 16)) * strength;
       weightedGreen[pixel] +=
-        static_cast<uint32_t>(colorChannel(event.targetColor, 8)) * strength;
+        static_cast<uint32_t>(colorChannel(targetColor, 8)) * strength;
       weightedBlue[pixel] +=
-        static_cast<uint32_t>(colorChannel(event.targetColor, 0)) * strength;
+        static_cast<uint32_t>(colorChannel(targetColor, 0)) * strength;
       if (!event.preserveBaseChannels) {
         preserveBaseChannels[pixel] = false;
       }
@@ -608,6 +632,21 @@ void updateColorWheelLed(bool flowing) {
 }
 
 void updateLayerLed(uint8_t layer) {
+  if (statusLayerDisplayMode() == StatusLayerDisplayMode::RainbowCycle) {
+    cancelLayerTransition();
+    idleShown = true;
+    displayedLayer = layer;
+    const uint32_t now = millis();
+    if (lastUpdateMs == 0 || now - lastUpdateMs >= Config::STATUS_COLOR_WHEEL_MS) {
+      lastUpdateMs = now;
+      colorWheelPosition += 2;
+      showFlowingColorWheel(colorWheelPosition);
+      keyAnimationLastFrameMs = 0;
+    }
+    updateKeyAnimations();
+    return;
+  }
+
   if (!idleShown || displayedLayer != layer) {
     startLayerTransition(layer);
     idleShown = true;

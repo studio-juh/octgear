@@ -9,11 +9,11 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 - Layer 1-7の個別有効化。Layer 0は常時有効、既定有効はLayer 0/1
 - 通常のLayer切り替えは10秒間変化がなければFlashへ保存し、次回起動時に復元
 - LayerごとのRGB LED色設定。`0,0,0`で消灯
-- Layer色の全灯表示と、4灯の点灯パターンによる8 Layer表示を切り替えてFlash保存
+- Layer色の全灯表示、4灯の点灯パターン、虹色サイクルを切り替えてFlash保存
 - 外付けWS2812Bと内蔵mirrorの輝度上限を`0-128`で設定、Flash保存
 - 外付けWS2812Bのphysical pixel順を標準／反転で設定、Flash保存
 - PCのUSBサスペンド中は外付け・内蔵LEDを消灯
-- 打鍵アニメーションを無効／波紋／フラッシュ／スパークから選択、Flash保存
+- 打鍵アニメーションを無効／波紋／フラッシュ／スパーク／打鍵虹色から選択、Flash保存
 - 通常打鍵は現在Layer色、Layer変更を伴うcontrolは切り替え後のLayer色でアニメーション表示
 - Layer表示と独立した打鍵アニメーション輝度上限でコントラストを調整
 - Encoder回転方向の反転設定とFlash保存

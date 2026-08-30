@@ -50,6 +50,7 @@ Arduino IDE / Arduino CLIで開くOctGear firmware sketchです。利用者向�
 | `STATUS_KEY_RIPPLE_PULSE_MS` | `160` | 各LEDの打鍵波紋が減衰する時間 |
 | `STATUS_KEY_FLASH_MS` | `180` | 全灯フラッシュが減衰する時間 |
 | `STATUS_KEY_SPARK_MS` | `240` | 局所スパークが減衰する時間 |
+| `STATUS_KEY_RAINBOW_MS` | `320` | 打鍵虹色が通常表示へ戻る時間 |
 | `STATUS_REMAPPER_ANIMATION_MS` | `1000` | Remapper接続時のカラーホイール表示時間 |
 | `CONFIG_RESPONSE_READY_RETRIES` | `20` | Config input reportのHID ready retry |
 | `CONFIG_RESPONSE_RETRY_DELAY_US` | `100` | Retry間隔 |

@@ -214,10 +214,16 @@ export function HardwarePanel({
               <option value={StatusLayerDisplayMode.Pattern}>
                 {t.hardware.statusLayerDisplayPattern}
               </option>
+              <option value={StatusLayerDisplayMode.RainbowCycle}>
+                {t.hardware.statusLayerDisplayRainbowCycle}
+              </option>
             </select>
-            <small>
-              {t.hardware.statusLayerDisplayPatternHint}
-            </small>
+            {deviceState?.statusLayerDisplayMode === StatusLayerDisplayMode.Pattern && (
+              <small>{t.hardware.statusLayerDisplayPatternHint}</small>
+            )}
+            {deviceState?.statusLayerDisplayMode === StatusLayerDisplayMode.RainbowCycle && (
+              <small>{t.hardware.statusLayerDisplayRainbowCycleHint}</small>
+            )}
           </dd>
         </div>
         <div className="hardware-brightness-row hardware-timing-row">
@@ -287,6 +293,9 @@ export function HardwarePanel({
               </option>
               <option value={StatusKeyAnimation.Spark}>
                 {t.hardware.statusKeyAnimationSpark}
+              </option>
+              <option value={StatusKeyAnimation.Rainbow}>
+                {t.hardware.statusKeyAnimationRainbow}
               </option>
             </select>
           </dd>
