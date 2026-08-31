@@ -44,17 +44,6 @@
         box-shadow: 0 8px 32px rgba(51, 39, 24, 0.18);
       }
 
-      .sheet::after {
-        position: absolute;
-        right: -17mm;
-        bottom: -20mm;
-        width: 55mm;
-        height: 55mm;
-        border: 0.8mm solid rgba(13, 122, 114, 0.1);
-        border-radius: 50%;
-        content: "";
-      }
-
       .brand {
         display: flex;
         align-items: center;
@@ -102,8 +91,8 @@
       .access {
         display: grid;
         align-items: center;
-        gap: 4mm;
-        grid-template-columns: 31mm minmax(0, 1fr);
+        gap: 3.5mm;
+        grid-template-columns: 27mm minmax(0, 1fr);
         margin-top: 3.5mm;
         padding: 2.5mm;
         border: 0.3mm solid rgba(78, 61, 38, 0.14);
@@ -113,9 +102,9 @@
 
       .qr {
         display: block;
-        width: 31mm;
-        height: 31mm;
-        padding: 3mm;
+        width: 27mm;
+        height: 27mm;
+        padding: 2.7mm;
         border-radius: 1.5mm;
         background: white;
       }
@@ -145,19 +134,11 @@
         overflow-wrap: anywhere;
         color: #3f3a35;
         font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-        font-size: 6.2pt;
-        font-weight: 600;
-        line-height: 1.4;
+        font-size: 7.4pt;
+        font-weight: 700;
+        line-height: 1.45;
         letter-spacing: 0;
         text-transform: none !important;
-      }
-
-      .language-note {
-        display: block;
-        margin-top: 1.4mm;
-        color: #6a625a;
-        font-size: 6.1pt;
-        line-height: 1.4;
       }
 
       .steps {
@@ -196,23 +177,48 @@
         font-weight: 800;
       }
 
+      .shortcut {
+        margin-top: auto;
+        padding: 2.5mm 3mm;
+        border-radius: 1.8mm;
+        background: rgba(13, 122, 114, 0.09);
+      }
+
+      .shortcut strong {
+        display: block;
+        color: #08544f;
+        font-size: 7.5pt;
+      }
+
+      .shortcut-keys {
+        display: flex;
+        align-items: center;
+        gap: 1.2mm;
+        margin-top: 1.4mm;
+        color: #5a524a;
+        font-size: 6.5pt;
+        font-weight: 800;
+      }
+
+      .shortcut-keys kbd {
+        padding: 0.8mm 1.4mm;
+        border: 0.25mm solid rgba(13, 122, 114, 0.24);
+        border-radius: 1mm;
+        background: rgba(255, 255, 255, 0.88);
+        color: #183e3a;
+        font: inherit;
+        box-shadow: 0 0.6mm 0 rgba(13, 122, 114, 0.12);
+      }
+
+      .shortcut p {
+        margin: 1.8mm 0 0;
+        color: #4f4942;
+        font-size: 6.7pt;
+        line-height: 1.5;
+      }
+
       .steps strong {
         color: #1f2529;
-      }
-
-      .help {
-        margin-top: auto;
-        padding: 2mm 2.5mm;
-        border-left: 1mm solid #b86e34;
-        border-radius: 1.4mm;
-        background: rgba(184, 110, 52, 0.09);
-        color: #5b5148;
-        font-size: 7pt;
-        line-height: 1.55;
-      }
-
-      .help strong {
-        color: #342d27;
       }
 
       @page {
@@ -268,7 +274,6 @@
           <span>Start Guide</span>
           <strong>QRコードを読み取るか、URLを開きます</strong>
           <span class="url">https://studio-juh.github.io/<wbr />octgear/<wbr />octgear-start.html</span>
-          <small class="language-note">専用driverは不要です。ページ右上からEnglishへ切り替えられます。</small>
         </div>
       </section>
 
@@ -278,9 +283,14 @@
         <li><strong>自分用に設定</strong> — ChromeまたはEdgeでRemapperへ接続します。</li>
       </ol>
 
-      <aside class="help">
-        <strong>うまく動かないとき</strong><br />
-        スタートガイドの「困ったとき」からDiagnosticsと問い合わせ先を確認できます。
+      <aside class="shortcut">
+        <strong>本体からRemapperを開く</strong>
+        <div class="shortcut-keys" aria-label="K1、K5、Encoder SWを同時に1秒長押し">
+          <kbd>K1</kbd><span>＋</span><kbd>K5</kbd><span>＋</span><kbd>Encoder SW</kbd><span>1秒長押し</span>
+        </div>
+        <p>
+          左端の上下2キーとロータリーエンコーダースイッチを同時に長押しすると再起動します。対応するdesktop Chromiumでは、接続通知からRemapperを開けます。通知が出ない場合は上のQR／URLを使用してください。
+        </p>
       </aside>
 
     </main>
