@@ -1,6 +1,6 @@
 # Web App
 
-React 19 + TypeScript + Viteで構成する、OctGearのWeb toolsです。Home、Start Guide、Build Guide、Remapper、Diagnosticsをmulti-page buildで出力します。
+React 19 + TypeScript + Viteで構成する、OctGearのWeb toolsです。Home、Start Guide、Build Guide、Remapper、Diagnosticsと、非リンクの印刷用ページをmulti-page buildで出力します。
 
 システム全体の関係は[`docs/architecture.md`](../../docs/architecture.md)、利用手順は[`docs/operations.md`](../../docs/operations.md)を参照してください。
 
@@ -10,6 +10,7 @@ React 19 + TypeScript + Viteで構成する、OctGearのWeb toolsです。Home�
 | --- | --- | --- | --- |
 | Home | `index.html` | `src/main.tsx` | `src/app/pages/HomePage.tsx` |
 | Start Guide | `octgear-start.html` | `src/pages/start-guide.tsx` | `src/app/pages/StartGuidePage.tsx` |
+| Start Guide A6 Card | `octgear-start-card-a6.html` | Static HTML | 非リンク・`noindex`の同梱カード印刷用ページ |
 | Build Guide | `octgear.html` | `src/pages/build-guide.tsx` | `src/app/pages/BuildGuidePage.tsx` |
 | Remapper | `octgear-remapper.html` | `src/pages/remapper.tsx` | `src/app/pages/RemapperApp.tsx` |
 | Diagnostics | `octgear-diagnostics.html` | `src/pages/diagnostics.tsx` | `src/app/pages/DiagnosticsApp.tsx` |

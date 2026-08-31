@@ -58,7 +58,7 @@ pnpm typecheck
 pnpm build
 ```
 
-画面を確認する場合は`pnpm dev`を起動します。ViteはHome、Start Guide、Build Guide、Remapper、Diagnosticsの5 entryを扱います。
+画面を確認する場合は`pnpm dev`を起動します。ViteはHome、Start Guide、Build Guide、Remapper、Diagnosticsと非リンクのA6印刷ページの6 entryを扱います。
 
 ### Hardware Profile Change
 

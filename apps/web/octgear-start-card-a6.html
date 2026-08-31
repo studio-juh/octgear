@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <link rel="icon" type="image/png" href="%BASE_URL%brand/octgear-mark.png" />
+    <title>OctGear スタートガイド案内カード A6</title>
+    <style>
+      :root {
+        color: #1f2529;
+        background: #d8d2c9;
+        font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Sans", sans-serif;
+        font-synthesis: none;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        display: grid;
+        place-items: start center;
+        padding: 12mm 0;
+      }
+
+      .sheet {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 105mm;
+        height: 148mm;
+        overflow: hidden;
+        padding: 6mm 7mm;
+        background:
+          radial-gradient(circle at 96% 2%, rgba(13, 122, 114, 0.16), transparent 32%),
+          #fffdfa;
+        box-shadow: 0 8px 32px rgba(51, 39, 24, 0.18);
+      }
+
+      .sheet::after {
+        position: absolute;
+        right: -17mm;
+        bottom: -20mm;
+        width: 55mm;
+        height: 55mm;
+        border: 0.8mm solid rgba(13, 122, 114, 0.1);
+        border-radius: 50%;
+        content: "";
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 3mm;
+      }
+
+      .brand img {
+        width: 11mm;
+        height: 11mm;
+        object-fit: contain;
+      }
+
+      .brand-copy {
+        display: grid;
+        gap: 0.4mm;
+      }
+
+      .brand-copy small {
+        color: #0d7a72;
+        font-size: 6.5pt;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .brand-copy strong {
+        font-size: 15pt;
+        line-height: 1;
+      }
+
+      h1 {
+        margin: 4.5mm 0 0;
+        font-size: 18pt;
+        line-height: 1.15;
+        letter-spacing: -0.035em;
+      }
+
+      .intro {
+        margin: 2mm 0 0;
+        color: #5f574f;
+        font-size: 8pt;
+        line-height: 1.55;
+      }
+
+      .access {
+        display: grid;
+        align-items: center;
+        gap: 4mm;
+        grid-template-columns: 31mm minmax(0, 1fr);
+        margin-top: 3.5mm;
+        padding: 2.5mm;
+        border: 0.3mm solid rgba(78, 61, 38, 0.14);
+        border-radius: 2.5mm;
+        background: rgba(249, 244, 237, 0.82);
+      }
+
+      .qr {
+        display: block;
+        width: 31mm;
+        height: 31mm;
+        padding: 3mm;
+        border-radius: 1.5mm;
+        background: white;
+      }
+
+      .access-copy {
+        min-width: 0;
+      }
+
+      .access-copy span {
+        color: #0d7a72;
+        font-size: 6.5pt;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .access-copy strong {
+        display: block;
+        margin-top: 1mm;
+        font-size: 10pt;
+        line-height: 1.35;
+      }
+
+      .url {
+        display: block;
+        margin-top: 1.6mm;
+        overflow-wrap: anywhere;
+        color: #3f3a35;
+        font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+        font-size: 6.2pt;
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: 0;
+        text-transform: none !important;
+      }
+
+      .language-note {
+        display: block;
+        margin-top: 1.4mm;
+        color: #6a625a;
+        font-size: 6.1pt;
+        line-height: 1.4;
+      }
+
+      .steps {
+        display: grid;
+        gap: 0.8mm;
+        margin: 3mm 0 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: steps;
+      }
+
+      .steps li {
+        position: relative;
+        min-height: 6.5mm;
+        padding: 0.9mm 1mm 0.9mm 8mm;
+        border-top: 0.25mm solid rgba(78, 61, 38, 0.12);
+        color: #4f4942;
+        font-size: 7.3pt;
+        line-height: 1.5;
+        counter-increment: steps;
+      }
+
+      .steps li::before {
+        position: absolute;
+        top: 0.7mm;
+        left: 0;
+        display: grid;
+        place-items: center;
+        width: 5.5mm;
+        height: 5.5mm;
+        border-radius: 50%;
+        background: #0d7a72;
+        color: white;
+        content: counter(steps);
+        font-size: 6.5pt;
+        font-weight: 800;
+      }
+
+      .steps strong {
+        color: #1f2529;
+      }
+
+      .help {
+        margin-top: auto;
+        padding: 2mm 2.5mm;
+        border-left: 1mm solid #b86e34;
+        border-radius: 1.4mm;
+        background: rgba(184, 110, 52, 0.09);
+        color: #5b5148;
+        font-size: 7pt;
+        line-height: 1.55;
+      }
+
+      .help strong {
+        color: #342d27;
+      }
+
+      @page {
+        size: 105mm 148mm;
+        margin: 0;
+      }
+
+      @media print {
+        html,
+        body {
+          width: 105mm;
+          height: 148mm;
+          background: white;
+        }
+
+        body {
+          display: block;
+          padding: 0;
+        }
+
+        .sheet {
+          box-shadow: none;
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <header class="brand">
+        <img src="%BASE_URL%brand/octgear-mark.png" alt="" />
+        <div class="brand-copy">
+          <small>8 Keys + Rotary Encoder</small>
+          <strong>OctGear</strong>
+        </div>
+      </header>
+
+      <h1>はじめに<br />スタートガイドをご覧ください</h1>
+      <p class="intro">
+        ご購入ありがとうございます。接続、初期操作、キー設定、Firmware更新、困ったときの確認方法をWebで案内しています。
+      </p>
+
+      <section class="access" aria-label="スタートガイドへのアクセス">
+        <img
+          class="qr"
+          src="%BASE_URL%print/octgear-start-guide-qr.svg"
+          width="600"
+          height="600"
+          alt="OctGearスタートガイドを開くQRコード"
+        />
+        <div class="access-copy">
+          <span>Start Guide</span>
+          <strong>QRコードを読み取るか、URLを開きます</strong>
+          <span class="url">https://studio-juh.github.io/<wbr />octgear/<wbr />octgear-start.html</span>
+          <small class="language-note">専用driverは不要です。ページ右上からEnglishへ切り替えられます。</small>
+        </div>
+      </section>
+
+      <ol class="steps" aria-label="最初の手順">
+        <li><strong>USBで接続</strong> — データ通信対応のUSB Type-Cケーブルを使用します。</li>
+        <li><strong>ガイドを開く</strong> — キーとEncoderの初期操作を確認します。</li>
+        <li><strong>自分用に設定</strong> — ChromeまたはEdgeでRemapperへ接続します。</li>
+      </ol>
+
+      <aside class="help">
+        <strong>うまく動かないとき</strong><br />
+        スタートガイドの「困ったとき」からDiagnosticsと問い合わせ先を確認できます。
+      </aside>
+
+    </main>
+  </body>
+</html>

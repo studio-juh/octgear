@@ -25,6 +25,7 @@ OctGearの文書索引です。目的に合う文書から読み、値を変更�
 | [`operations.md`](operations.md) | Remapper、Firmware更新、Diagnostics、rescue | 利用手順や実機挙動が変わる |
 | [`hid-report.md`](hid-report.md) | WebHID wire protocol | command、payload、現行contractが変わる |
 | [`cost-estimate.md`](cost-estimate.md) | 少量頒布時の暫定材料原価、梱包、未計上費用 | 部品、仕入価格、構成、梱包条件が変わる |
+| [`print/README.md`](print/README.md) | 頒布物へ同梱する印刷用データと非リンク公開ページ | 同梱案内、公開URL、印刷条件が変わる |
 | [`ai-context.md`](ai-context.md) | AI向けproject mapと不変条件 | source ownershipや主要runtime behaviorが変わる |
 | [`../AGENTS.md`](../AGENTS.md) | AI agentの作業・検証規約 | repository policyや必須検証が変わる |
 
