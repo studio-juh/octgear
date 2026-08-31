@@ -19,6 +19,7 @@ export const octgearProduct = {
   },
   routes: {
     home: "",
+    startGuide: "octgear-start.html",
     buildGuide: "octgear.html",
     remapper: "octgear-remapper.html",
     diagnostics: "octgear-diagnostics.html",
@@ -29,6 +30,7 @@ export const octgearProduct = {
   assets: {
     mark: "brand/octgear-mark.png",
     homeImage: "build-guide/completed/octgear-completed-front.jpg",
+    startGuideRoot: "start-guide/",
     buildGuideRoot: "build-guide/",
   },
   buildGuide: {

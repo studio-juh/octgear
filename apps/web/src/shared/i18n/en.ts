@@ -12,7 +12,7 @@ export const en: typeof ja = {
   home: {
     eyebrow: "Studio Juh",
     title: "Device Hub",
-    description: "Open the build guide, remapper, or firmware updater for your device.",
+    description: "Open the start guide, build guide, remapper, and other tools for your device.",
     productListLabel: "Product list",
     products: {
       octgear: {
@@ -30,11 +30,182 @@ export const en: typeof ja = {
     encoder: "Encoder",
     layers: "Layers",
     connection: "Connection",
+    openStartGuide: "Start Guide",
     openBuildGuide: "Build Guide",
     openRemapper: "Open Remapper",
     openDiagnostics: "Open Diagnostics",
     openStore: "Store / Contact",
     backHome: "Home",
+  },
+  octgearStartGuide: {
+    brandKicker: "Start Guide",
+    navigationLabel: "Start guide navigation",
+    kicker: "Ready to Use",
+    title: "OctGear Start Guide",
+    description:
+      "For completed OctGear units and ready-built purchases, this guide covers the first connection, setup, everyday use, and what to check when something goes wrong.",
+    start: "Get started",
+    factsLabel: "Requirements",
+    facts: [
+      { label: "CONNECTION", value: "USB Type-C" },
+      { label: "SETUP", value: "Web Remapper" },
+      { label: "BROWSER", value: "Chromium" },
+      { label: "DRIVER", value: "Not required" },
+    ],
+    pageIndexLabel: "Page index",
+    pageIndex: [
+      { href: "#first-use", label: "First connection" },
+      { href: "#controls", label: "Basic controls" },
+      { href: "#remap", label: "Key setup" },
+      { href: "#firmware", label: "Firmware update" },
+      { href: "#help", label: "Troubleshooting" },
+    ],
+    firstUseKicker: "First Connection",
+    firstUseTitle: "Check your OctGear for the first time",
+    firstUseDescription:
+      "A completed unit with firmware installed works as a USB keyboard immediately. Connect it with a data-capable cable and follow these checks in order.",
+    firstUseSteps: [
+      {
+        title: "Connect USB",
+        description:
+          "Connect OctGear to your computer with a USB Type-C cable that supports data, not a charge-only cable.",
+      },
+      {
+        title: "Check the LEDs",
+        description:
+          "The side LEDs show a moving pattern before USB is recognized, then switch to the current layer display.",
+      },
+      {
+        title: "Check input",
+        description:
+          "Try the keys and encoder. The default assignments are listed under Basic controls below.",
+      },
+      {
+        title: "Connect the Remapper",
+        description:
+          "Open the Remapper in a supported browser and select OctGear from Connect to read its current settings.",
+      },
+    ],
+    browserNoteTitle: "Use a Chromium-based browser for the Remapper",
+    browserNoteDescription:
+      "WebHID requires an HTTPS page in a current browser such as Chrome or Edge. Normal keyboard input needs neither a browser nor a dedicated driver.",
+    devicePickerScreenshot: {
+      caption: "After selecting Connect, choose “OctGear” from the browser device list.",
+      alt: "Chrome HID device chooser showing an OctGear device",
+    },
+    controlsKicker: "Basic Controls",
+    controlsTitle: "Default controls",
+    controlsDescription:
+      "Layer 0 controls volume and media by default, while Layer 1 provides Q/W/E/A/S/D input. Layers 2–7 start empty.",
+    controls: [
+      {
+        label: "LAYER 0",
+        title: "Volume and media",
+        description:
+          "K2–K4 are Mute, Volume Down, and Volume Up. K6–K8 are Previous Track, Play/Pause, and Next Track. Encoder rotation also changes volume.",
+      },
+      {
+        label: "LAYER 1",
+        title: "Six-key input",
+        description:
+          "K2–K4 on the top row are Q, W, and E; K6–K8 on the bottom row are A, S, and D. Change them freely in the Remapper.",
+      },
+      {
+        label: "CHANGE",
+        title: "Change layers",
+        description:
+          "Tap K1 once for the next enabled layer or double-tap it for the previous layer. Hold K5 to use Layer 1 temporarily.",
+      },
+    ],
+    savedSettingsTitle: "Settings are saved on the device",
+    savedSettingsDescription:
+      "Keymaps and LED settings stay on OctGear and carry over to another computer. A normal layer change is saved after 10 seconds.",
+    remapKicker: "Customize",
+    remapTitle: "Make it yours with the Remapper",
+    remapDescription:
+      "There is no app to install. Configure assignments, layers, LEDs, the encoder, and other hardware settings from the web page.",
+    remapSteps: [
+      "Open the Remapper in Chrome or Edge.",
+      "Select Connect, then choose OctGear from the device list.",
+      "Choose a layer and key or encoder action, then change its assignment.",
+      "Select Save to store the changes on OctGear.",
+      "Disconnect and verify the new input in your usual application.",
+    ],
+    remapperScreenshot: {
+      caption: "The Remapper shows layers, all eight keys, encoder controls, and assignment choices in one workspace.",
+      alt: "OctGear Remapper showing layers, keys, encoder controls, and keyboard assignments",
+    },
+    hardwareScreenshot: {
+      caption: "Hardware settings control encoder direction, LED display, Tap Dance timing, animation, and brightness.",
+      alt: "Adjustable controls in the OctGear Remapper Hardware settings",
+    },
+    openRemapper: "Open the Remapper",
+    firmwareKicker: "Keep Updated",
+    firmwareTitle: "Update the firmware",
+    firmwareDescription:
+      "You do not need to update for everyday use. Use the Firmware section in the Remapper when you need a new feature or fix.",
+    firmwareCards: [
+      {
+        label: "BEFORE UPDATE",
+        title: "Saved settings are retained",
+        description:
+          "A normal firmware update does not overwrite saved keymaps or LED settings. Review important settings before updating.",
+        action: "none",
+      },
+      {
+        label: "UPDATE",
+        title: "Write the UF2",
+        description:
+          "Switch to BOOTSEL from the Remapper and write the bundled firmware to the UF2 drive. Supported browsers can write it directly from the page.",
+        action: "remapper",
+      },
+    ],
+    firmwareScreenshot: {
+      caption: "The Updater provides BOOTSEL switching, direct installation, and UF2 download options.",
+      alt: "Firmware updater in the OctGear Remapper",
+    },
+    openUpdater: "Open the Firmware section",
+    helpKicker: "Support",
+    helpTitle: "When something goes wrong",
+    helpDescription:
+      "Check the connection and settings first. If the issue remains, use Diagnostics to distinguish physical input problems from device communication problems.",
+    troubleshooting: [
+      {
+        title: "The computer does not recognize OctGear",
+        description:
+          "Reconnect the USB cable and try another USB port and a known data-capable cable. If you use a USB hub, connect OctGear directly to the computer.",
+      },
+      {
+        title: "OctGear is missing from the Remapper device list",
+        description:
+          "Make sure the HTTPS page is open in a supported browser such as Chrome or Edge. If another tab is connected, disconnect it before trying Connect again.",
+      },
+      {
+        title: "Keys do not type while the Remapper is connected",
+        description:
+          "This is expected and prevents accidental input during setup. Select Disconnect to return to normal keyboard input.",
+      },
+      {
+        title: "A key, the encoder, or an LED behaves incorrectly",
+        description:
+          "Check every input in Diagnostics. Encoder direction, PCB revision, and LED strip direction can be changed in the Remapper Hardware settings.",
+      },
+      {
+        title: "I cannot use WebHID to restore settings",
+        description:
+          "Connect USB while holding Key 4 to enable the OCTGEAR rescue drive and Serial rescue for that boot. To return to normal use, unplug USB and reconnect without holding a key.",
+      },
+    ],
+    diagnosticsTitle: "Run input diagnostics",
+    diagnosticsDescription:
+      "Check all eight keys, three encoder actions, and report communication. Run Storage test only when needed because it writes to flash.",
+    supportTitle: "Contact the distributor",
+    supportDescription:
+      "If the issue remains, include the purchase date, OS and browser, LED state, and Diagnostics results with your inquiry.",
+    footerTitle: "Looking for assembly information?",
+    footerDescription:
+      "If you are building from a PCB or performing the final inspection after assembly, see the separate Build Guide.",
+    openBuildGuide: "View the Build Guide",
   },
   octgearBuildGuide: {
     brandKicker: "Build Guide",

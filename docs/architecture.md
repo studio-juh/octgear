@@ -104,7 +104,7 @@ Web entry pointはページごとに分かれ、共通実装を`src/app`と`src/
 | Path | Responsibility |
 | --- | --- |
 | `src/pages/*.tsx` | Vite multi-page entry points |
-| `src/app/pages/` | Home、Build Guide、Remapper、Diagnosticsの画面状態とworkflow |
+| `src/app/pages/` | Home、Start Guide、Build Guide、Remapper、Diagnosticsの画面状態とworkflow |
 | `src/app/components/` | UI panelとkeycap表示 |
 | `src/app/hooks/useDeviceSession.ts` | heartbeat、timeout、disconnect cleanup |
 | `src/features/device/` | WebHID transport、protocol encode/decode、device commands |

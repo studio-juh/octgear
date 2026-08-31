@@ -10,7 +10,7 @@ export const ja = {
   home: {
     eyebrow: "Studio Juh",
     title: "Device Hub",
-    description: "ビルドガイド、Remapper、Firmware updaterから必要なツールを開きます。",
+    description: "スタートガイド、ビルドガイド、Remapperから必要な案内とツールを開きます。",
     productListLabel: "製品一覧",
     products: {
       octgear: {
@@ -28,11 +28,182 @@ export const ja = {
     encoder: "Encoder",
     layers: "Layers",
     connection: "Connection",
+    openStartGuide: "Start Guide",
     openBuildGuide: "Build Guide",
     openRemapper: "Open Remapper",
     openDiagnostics: "Open Diagnostics",
     openStore: "頒布・問い合わせ",
     backHome: "Home",
+  },
+  octgearStartGuide: {
+    brandKicker: "Start Guide",
+    navigationLabel: "スタートガイドのナビゲーション",
+    kicker: "Ready to Use",
+    title: "OctGear スタートガイド",
+    description:
+      "組み立てが完了したOctGearと完成品を購入した方へ、最初の接続から設定、日常の使い方、困ったときの確認方法までを案内します。",
+    start: "使い始める",
+    factsLabel: "利用環境",
+    facts: [
+      { label: "CONNECTION", value: "USB Type-C" },
+      { label: "SETUP", value: "Web Remapper" },
+      { label: "BROWSER", value: "Chromium" },
+      { label: "DRIVER", value: "不要" },
+    ],
+    pageIndexLabel: "ページ内目次",
+    pageIndex: [
+      { href: "#first-use", label: "最初の接続" },
+      { href: "#controls", label: "基本操作" },
+      { href: "#remap", label: "キー設定" },
+      { href: "#firmware", label: "Firmware更新" },
+      { href: "#help", label: "困ったとき" },
+    ],
+    firstUseKicker: "First Connection",
+    firstUseTitle: "最初に動作を確認する",
+    firstUseDescription:
+      "Firmware導入済みの完成品はすぐにUSBキーボードとして使用できます。データ通信対応ケーブルで接続し、次の順に確認してください。",
+    firstUseSteps: [
+      {
+        title: "USBで接続",
+        description:
+          "OctGearとPCをUSB Type-Cケーブルで接続します。充電専用ではなく、データ通信対応のケーブルを使用します。",
+      },
+      {
+        title: "LEDを確認",
+        description:
+          "USB認識前は側面LEDが流れるように光り、認識後は現在のLayer表示へ切り替わります。",
+      },
+      {
+        title: "入力を確認",
+        description:
+          "キーとEncoderを操作します。初期割り当ては次の「基本操作」で確認できます。",
+      },
+      {
+        title: "Remapperへ接続",
+        description:
+          "対応browserでRemapperを開き、ConnectからOctGearを選ぶと、現在の設定を読み込めます。",
+      },
+    ],
+    browserNoteTitle: "RemapperはChromium系browserで使用します",
+    browserNoteDescription:
+      "WebHIDを利用するため、最新のChromeやEdgeなどでHTTPS配信ページを開いてください。通常のキーボード入力にはbrowserや専用driverは不要です。",
+    devicePickerScreenshot: {
+      caption: "Connectを押した後、browserの一覧から「OctGear」を選択します。",
+      alt: "ChromeのHIDデバイス接続画面にOctGearが表示されているスクリーンショット",
+    },
+    controlsKicker: "Basic Controls",
+    controlsTitle: "初期状態の基本操作",
+    controlsDescription:
+      "初期設定ではLayer 0が音量・メディア操作、Layer 1がQ/W/E/A/S/D入力です。Layer 2〜7は未割り当てです。",
+    controls: [
+      {
+        label: "LAYER 0",
+        title: "音量とメディア",
+        description:
+          "K2〜K4でMute・音量−・音量＋、K6〜K8で前の曲・再生／一時停止・次の曲を操作します。Encoder回転でも音量を変更できます。",
+      },
+      {
+        label: "LAYER 1",
+        title: "6キー入力",
+        description:
+          "上段K2〜K4がQ・W・E、下段K6〜K8がA・S・Dです。用途に合わせてRemapperから自由に変更できます。",
+      },
+      {
+        label: "CHANGE",
+        title: "Layerを切り替える",
+        description:
+          "K1の単押しで次の有効Layerへ進み、ダブルタップで前へ戻ります。K5を押している間はLayer 1へ切り替わります。",
+      },
+    ],
+    savedSettingsTitle: "設定は本体へ保存されます",
+    savedSettingsDescription:
+      "キーマップやLED設定はOctGear本体へ保存されるため、別のPCへ接続しても引き継がれます。通常Layerは切り替え後10秒で保存されます。",
+    remapKicker: "Customize",
+    remapTitle: "Remapperで自分用に設定する",
+    remapDescription:
+      "アプリのインストールは不要です。Webページからキー割り当て、Layer、LED、Encoderなどを設定できます。",
+    remapSteps: [
+      "ChromeまたはEdgeでRemapperを開きます。",
+      "Connectを押し、一覧からOctGearを選択します。",
+      "編集するLayerとキー／Encoder操作を選び、割り当てを変更します。",
+      "Saveを押し、変更内容をOctGear本体へ保存します。",
+      "Disconnect後、設定した入力が通常のアプリで動作することを確認します。",
+    ],
+    remapperScreenshot: {
+      caption: "RemapperではLayer、8キー、Encoder、割り当て候補を1画面で確認できます。",
+      alt: "OctGear RemapperのLayer、キー、Encoder、キーボード選択画面",
+    },
+    hardwareScreenshot: {
+      caption: "Hardware設定では回転方向、LED表示、Tap Dance判定時間、アニメーション、輝度を調整できます。",
+      alt: "OctGear RemapperのHardware設定にある変更可能な設定項目",
+    },
+    openRemapper: "Remapperを開く",
+    firmwareKicker: "Keep Updated",
+    firmwareTitle: "Firmwareを更新する",
+    firmwareDescription:
+      "通常利用では毎回更新する必要はありません。新機能や修正が必要なときに、RemapperのFirmware欄から更新します。",
+    firmwareCards: [
+      {
+        label: "BEFORE UPDATE",
+        title: "保存済み設定は維持されます",
+        description:
+          "通常のFirmware更新だけでは、保存済みキーマップやLED設定を上書きしません。重要な設定は事前に内容を確認してください。",
+        action: "none",
+      },
+      {
+        label: "UPDATE",
+        title: "UF2を書き込む",
+        description:
+          "RemapperからBOOTSELへ切り替え、表示されたUF2ドライブへ同梱Firmwareを書き込みます。対応browserではページから直接書き込めます。",
+        action: "remapper",
+      },
+    ],
+    firmwareScreenshot: {
+      caption: "RemapperのUpdaterからBOOTSELへの切り替え、直接書き込み、UF2のdownloadを選べます。",
+      alt: "OctGear RemapperのFirmware updater画面",
+    },
+    openUpdater: "Firmware欄を開く",
+    helpKicker: "Support",
+    helpTitle: "困ったときに確認する",
+    helpDescription:
+      "まず接続と設定を確認し、解決しない場合はDiagnosticsで物理入力と本体通信を切り分けます。",
+    troubleshooting: [
+      {
+        title: "PCがOctGearを認識しない",
+        description:
+          "USBケーブルを抜き差しし、別のUSB portとデータ通信対応ケーブルを試します。USB hubを使っている場合はPCへ直接接続します。",
+      },
+      {
+        title: "Remapperの一覧にOctGearが出ない",
+        description:
+          "ChromeやEdgeなどの対応browserでHTTPSページを開いているか確認します。別tabで接続中の場合は、その接続を解除してから再度Connectします。",
+      },
+      {
+        title: "Remapper接続中にキー入力できない",
+        description:
+          "設定中の誤入力を防ぐための正常な動作です。Disconnectすると通常のキーボード入力へ戻ります。",
+      },
+      {
+        title: "キー、Encoder、LEDの動作がおかしい",
+        description:
+          "Diagnosticsで各入力を確認します。Encoder方向、PCBリビジョン、LEDテープ方向はRemapperのHardware設定から変更できます。",
+      },
+      {
+        title: "WebHIDを使えず設定を戻せない",
+        description:
+          "Key 4を押したままUSB接続すると、その起動だけOCTGEAR rescue driveとSerial rescueを利用できます。通常利用へ戻るときはUSBを抜き、キーを押さずに再接続します。",
+      },
+    ],
+    diagnosticsTitle: "入力を診断する",
+    diagnosticsDescription:
+      "8キー、Encoder 3操作、本体とのreport通信を順番に確認できます。Storage testはFlashへ書き込むため、必要な場合だけ実行してください。",
+    supportTitle: "頒布元へ問い合わせる",
+    supportDescription:
+      "解決しない場合は、購入時期、使用OSとbrowser、LEDの状態、Diagnosticsの結果を添えてお問い合わせください。",
+    footerTitle: "組み立て情報をお探しですか？",
+    footerDescription:
+      "PCBから製作する場合や、組み立て後の最終検査を行う場合は、別ページのBuild Guideを参照してください。",
+    openBuildGuide: "Build Guideを見る",
   },
   octgearBuildGuide: {
     brandKicker: "Build Guide",

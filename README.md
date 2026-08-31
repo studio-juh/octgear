@@ -32,6 +32,7 @@ RP2040 Zero / compatible boardで動く、8キー + ロータリーエンコー�
 | Page | Path | Role |
 | --- | --- | --- |
 | Home | `/` | 製品情報と各ツールへの入口 |
+| Start Guide | `/octgear-start.html` | 完成後・完成品購入者向けの導入、設定、サポート案内 |
 | Build Guide | `/octgear.html` | 組み立て、Firmware導入、完成検査 |
 | Remapper | `/octgear-remapper.html` | キーマップ設定とファームウェア更新 |
 | Diagnostics | `/octgear-diagnostics.html` | 出荷前・販売前の個体検査 |

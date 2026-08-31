@@ -3,7 +3,12 @@ import type { FirmwareArtifact } from "../features/firmware/firmwareUpdater";
 import type { HardwareConfig } from "../features/hardware/hardwareConfig";
 
 export type ProductId = "octgear";
-export type ProductPage = "home" | "buildGuide" | "remapper" | "diagnostics";
+export type ProductPage =
+  | "home"
+  | "startGuide"
+  | "buildGuide"
+  | "remapper"
+  | "diagnostics";
 
 export type ProductDefinition = {
   readonly id: ProductId;
@@ -18,6 +23,7 @@ export type ProductDefinition = {
   readonly assets: {
     readonly mark: string;
     readonly homeImage: string;
+    readonly startGuideRoot: string;
     readonly buildGuideRoot: string;
   };
   readonly buildGuide: {

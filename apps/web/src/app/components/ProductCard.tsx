@@ -60,6 +60,12 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="product-actions">
         <a
           className="product-action"
+          href={productPageUrl(product, "startGuide")}
+        >
+          {t.home.openStartGuide}
+        </a>
+        <a
+          className="product-action secondary"
           href={productPageUrl(product, "remapper")}
         >
           {t.home.openRemapper}

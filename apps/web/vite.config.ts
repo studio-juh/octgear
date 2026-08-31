@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => ({
       input: {
         index: "index.html",
         octgear: "octgear.html",
+        octgearStart: "octgear-start.html",
         octgearRemapper: "octgear-remapper.html",
         octgearDiagnostics: "octgear-diagnostics.html",
       },
