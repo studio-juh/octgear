@@ -182,12 +182,6 @@ export function DiagnosticsApp() {
           <div className="connection-actions">
             <a
               className="ghost-button nav-button"
-              href={productPageUrl(product, "startGuide")}
-            >
-              {t.home.openStartGuide}
-            </a>
-            <a
-              className="ghost-button nav-button"
               href={productPageUrl(product, "home")}
             >
               {t.home.backHome}

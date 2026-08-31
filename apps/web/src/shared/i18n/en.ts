@@ -139,6 +139,81 @@ export const en: typeof ja = {
       caption: "Hardware settings control encoder direction, LED display, Tap Dance timing, animation, and brightness.",
       alt: "Adjustable controls in the OctGear Remapper Hardware settings",
     },
+    hardwareTermsTitle: "Hardware settings glossary",
+    hardwareTermsDescription:
+      "Board details describe the connected unit. Adjustable settings change behavior and are saved on the device. Change only the items you need.",
+    hardwareTerms: [
+      {
+        term: "PCB revision",
+        description:
+          "The wiring generation of the PCB. Select PCB v3 for current units and v2 only for an older PCB v2. K1–K4 will not respond when this setting is wrong.",
+      },
+      {
+        term: "Keys / Report keys",
+        description:
+          "Keys means the eight physical keys. Report keys means all 11 assignable controls, including encoder CCW (counterclockwise), CW (clockwise), and SW (encoder push switch).",
+      },
+      {
+        term: "Encoder A/C/B/SW",
+        description:
+          "A and B detect rotation, C is the common pin, and SW is the knob press. Configure the encoder as two rotation directions and one press.",
+      },
+      {
+        term: "Matrix 2 × 4 / no diodes",
+        description:
+          "The eight keys are scanned as two rows by four columns. With no diodes, some rectangular combinations are held until the ambiguous state clears.",
+      },
+      {
+        term: "Device layer",
+        description:
+          "The number of layers supported by the device. Current firmware has eight layers; Layer 0 is always enabled, and Layers 0 and 1 are enabled by default.",
+      },
+      {
+        term: "USB ID",
+        description:
+          "The VID/PID used by the computer to identify OctGear. The current value is 0x2E8A:0x1133 and is not a user-adjustable setting.",
+      },
+      {
+        term: "External RGB / OLED",
+        description:
+          "External RGB means the four side LEDs on GPIO 14. OLED is shown as None because OctGear does not include one.",
+      },
+      {
+        term: "Encoder direction",
+        description:
+          "Swaps the CCW and CW events from encoder rotation. Enable Reverse only when rotation feels opposite to the expected control.",
+      },
+      {
+        term: "LED strip direction",
+        description:
+          "Changes how the leftmost logical LED 1 maps to physical pixels. Change it when position-based animation runs in the wrong direction.",
+      },
+      {
+        term: "Layer display",
+        description:
+          "The normal side-LED display. Choose solid layer color, a four-pixel layer pattern, or a moving rainbow cycle.",
+      },
+      {
+        term: "Tap Dance term",
+        description:
+          "The 50–1000 ms window that distinguishes a Next Layer tap from a double-tap. Shorter reacts faster; longer makes double-tapping easier.",
+      },
+      {
+        term: "Key animation",
+        description:
+          "The side-LED effect shown for a key press. Choose Disabled, Ripple, Flash, Spark, or Key Rainbow.",
+      },
+      {
+        term: "Animation brightness limit",
+        description:
+          "Sets highlighted key-animation brightness from 0 to 128. A value above normal LED brightness increases animation contrast.",
+      },
+      {
+        term: "LED brightness limit",
+        description:
+          "Sets normal layer-display and onboard-mirror brightness from 0 to 128. A value of 0 turns the normal display off.",
+      },
+    ],
     openRemapper: "Open the Remapper",
     firmwareKicker: "Keep Updated",
     firmwareTitle: "Update the firmware",
@@ -160,6 +235,22 @@ export const en: typeof ja = {
         action: "remapper",
       },
     ],
+    manualBootTitle: "Enter BOOTSEL from the bottom of the unit",
+    manualBootDescription:
+      "If the Remapper cannot switch modes, operate BOOT and RESET through the two small holes on the bottom. In the photo orientation, BOOT is on the left and RESET is on the right.",
+    manualBootSteps: [
+      "Leave OctGear connected to USB.",
+      "Press and hold BOOT through the left hole.",
+      "While holding BOOT, press and release RESET through the right hole.",
+      "Release BOOT and confirm that an RPI-RP2 or UF2 drive appears on the computer.",
+    ],
+    manualBootWarningTitle: "Do not use a metal needle or pointed metal tool",
+    manualBootWarningDescription:
+      "Press the buttons gently with a thin, non-conductive object such as a wooden toothpick. Do not use a needle, pin, precision screwdriver, or other metal tool because it may short or damage components inside.",
+    manualBootPhotoCaption:
+      "The two small holes on the bottom: BOOT is on the left and RESET is on the right.",
+    manualBootPhotoAlt:
+      "Bottom of OctGear showing the BOOT access hole on the left and RESET access hole on the right",
     firmwareScreenshot: {
       caption: "The Updater provides BOOTSEL switching, direct installation, and UF2 download options.",
       alt: "Firmware updater in the OctGear Remapper",

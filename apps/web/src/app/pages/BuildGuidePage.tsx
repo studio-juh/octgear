@@ -32,7 +32,6 @@ export function BuildGuidePage() {
   const guide = getProductMessages(product.id).buildGuide;
   const buildGuideAssetUrl = productAssetUrl(product.assets.buildGuideRoot);
   const buildGuideUrl = productPageUrl(product, "buildGuide");
-  const startGuideUrl = productPageUrl(product, "startGuide");
   const homeUrl = productPageUrl(product, "home");
   const remapperUrl = productPageUrl(product, "remapper");
   const diagnosticsUrl = productPageUrl(product, "diagnostics");
@@ -81,9 +80,6 @@ export function BuildGuidePage() {
           </span>
         </a>
         <nav className="guide-nav" aria-label={guide.navigationLabel}>
-          <a className="ghost-button nav-button" href={startGuideUrl}>
-            {t.home.openStartGuide}
-          </a>
           <a className="ghost-button nav-button" href={homeUrl}>
             {t.home.backHome}
           </a>

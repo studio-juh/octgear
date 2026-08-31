@@ -161,6 +161,24 @@ export function StartGuidePage() {
                   crop="settings"
                 />
               </div>
+              <section
+                className="start-guide-terms"
+                aria-labelledby="hardware-terms-title"
+              >
+                <div className="start-guide-terms-heading">
+                  <span className="eyebrow">Glossary</span>
+                  <h3 id="hardware-terms-title">{guide.hardwareTermsTitle}</h3>
+                  <p>{guide.hardwareTermsDescription}</p>
+                </div>
+                <dl className="start-guide-term-grid">
+                  {guide.hardwareTerms.map((term) => (
+                    <div key={term.term}>
+                      <dt>{term.term}</dt>
+                      <dd>{term.description}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
               <a className="product-action guide-diagnostics-action" href={remapperUrl}>
                 {guide.openRemapper}
               </a>
@@ -186,6 +204,40 @@ export function StartGuidePage() {
                   </article>
                 ))}
               </div>
+              <article className="start-guide-manual-boot">
+                <div className="start-guide-manual-boot-copy">
+                  <span className="eyebrow">Manual BOOTSEL</span>
+                  <h3>{guide.manualBootTitle}</h3>
+                  <p>{guide.manualBootDescription}</p>
+                  <ol className="start-guide-simple-steps">
+                    {guide.manualBootSteps.map((step) => (
+                      <li key={step}>{step}</li>
+                    ))}
+                  </ol>
+                  <div className="guide-notice warning">
+                    <strong>{guide.manualBootWarningTitle}</strong>
+                    <p>{guide.manualBootWarningDescription}</p>
+                  </div>
+                </div>
+                <figure className="start-guide-button-photo">
+                  <div className="start-guide-button-photo-frame">
+                    <img
+                      src={`${startGuideAssetUrl}octgear-boot-reset-holes.jpg`}
+                      width="1365"
+                      height="1024"
+                      loading="lazy"
+                      alt={guide.manualBootPhotoAlt}
+                    />
+                    <span className="start-guide-button-marker boot" aria-hidden="true">
+                      <b>BOOT</b>
+                    </span>
+                    <span className="start-guide-button-marker reset" aria-hidden="true">
+                      <b>RESET</b>
+                    </span>
+                  </div>
+                  <figcaption>{guide.manualBootPhotoCaption}</figcaption>
+                </figure>
+              </article>
               <GuideScreenshot
                 src={`${startGuideAssetUrl}octgear-firmware-updater.jpg`}
                 width={2048}

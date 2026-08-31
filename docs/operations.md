@@ -87,6 +87,8 @@ Folder pickerによる直接書込はFile System Access APIが必要です。未
 
 WebHIDからBOOTSELへ移行できない場合は、boardのBOOTSEL操作を使って手動でbootloader driveを表示します。
 
+完成品では底面に並ぶ2つの小穴からboard上のbuttonを操作できます。底面を正面に見て左側の穴がBOOT、右側がRESETです。USB接続中に左側からBOOTを押したまま、右側からRESETを押して離し、最後にBOOTを離すとbootloaderへ移行します。buttonは爪楊枝など電気を通さない細い物で静かに押してください。針、ピン、精密ドライバーなど金属製の針状工具は、内部を短絡・損傷するおそれがあるため使用しないでください。
+
 ## Diagnostics
 
 `/octgear-diagnostics.html`は出荷前・販売前の個体検査用です。

@@ -137,6 +137,81 @@ export const ja = {
       caption: "Hardware設定では回転方向、LED表示、Tap Dance判定時間、アニメーション、輝度を調整できます。",
       alt: "OctGear RemapperのHardware設定にある変更可能な設定項目",
     },
+    hardwareTermsTitle: "Hardware設定の用語",
+    hardwareTermsDescription:
+      "Board詳細は接続中の本体情報、変更可能な設定は本体へ保存される動作設定です。通常は必要な項目だけ変更してください。",
+    hardwareTerms: [
+      {
+        term: "PCBリビジョン",
+        description:
+          "基板の配線世代です。現行品はPCB v3を選びます。旧PCB v2だけv2へ変更します。合っていない場合はK1〜K4が反応しません。",
+      },
+      {
+        term: "Keys / Report keys",
+        description:
+          "Keysは物理キー8個、Report keysはEncoderのCCW（反時計回り）・CW（時計回り）・SW（エンコーダ押スイッチ）を加えた割り当て可能な11操作です。",
+      },
+      {
+        term: "Encoder A/C/B/SW",
+        description:
+          "AとBは回転検出、Cは共通端子、SWはノブ押下です。Encoderは回転2方向と押下の3操作として設定します。",
+      },
+      {
+        term: "Matrix 2 × 4 / ダイオードなし",
+        description:
+          "8キーを2行×4列で読み取る配線方式です。ダイオードがないため、一部の矩形同時押しは確定するまで入力を保留します。",
+      },
+      {
+        term: "Device layer",
+        description:
+          "本体が扱えるLayer数です。現行Firmwareは8 Layerで、Layer 0は常時有効、初期状態ではLayer 0と1が有効です。",
+      },
+      {
+        term: "USB ID",
+        description:
+          "PCがOctGearを識別するためのVID/PIDです。現行値は0x2E8A:0x1133で、利用者が変更する項目ではありません。",
+      },
+      {
+        term: "External RGB / OLED",
+        description:
+          "External RGBはGPIO 14へ接続された側面LED 4灯です。OLEDは搭載していないためNoneと表示されます。",
+      },
+      {
+        term: "回転方向",
+        description:
+          "Encoderを回したときのCCWとCWを入れ替えます。表示や操作感と逆の場合だけ「反転」を有効にします。",
+      },
+      {
+        term: "LEDテープ方向",
+        description:
+          "盤面左端のLED 1とphysical pixelの対応順を切り替えます。位置に連動するアニメーションが左右逆の場合に変更します。",
+      },
+      {
+        term: "レイヤー表示",
+        description:
+          "通常時の側面LED表示です。Layer色の全灯、4灯パターン、流れる虹色サイクルから選択します。",
+      },
+      {
+        term: "Tap Dance判定時間",
+        description:
+          "Next Layerの単押しとダブルタップを区別する50〜1000 msの時間です。短いほど単押しの反応が速く、長いほどダブルタップしやすくなります。",
+      },
+      {
+        term: "アニメーション効果",
+        description:
+          "キー入力時の側面LED効果です。無効、波紋、フラッシュ、スパーク、打鍵虹色から選択します。",
+      },
+      {
+        term: "アニメーション輝度上限",
+        description:
+          "打鍵時に光る部分の明るさを0〜128で設定します。通常表示より高くすると打鍵効果のコントラストが強くなります。",
+      },
+      {
+        term: "LED輝度上限",
+        description:
+          "通常のLayer表示と内蔵mirrorの明るさを0〜128で設定します。0にすると通常表示を消灯します。",
+      },
+    ],
     openRemapper: "Remapperを開く",
     firmwareKicker: "Keep Updated",
     firmwareTitle: "Firmwareを更新する",
@@ -158,6 +233,22 @@ export const ja = {
         action: "remapper",
       },
     ],
+    manualBootTitle: "本体底面からBOOTSELへ切り替える",
+    manualBootDescription:
+      "Remapperから切り替えられない場合は、底面に並ぶ2つの小穴からBOOTとRESETを操作します。写真の向きで左側がBOOT、右側がRESETです。",
+    manualBootSteps: [
+      "OctGearをUSBへ接続した状態にします。",
+      "左側の穴からBOOTを押したまま保持します。",
+      "BOOTを押したまま、右側の穴からRESETを一度押して離します。",
+      "最後にBOOTを離し、PCにRPI-RP2またはUF2ドライブが表示されることを確認します。",
+    ],
+    manualBootWarningTitle: "金属製の針状の物は使用しないでください",
+    manualBootWarningDescription:
+      "ボタンは爪楊枝など、電気を通さない細い物で静かに押します。針、ピン、精密ドライバーなどの金属製工具は、内部を短絡・損傷するおそれがあるため使用しないでください。",
+    manualBootPhotoCaption:
+      "底面の2つの小穴。写真の左がBOOT、右がRESETです。",
+    manualBootPhotoAlt:
+      "OctGear底面の写真。左側にBOOT用、右側にRESET用の小穴が並んでいる",
     firmwareScreenshot: {
       caption: "RemapperのUpdaterからBOOTSELへの切り替え、直接書き込み、UF2のdownloadを選べます。",
       alt: "OctGear RemapperのFirmware updater画面",
