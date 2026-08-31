@@ -45,6 +45,8 @@ export const en: typeof ja = {
     description:
       "For completed OctGear units and ready-built purchases, this guide covers the first connection, setup, everyday use, and what to check when something goes wrong.",
     start: "Get started",
+    enlargeImage: "Enlarge image",
+    closeImage: "Close enlarged image",
     factsLabel: "Requirements",
     facts: [
       { label: "CONNECTION", value: "USB Type-C" },

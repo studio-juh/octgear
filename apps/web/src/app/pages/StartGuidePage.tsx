@@ -1,8 +1,18 @@
 import { LanguageSwitch } from "../components/LanguageSwitch";
-import type { ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { productAssetUrl, productPageUrl } from "../appUrls";
 import { useProductDefinition } from "../../products/ProductContext";
 import { useI18n } from "../../shared/i18n";
+
+type ExpandedStartGuideImage = {
+  src: string;
+  caption: string;
+  alt: string;
+  width: number;
+  height: number;
+  crop?: "settings";
+  markers?: "bootReset";
+};
 
 export function StartGuidePage() {
   const { t } = useI18n();
@@ -14,6 +24,28 @@ export function StartGuidePage() {
   const buildGuideUrl = productPageUrl(product, "buildGuide");
   const remapperUrl = productPageUrl(product, "remapper");
   const diagnosticsUrl = productPageUrl(product, "diagnostics");
+  const [expandedImage, setExpandedImage] = useState<ExpandedStartGuideImage | null>(null);
+
+  useEffect(() => {
+    if (!expandedImage) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setExpandedImage(null);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [expandedImage]);
 
   return (
     <main className="app-shell guide-shell start-guide-shell" data-product={product.id}>
@@ -109,6 +141,8 @@ export function StartGuidePage() {
                 caption={guide.devicePickerScreenshot.caption}
                 alt={guide.devicePickerScreenshot.alt}
                 portrait
+                enlargeLabel={guide.enlargeImage}
+                onExpand={setExpandedImage}
               />
             </GuideSection>
 
@@ -151,6 +185,8 @@ export function StartGuidePage() {
                   height={1441}
                   caption={guide.remapperScreenshot.caption}
                   alt={guide.remapperScreenshot.alt}
+                  enlargeLabel={guide.enlargeImage}
+                  onExpand={setExpandedImage}
                 />
                 <GuideScreenshot
                   src={`${startGuideAssetUrl}octgear-hardware-settings.jpg`}
@@ -159,6 +195,8 @@ export function StartGuidePage() {
                   caption={guide.hardwareScreenshot.caption}
                   alt={guide.hardwareScreenshot.alt}
                   crop="settings"
+                  enlargeLabel={guide.enlargeImage}
+                  onExpand={setExpandedImage}
                 />
               </div>
               <section
@@ -220,7 +258,21 @@ export function StartGuidePage() {
                   </div>
                 </div>
                 <figure className="start-guide-button-photo">
-                  <div className="start-guide-button-photo-frame">
+                  <button
+                    type="button"
+                    className="start-guide-button-photo-frame start-guide-image-trigger"
+                    aria-label={`${guide.enlargeImage}: ${guide.manualBootPhotoCaption}`}
+                    onClick={() =>
+                      setExpandedImage({
+                        src: `${startGuideAssetUrl}octgear-boot-reset-holes.jpg`,
+                        width: 1365,
+                        height: 1024,
+                        caption: guide.manualBootPhotoCaption,
+                        alt: guide.manualBootPhotoAlt,
+                        markers: "bootReset",
+                      })
+                    }
+                  >
                     <img
                       src={`${startGuideAssetUrl}octgear-boot-reset-holes.jpg`}
                       width="1365"
@@ -234,7 +286,7 @@ export function StartGuidePage() {
                     <span className="start-guide-button-marker reset" aria-hidden="true">
                       <b>RESET</b>
                     </span>
-                  </div>
+                  </button>
                   <figcaption>{guide.manualBootPhotoCaption}</figcaption>
                 </figure>
               </article>
@@ -244,6 +296,8 @@ export function StartGuidePage() {
                 height={1078}
                 caption={guide.firmwareScreenshot.caption}
                 alt={guide.firmwareScreenshot.alt}
+                enlargeLabel={guide.enlargeImage}
+                onExpand={setExpandedImage}
               />
             </GuideSection>
 
@@ -295,6 +349,62 @@ export function StartGuidePage() {
           </div>
         </footer>
       </article>
+
+      {expandedImage ? (
+        <div
+          className="guide-image-lightbox"
+          role="presentation"
+          onClick={() => setExpandedImage(null)}
+        >
+          <div
+            className="guide-image-lightbox-dialog start-guide-image-lightbox-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label={expandedImage.caption}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="guide-image-lightbox-close"
+              aria-label={guide.closeImage}
+              autoFocus
+              onClick={() => setExpandedImage(null)}
+            >
+              ×
+            </button>
+            <div
+              className="start-guide-image-lightbox-media"
+              data-crop={expandedImage.crop}
+              data-markers={expandedImage.markers}
+              style={
+                {
+                  "--start-guide-image-ratio": expandedImage.crop
+                    ? "3.25"
+                    : String(expandedImage.width / expandedImage.height),
+                } as CSSProperties
+              }
+            >
+              <img
+                src={expandedImage.src}
+                alt={expandedImage.alt}
+                width={expandedImage.width}
+                height={expandedImage.height}
+              />
+              {expandedImage.markers === "bootReset" ? (
+                <>
+                  <span className="start-guide-button-marker boot" aria-hidden="true">
+                    <b>BOOT</b>
+                  </span>
+                  <span className="start-guide-button-marker reset" aria-hidden="true">
+                    <b>RESET</b>
+                  </span>
+                </>
+              ) : null}
+            </div>
+            <strong>{expandedImage.caption}</strong>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
@@ -330,6 +440,8 @@ type GuideScreenshotProps = {
   alt: string;
   portrait?: boolean;
   crop?: "settings";
+  enlargeLabel: string;
+  onExpand: (image: ExpandedStartGuideImage) => void;
 };
 
 function GuideScreenshot({
@@ -340,6 +452,8 @@ function GuideScreenshot({
   alt,
   portrait = false,
   crop,
+  enlargeLabel,
+  onExpand,
 }: GuideScreenshotProps) {
   return (
     <figure
@@ -347,9 +461,14 @@ function GuideScreenshot({
       data-portrait={portrait || undefined}
       data-crop={crop}
     >
-      <div className="start-guide-screenshot-frame">
+      <button
+        type="button"
+        className="start-guide-screenshot-frame start-guide-image-trigger"
+        aria-label={`${enlargeLabel}: ${caption}`}
+        onClick={() => onExpand({ src, width, height, caption, alt, crop })}
+      >
         <img src={src} width={width} height={height} loading="lazy" alt={alt} />
-      </div>
+      </button>
       <figcaption>{caption}</figcaption>
     </figure>
   );

@@ -43,6 +43,8 @@ export const ja = {
     description:
       "組み立てが完了したOctGearと完成品を購入した方へ、最初の接続から設定、日常の使い方、困ったときの確認方法までを案内します。",
     start: "使い始める",
+    enlargeImage: "画像を拡大",
+    closeImage: "拡大画像を閉じる",
     factsLabel: "利用環境",
     facts: [
       { label: "CONNECTION", value: "USB Type-C" },

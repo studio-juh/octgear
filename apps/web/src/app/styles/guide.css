@@ -419,13 +419,11 @@ button.guide-photo-slot.available {
 .guide-notice {
   margin-top: 14px;
   padding: 16px 18px;
-  border-left: 4px solid #b36a2e;
   border-radius: 6px;
   background: rgba(211, 140, 74, 0.1);
 }
 
 .guide-notice.warning {
-  border-left-color: #b36a2e;
   background: rgba(211, 140, 74, 0.1);
 }
 
@@ -850,7 +848,6 @@ button.guide-photo-slot.available {
 }
 
 .guide-step-note {
-  border-left-color: var(--accent);
   background: rgba(13, 122, 114, 0.08);
 }
 
@@ -1195,11 +1192,33 @@ button.guide-photo-slot.available {
 }
 
 .start-guide-screenshot-frame {
+  display: block;
+  width: 100%;
   overflow: hidden;
+  padding: 0;
   border: 1px solid rgba(78, 61, 38, 0.14);
   border-radius: 8px;
   background: rgba(239, 234, 227, 0.82);
   box-shadow: var(--shadow-panel);
+}
+
+.start-guide-image-trigger {
+  color: inherit;
+  cursor: zoom-in;
+  text-align: inherit;
+}
+
+.start-guide-image-trigger:hover:not(:disabled) {
+  box-shadow: var(--shadow-panel);
+  transform: none;
+}
+
+.start-guide-image-trigger img {
+  transition: transform 160ms ease;
+}
+
+.start-guide-image-trigger:hover img {
+  transform: scale(1.015);
 }
 
 .start-guide-screenshot img {
@@ -1302,12 +1321,39 @@ button.guide-photo-slot.available {
 }
 
 .start-guide-button-photo-frame {
+  display: block;
+  width: 100%;
   position: relative;
   overflow: hidden;
+  padding: 0;
   border: 1px solid rgba(78, 61, 38, 0.14);
   border-radius: 8px;
   background: rgba(239, 234, 227, 0.82);
   box-shadow: var(--shadow-panel);
+}
+
+.start-guide-image-lightbox-media {
+  position: relative;
+  width: min(100%, calc((100vh - 124px) * var(--start-guide-image-ratio)));
+  aspect-ratio: var(--start-guide-image-ratio);
+  overflow: hidden;
+  margin-inline: auto;
+}
+
+.start-guide-image-lightbox-media img {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+}
+
+.start-guide-image-lightbox-media[data-crop="settings"] {
+  aspect-ratio: 3.25 / 1;
+}
+
+.start-guide-image-lightbox-media[data-crop="settings"] img {
+  object-fit: cover;
+  object-position: center bottom;
 }
 
 .start-guide-button-photo img {
