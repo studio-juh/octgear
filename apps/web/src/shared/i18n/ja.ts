@@ -135,6 +135,32 @@ export const ja = {
       caption: "RemapperではLayer、8キー、Encoder、割り当て候補を1画面で確認できます。",
       alt: "OctGear RemapperのLayer、キー、Encoder、キーボード選択画面",
     },
+    remapStepScreenshots: [
+      {
+        caption: "Remapper右上のConnectからOctGearとの接続を開始します。",
+        alt: "OctGear Remapper右上のConnectボタン",
+      },
+      {
+        caption: "編集するLayerとキー／Encoder操作を選択します。",
+        alt: "OctGear RemapperのLayer、キー、Encoder選択領域",
+      },
+      {
+        caption: "右側のAssignmentで割り当ての種類や内容を確認します。",
+        alt: "OctGear RemapperのAssignment編集領域",
+      },
+      {
+        caption: "Paletteから割り当てたいキーや機能を選択します。",
+        alt: "OctGear Remapperのキーと機能を選ぶPalette",
+      },
+      {
+        caption: "編集後はKeymap欄のSaveを押して本体へ保存します。",
+        alt: "OctGear RemapperのKeymap欄にあるSaveボタン",
+      },
+      {
+        caption: "Hardwareカードの「設定を開く」から本体設定を表示します。",
+        alt: "OctGear RemapperのHardwareカードと設定を開くボタン",
+      },
+    ],
     hardwareScreenshot: {
       caption: "Hardware設定では回転方向、LED表示、Tap Dance判定時間、アニメーション、輝度を調整できます。",
       alt: "OctGear RemapperのHardware設定にある変更可能な設定項目",

@@ -137,6 +137,32 @@ export const en: typeof ja = {
       caption: "The Remapper shows layers, all eight keys, encoder controls, and assignment choices in one workspace.",
       alt: "OctGear Remapper showing layers, keys, encoder controls, and keyboard assignments",
     },
+    remapStepScreenshots: [
+      {
+        caption: "Start connecting to OctGear with Connect at the top right of the Remapper.",
+        alt: "Connect button at the top right of the OctGear Remapper",
+      },
+      {
+        caption: "Choose the layer and key or encoder control you want to edit.",
+        alt: "Layer, key, and encoder selection area in the OctGear Remapper",
+      },
+      {
+        caption: "Review the assignment type and details in the Assignment panel on the right.",
+        alt: "Assignment editing panel in the OctGear Remapper",
+      },
+      {
+        caption: "Choose the key or function you want to assign from the Palette.",
+        alt: "Key and function Palette in the OctGear Remapper",
+      },
+      {
+        caption: "After editing, select Save in the Keymap panel to store the changes on the device.",
+        alt: "Save button in the OctGear Remapper Keymap panel",
+      },
+      {
+        caption: "Open device settings from the Hardware card with “設定を開く”.",
+        alt: "Hardware card and open-settings button in the OctGear Remapper",
+      },
+    ],
     hardwareScreenshot: {
       caption: "Hardware settings control encoder direction, LED display, Tap Dance timing, animation, and brightness.",
       alt: "Adjustable controls in the OctGear Remapper Hardware settings",

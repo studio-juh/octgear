@@ -1168,6 +1168,36 @@ button.guide-photo-slot.available {
   font-weight: 800;
 }
 
+.start-guide-simple-steps li[data-has-image="true"] {
+  display: grid;
+  align-items: start;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+.start-guide-step-description {
+  display: block;
+}
+
+.start-guide-simple-steps .start-guide-screenshot {
+  margin: 0;
+}
+
+.start-guide-step-screenshots {
+  display: grid;
+  gap: 16px;
+  justify-content: end;
+  justify-items: end;
+}
+
+.start-guide-step-screenshots[data-columns="2"] {
+  grid-template-columns: repeat(2, minmax(0, 420px));
+}
+
+.start-guide-step-screenshots[data-columns="3"] {
+  grid-template-columns: repeat(3, minmax(0, 420px));
+}
+
 .start-guide-help-actions {
   margin-top: 18px;
 }
@@ -1175,25 +1205,35 @@ button.guide-photo-slot.available {
 .start-guide-screenshot-grid {
   display: grid;
   gap: 20px;
+  justify-items: end;
   margin-top: 20px;
 }
 
 .start-guide-screenshot {
+  width: min(100%, 420px);
   margin: 20px 0 0;
+  margin-left: auto;
 }
 
 .start-guide-screenshot-grid .start-guide-screenshot {
   margin-top: 0;
 }
 
+.start-guide-hardware-screenshot-grid {
+  justify-content: end;
+  grid-template-columns: repeat(2, minmax(0, 420px));
+}
+
 .start-guide-screenshot[data-portrait="true"] {
-  width: min(100%, 520px);
-  margin-inline: auto;
+  width: min(100%, 420px);
+  margin-right: 0;
+  margin-left: auto;
 }
 
 .start-guide-screenshot-frame {
   display: block;
   width: 100%;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   padding: 0;
   border: 1px solid rgba(78, 61, 38, 0.14);
@@ -1224,17 +1264,8 @@ button.guide-photo-slot.available {
 .start-guide-screenshot img {
   display: block;
   width: 100%;
-  height: auto;
-}
-
-.start-guide-screenshot[data-crop="settings"] .start-guide-screenshot-frame {
-  aspect-ratio: 3.25 / 1;
-}
-
-.start-guide-screenshot[data-crop="settings"] img {
   height: 100%;
-  object-fit: cover;
-  object-position: center bottom;
+  object-fit: contain;
 }
 
 .start-guide-screenshot figcaption {
@@ -1316,14 +1347,16 @@ button.guide-photo-slot.available {
 }
 
 .start-guide-button-photo {
+  width: min(100%, 420px);
   min-width: 0;
-  margin: 0;
+  margin: 0 0 0 auto;
 }
 
 .start-guide-button-photo-frame {
   display: block;
   width: 100%;
   position: relative;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   padding: 0;
   border: 1px solid rgba(78, 61, 38, 0.14);
@@ -1347,19 +1380,11 @@ button.guide-photo-slot.available {
   object-fit: contain;
 }
 
-.start-guide-image-lightbox-media[data-crop="settings"] {
-  aspect-ratio: 3.25 / 1;
-}
-
-.start-guide-image-lightbox-media[data-crop="settings"] img {
-  object-fit: cover;
-  object-position: center bottom;
-}
-
 .start-guide-button-photo img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
 }
 
 .start-guide-button-marker {
@@ -1565,6 +1590,14 @@ button.guide-photo-slot.available {
   .guide-action-grid,
   .guide-check-flow {
     grid-template-columns: 1fr;
+  }
+
+  .start-guide-step-screenshots[data-columns] {
+    grid-template-columns: 1fr;
+  }
+
+  .start-guide-hardware-screenshot-grid {
+    grid-template-columns: minmax(0, 420px);
   }
 
   .guide-facts div:nth-last-child(2) {

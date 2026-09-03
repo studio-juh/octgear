@@ -10,7 +10,6 @@ type ExpandedStartGuideImage = {
   alt: string;
   width: number;
   height: number;
-  crop?: "settings";
   markers?: "bootReset";
 };
 
@@ -134,16 +133,6 @@ export function StartGuidePage() {
                 <strong>{guide.browserNoteTitle}</strong>
                 <p>{guide.browserNoteDescription}</p>
               </div>
-              <GuideScreenshot
-                src={`${startGuideAssetUrl}octgear-device-picker.jpg`}
-                width={924}
-                height={968}
-                caption={guide.devicePickerScreenshot.caption}
-                alt={guide.devicePickerScreenshot.alt}
-                portrait
-                enlargeLabel={guide.enlargeImage}
-                onExpand={setExpandedImage}
-              />
             </GuideSection>
 
             <GuideSection
@@ -174,27 +163,114 @@ export function StartGuidePage() {
               description={guide.remapDescription}
             >
               <ol className="start-guide-simple-steps">
-                {guide.remapSteps.map((step) => (
-                  <li key={step}>{step}</li>
+                {guide.remapSteps.map((step, index) => (
+                  <li data-has-image={index < 4 || undefined} key={step}>
+                    <span className="start-guide-step-description">{step}</span>
+                    {index < 4 ? (
+                      <div
+                        className="start-guide-step-screenshots"
+                        data-columns={index === 1 ? 2 : index === 2 ? 3 : undefined}
+                      >
+                        {index === 0 ? (
+                          <GuideScreenshot
+                            src={`${startGuideAssetUrl}octgear-remapper-overview.jpg`}
+                            width={2048}
+                            height={1441}
+                            caption={guide.remapperScreenshot.caption}
+                            alt={guide.remapperScreenshot.alt}
+                            enlargeLabel={guide.enlargeImage}
+                            onExpand={setExpandedImage}
+                          />
+                        ) : null}
+                        {index === 1 ? (
+                          <>
+                            <GuideScreenshot
+                              src={`${startGuideAssetUrl}octgear-connect-controls.jpg`}
+                              width={880}
+                              height={326}
+                              caption={guide.remapStepScreenshots[0].caption}
+                              alt={guide.remapStepScreenshots[0].alt}
+                              enlargeLabel={guide.enlargeImage}
+                              onExpand={setExpandedImage}
+                            />
+                            <GuideScreenshot
+                              src={`${startGuideAssetUrl}octgear-device-picker.jpg`}
+                              width={924}
+                              height={968}
+                              caption={guide.devicePickerScreenshot.caption}
+                              alt={guide.devicePickerScreenshot.alt}
+                              portrait
+                              enlargeLabel={guide.enlargeImage}
+                              onExpand={setExpandedImage}
+                            />
+                          </>
+                        ) : null}
+                        {index === 2 ? (
+                          <>
+                            <GuideScreenshot
+                              src={`${startGuideAssetUrl}octgear-keymap-panel.jpg`}
+                              width={1024}
+                              height={417}
+                              caption={guide.remapStepScreenshots[1].caption}
+                              alt={guide.remapStepScreenshots[1].alt}
+                              enlargeLabel={guide.enlargeImage}
+                              onExpand={setExpandedImage}
+                            />
+                            <GuideScreenshot
+                              src={`${startGuideAssetUrl}octgear-assignment-panel.jpg`}
+                              width={516}
+                              height={722}
+                              caption={guide.remapStepScreenshots[2].caption}
+                              alt={guide.remapStepScreenshots[2].alt}
+                              portrait
+                              enlargeLabel={guide.enlargeImage}
+                              onExpand={setExpandedImage}
+                            />
+                            <GuideScreenshot
+                              src={`${startGuideAssetUrl}octgear-palette-panel.jpg`}
+                              width={1024}
+                              height={431}
+                              caption={guide.remapStepScreenshots[3].caption}
+                              alt={guide.remapStepScreenshots[3].alt}
+                              enlargeLabel={guide.enlargeImage}
+                              onExpand={setExpandedImage}
+                            />
+                          </>
+                        ) : null}
+                        {index === 3 ? (
+                          <GuideScreenshot
+                            src={`${startGuideAssetUrl}octgear-keymap-panel.jpg`}
+                            width={1024}
+                            height={417}
+                            caption={guide.remapStepScreenshots[4].caption}
+                            alt={guide.remapStepScreenshots[4].alt}
+                            enlargeLabel={guide.enlargeImage}
+                            onExpand={setExpandedImage}
+                          />
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </li>
                 ))}
               </ol>
-              <div className="start-guide-screenshot-grid">
+              <div className="start-guide-screenshot-grid start-guide-hardware-screenshot-grid">
                 <GuideScreenshot
-                  src={`${startGuideAssetUrl}octgear-remapper-overview.jpg`}
-                  width={2048}
-                  height={1441}
-                  caption={guide.remapperScreenshot.caption}
-                  alt={guide.remapperScreenshot.alt}
+                  src={`${startGuideAssetUrl}octgear-hardware-card.jpg`}
+                  width={502}
+                  height={720}
+                  caption={guide.remapStepScreenshots[5].caption}
+                  alt={guide.remapStepScreenshots[5].alt}
+                  portrait
                   enlargeLabel={guide.enlargeImage}
                   onExpand={setExpandedImage}
                 />
                 <GuideScreenshot
-                  src={`${startGuideAssetUrl}octgear-hardware-settings.jpg`}
-                  width={2048}
-                  height={1078}
+                  src={`${startGuideAssetUrl}octgear-hardware-settings-optimized.jpg`}
+                  width={1024}
+                  height={1232}
                   caption={guide.hardwareScreenshot.caption}
                   alt={guide.hardwareScreenshot.alt}
-                  crop="settings"
+                  portrait
                   enlargeLabel={guide.enlargeImage}
                   onExpand={setExpandedImage}
                 />
@@ -374,13 +450,12 @@ export function StartGuidePage() {
             </button>
             <div
               className="start-guide-image-lightbox-media"
-              data-crop={expandedImage.crop}
               data-markers={expandedImage.markers}
               style={
                 {
-                  "--start-guide-image-ratio": expandedImage.crop
-                    ? "3.25"
-                    : String(expandedImage.width / expandedImage.height),
+                  "--start-guide-image-ratio": String(
+                    expandedImage.width / expandedImage.height,
+                  ),
                 } as CSSProperties
               }
             >
@@ -439,7 +514,6 @@ type GuideScreenshotProps = {
   caption: string;
   alt: string;
   portrait?: boolean;
-  crop?: "settings";
   enlargeLabel: string;
   onExpand: (image: ExpandedStartGuideImage) => void;
 };
@@ -451,7 +525,6 @@ function GuideScreenshot({
   caption,
   alt,
   portrait = false,
-  crop,
   enlargeLabel,
   onExpand,
 }: GuideScreenshotProps) {
@@ -459,13 +532,12 @@ function GuideScreenshot({
     <figure
       className="start-guide-screenshot"
       data-portrait={portrait || undefined}
-      data-crop={crop}
     >
       <button
         type="button"
         className="start-guide-screenshot-frame start-guide-image-trigger"
         aria-label={`${enlargeLabel}: ${caption}`}
-        onClick={() => onExpand({ src, width, height, caption, alt, crop })}
+        onClick={() => onExpand({ src, width, height, caption, alt })}
       >
         <img src={src} width={width} height={height} loading="lazy" alt={alt} />
       </button>
