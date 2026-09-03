@@ -1202,6 +1202,14 @@ button.guide-photo-slot.available {
   margin-top: 18px;
 }
 
+.start-guide-diagnostics-action,
+.start-guide-diagnostics-action:hover,
+.start-guide-start-action,
+.start-guide-start-action:hover {
+  box-shadow: none;
+  transform: none;
+}
+
 .start-guide-screenshot-grid {
   display: grid;
   gap: 20px;

@@ -83,7 +83,7 @@ export function StartGuidePage() {
             <h1 id="start-guide-title">{guide.title}</h1>
             <p>{guide.description}</p>
             <div className="guide-hero-actions">
-              <a className="product-action" href="#first-use">
+              <a className="product-action start-guide-start-action" href="#first-use">
                 {guide.start}
               </a>
               <a className="product-action secondary" href={remapperUrl}>
@@ -368,8 +368,8 @@ export function StartGuidePage() {
               </article>
               <GuideScreenshot
                 src={`${startGuideAssetUrl}octgear-firmware-updater.jpg`}
-                width={2048}
-                height={1078}
+                width={956}
+                height={1024}
                 caption={guide.firmwareScreenshot.caption}
                 alt={guide.firmwareScreenshot.alt}
                 enlargeLabel={guide.enlargeImage}
@@ -396,7 +396,10 @@ export function StartGuidePage() {
                   <span>CHECK</span>
                   <h3>{guide.diagnosticsTitle}</h3>
                   <p>{guide.diagnosticsDescription}</p>
-                  <a className="product-action" href={diagnosticsUrl}>
+                  <a
+                    className="product-action start-guide-diagnostics-action"
+                    href={diagnosticsUrl}
+                  >
                     {t.home.openDiagnostics}
                   </a>
                 </article>
